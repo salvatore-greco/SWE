@@ -1,0 +1,9 @@
+Il progetto modella un sistema di gestione per biblioteche comunali, prendendo d'ispirazione le biblioteche del comune di Firenze.
+Il sistema permette la gestione da parte del personale della biblioteca del proprio catalogo di libri e di eventuali donazioni librarie da parte di privati , la gestione del loro prestito. Permette inoltre di gestire eventi, come mostre di libri, incontri con gli autori.
+Gli utenti possono consultare il catalogo della biblioteca, riservare una copia di un libro per richiederne il prestito, gestire i loro libri in prestito e inoltre richiedere l'acquisto di un libro da parte della biblioteca. Dal punto di vista degli eventi permette di consultare gli eventi disponibili e la prenotazione. Possono richiedere una tessera della biblioteca per poter accedere ai servizi fisici offerti da essa.
+Se provviste di aule studio, ne permette la gestione: consultare i posti disponibili in tempo reale e prenotarne uno.
+
+
+
+## vecchio brutto con gemini
+Il progetto modella un sistema informativo per il controllo e la gestione di una biblioteca, focalizzato sulla digitalizzazione dei servizi e sulla gestione completa del suo patrimonio librario e logistico. L'obiettivo ultimo è offrire un accesso efficiente ai servizi sia agli Utenti (Cittadini e Studenti) sia al personale (Bibliotecari e Amministrazione). La biblioteca è organizzata in diversi domini funzionali, tra cui un catalogo di libri con tracciabilità dei prestiti e delle riserve, una sezione dedicata alla gestione degli eventi e un modulo per la prenotazione delle aule studio. La gestione di base delle tessere, prestiti e restituzioni è automatizzata. Ci sono operazioni che devono essere effettuate manualmente, come la cura fisica dei libri o la verifica di persona delle aule studio, supervisionate dagli operatori. Il sistema permette ai clienti di accedere ai servizi e agli enti amministrativi di gestire i finanziamenti.
