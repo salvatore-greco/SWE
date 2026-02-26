@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.Duration;
 
 public class Event {
+
     private LocalDateTime startDate;
     private Duration eventDuration;
     private String name;
@@ -13,16 +14,74 @@ public class Event {
     private Librarian organizer;
     private ArrayList<LibraryUser> participants;
 
-    public Event(LocalDateTime startDate, Duration eventDuration, String name, String description, Room place, Librarian organizer) {
-        if (eventDuration.isNegative() || eventDuration.isZero())
-            throw new IllegalArgumentException("Event duration must be positive");
+    public static class EventBuilder {
+        private LocalDateTime startDate;
+        private Duration eventDuration;
+        private String name;
+        private String description;
+        private Room place;
+        private Librarian organizer;
 
-        this.startDate = startDate;
-        this.eventDuration = eventDuration;
-        this.name = name;
-        this.description = description;
-        this.place = place;
-        this.organizer = organizer;
+        public EventBuilder setStartDate(LocalDateTime startDate) {
+            this.startDate = startDate;
+            return this;
+        }
+
+        public EventBuilder setEventDuration(Duration eventDuration) {
+            this.eventDuration = eventDuration;
+            return this;
+        }
+
+        public EventBuilder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public EventBuilder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public EventBuilder setPlace(Room place) {
+            this.place = place;
+            return this;
+        }
+
+        public EventBuilder setOrganizer(Librarian organizer) {
+            this.organizer = organizer;
+            return this;
+        }
+
+        public Event build() {
+            if (startDate == null)
+                throw new IllegalStateException("Start date required");
+
+            if (eventDuration == null || eventDuration.isNegative() || eventDuration.isZero())
+                throw new IllegalArgumentException("Event duration must be positive");
+
+            if (name == null || name.isBlank())
+                throw new IllegalStateException("Name required");
+
+            if (place == null)
+                throw new IllegalStateException("Room required");
+
+            if (organizer == null)
+                throw new IllegalStateException("Organizer required");
+
+            if (!place.isAvailable(startDate, eventDuration))
+                throw new IllegalStateException("Room not available");
+
+            return new Event(this);
+        }
+    }
+
+    private Event(EventBuilder builder) {
+        this.startDate = builder.startDate;
+        this.eventDuration = builder.eventDuration;
+        this.name = builder.name;
+        this.description = builder.description;
+        this.place = builder.place;
+        this.organizer = builder.organizer;
         this.participants = new ArrayList<>();
 
         place.scheduleEvent(this);
@@ -32,50 +91,25 @@ public class Event {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setDate(LocalDateTime startDate) {
-        this.startDate = startDate;
-    }
 
     public Duration getEventDuration() {
         return eventDuration;
-    }
-
-    public void setEventDuration(Duration eventDuration) {
-        if (eventDuration.isNegative() || eventDuration.isZero())
-            throw new IllegalArgumentException("Event duration must be positive");
-        this.eventDuration = eventDuration;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Room getPlace() {
         return place;
     }
 
-    public void setPlace(Room place) {
-        this.place = place;
-    }
-
     public Librarian getOrganizer() {
         return organizer;
-    }
-
-    public void setOrganizer(Librarian organizer) {
-        this.organizer = organizer;
     }
 
     public ArrayList<LibraryUser> getParticipants() {
@@ -83,9 +117,12 @@ public class Event {
     }
 
     public void addParticipant(LibraryUser participant){
+        if(participants.contains(participant))
+            throw new IllegalStateException("User already registered for the event");
+
         if(participants.size() < place.getSeats())
             participants.add(participant);
-            //System.out.println("There are " + place.availableSeats() + " seats available");
+            //System.out.println("There are " + place.getAvailableSeats() + " seats available");
         else
             throw new IllegalStateException("Room is full");
     }
@@ -102,7 +139,7 @@ public class Event {
         return !(getEndDate().isBefore(other.startDate) || startDate.isAfter(other.getEndDate()));
     }
 
-    public int availableSeats(){
+    public int getAvailableSeats(){
         return place.getSeats() - participants.size();
     }
 }
