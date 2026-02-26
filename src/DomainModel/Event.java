@@ -40,7 +40,7 @@ public class Event {
         return startDate;
     }
 
-    public void setDate(LocalTime startDate) {
+    public void setDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
@@ -85,7 +85,7 @@ public class Event {
     public void addParticipant(LibraryUser participant){
         if(participants.size() < place.getSeats())
             participants.add(participant);
-            System.out.println("There are " + place.availableSeats() + " seats available");
+            //System.out.println("There are " + place.availableSeats() + " seats available");
         else
             throw new IllegalStateException("Room is full");
     }
