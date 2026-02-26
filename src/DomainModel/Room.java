@@ -39,6 +39,7 @@ public class Room {
         return scheduledEvents;
     }
 
+    //FIXME: change event parameter into LocalDateTime and Duration
     public boolean isAvailable (Event event) {
         for (Event scheduled : scheduledEvents) {
             if (scheduled.overlaps(event)) {
@@ -48,12 +49,12 @@ public class Room {
         return true; // No conflicts, the room is available
     }
 
-    //TODO: è da domain model?
+    //FIXME: spostare nella business logic
     public void scheduleEvent(Event newEvent) {
-        if (!isAvailable())
+        if (!isAvailable(newEvent))
             throw new IllegalStateException("Room is not available");
 
-        scheduledEvents.add(event);
+        scheduledEvents.add(newEvent);
     }
 
 }
