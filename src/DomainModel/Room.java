@@ -39,14 +39,17 @@ public class Room {
         return scheduledEvents;
     }
 
-    //FIXME: change event parameter into LocalDateTime and Duration
-    public boolean isAvailable (Event event) {
-        for (Event scheduled : scheduledEvents) {
-            if (scheduled.overlaps(event)) {
-                return false; // There is a scheduling conflict
+    public boolean isAvailable (LocalDateTime start, Duration duration) {
+        if(start == null || duration == null || duration.isNegative() || duration.isZero())
+            throw new IllegalArgumentException("Invalid time interval");
+
+        LocalDateTime newEventEnd = start.plus(duration);
+        for (Event event : scheduledEvents) {
+            if (start.isBefore(event.getEndDate()) && newEventEnd.isAfter(event.getStart())) {
+                return false; // Overlaps with an existing event
             }
         }
-        return true; // No conflicts, the room is available
+        return true; // No overlap, room is available
     }
 
     //FIXME: spostare nella business logic
