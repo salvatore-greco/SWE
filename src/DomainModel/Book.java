@@ -50,4 +50,15 @@ public class Book {
     private ArrayList<String> authors;
     private Boolean onLoan;
     private String code; //book code to identify multiple copies
+
+    public boolean isOnLoan() {
+        return onLoan;
+    }
+
+    public void setAsLoaned() {
+        this.onLoan = true;
+    }
+    public void setAsReturned() {
+        this.onLoan = false;
+    }
 }
