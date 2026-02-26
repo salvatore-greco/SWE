@@ -3,8 +3,7 @@ package DomainModel;
 import java.time.DateTimeException;
 import java.time.LocalTime;
 import java.util.Objects;
-//TODO: pensa a come implementare per bene card per composizione (diamante pieno)
-//Deve essere creata qua dentro
+
 public class LibraryUser {
     private String name;
     private String surname;
