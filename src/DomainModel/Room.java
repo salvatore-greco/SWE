@@ -1,10 +1,14 @@
 package DomainModel;
 
+import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.time.Duration;
+
 public class Room {
     private int number;
     private short seats; //TODO: controlla se va bene FAI COMBACIARE COL DB
     // valutare se aggiungere una lista di eventi che si svolgono in quella stanza
-    //o stabilere se al massimo c'è un evento per giorno
+    private ArrayList<Event> scheduledEvents;
 
     public Room(int number, short seats) {
         if (seats <= 0)
@@ -12,6 +16,7 @@ public class Room {
 
         this.number = number;
         this.seats = seats;
+        this.scheduledEvents = new ArrayList<>();
     }
 
     public int getNumber() {
@@ -30,7 +35,24 @@ public class Room {
         this.seats = seats;
     }
 
-    public int availableSeats(){
-        return place.getSeats() - participants.size();
+    public ArrayList<Event> getScheduledEvents() {
+        return scheduledEvents;
     }
+
+    public boolean isAvailable (Event event) {
+        for (Event scheduled : scheduledEvents) {
+            if (scheduled.overlaps(event)) {
+                return false; // There is a scheduling conflict
+            }
+        }
+        return true; // No conflicts, the room is available
+    }
+
+    public void scheduleEvent(Event newEvent) {
+        if (!isAvailable())
+            throw new IllegalStateException("Room is not available");
+
+        scheduledEvents.add(event);
+    }
+
 }
