@@ -16,7 +16,7 @@ public class Room {
 
         this.number = number;
         this.seats = seats;
-        this.scheduledEvents = new ArrayList<>();
+        this.scheduledEvents = new ArrayList<>(); //TODO: controlla se serve un altro costruttore, passando la lista di eventi proveniente dal db
     }
 
     public int getNumber() {
@@ -48,6 +48,7 @@ public class Room {
         return true; // No conflicts, the room is available
     }
 
+    //TODO: è da domain model?
     public void scheduleEvent(Event newEvent) {
         if (!isAvailable())
             throw new IllegalStateException("Room is not available");
