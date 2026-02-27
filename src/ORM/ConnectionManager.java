@@ -26,7 +26,7 @@ public class ConnectionManager {
         connection = DriverManager.getConnection(props.getProperty("url"), props);
     }
 
-    public ConnectionManager getInstance() throws SQLException, SQLTimeoutException{
+    public static ConnectionManager getInstance() throws SQLException, SQLTimeoutException{
         if (instance == null) instance = new ConnectionManager();
         return instance;
     }
