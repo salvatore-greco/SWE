@@ -1,5 +1,7 @@
 package BusinessLogic;
 
+import DomainModel.User;
+
 public interface ControllerFactory {
-    public ControllerInterface createController();
+    public ControllerInterface createController(User user);
 }
