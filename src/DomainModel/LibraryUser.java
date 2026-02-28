@@ -4,7 +4,7 @@ import java.time.DateTimeException;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class LibraryUser {
+public class LibraryUser implements User {
     private String name;
     private String surname;
     private String email;

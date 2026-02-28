@@ -1,6 +1,6 @@
 package DomainModel;
 
-public class Librarian {
+public class Librarian implements User {
 
     public Librarian(String name, String email, String surname) {
         this.name = name;

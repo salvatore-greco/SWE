@@ -1,7 +1,7 @@
 package DomainModel;
 
 
-public class LibraryAdministrator {
+public class LibraryAdministrator implements User {
     private String name;
     private String surname;
     private String email;
