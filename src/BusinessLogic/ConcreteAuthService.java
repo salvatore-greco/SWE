@@ -7,8 +7,10 @@ import DomainModel.User;
 import Exception.data.UserNotFoundException;
 import ORM.UserDAO;
 import ORM.UserDTO;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class ConcreteAuthService implements AuthService {
+
 
     @Override
     public ControllerInterface login(String email, String password) throws UserNotFoundException {
@@ -16,6 +18,11 @@ public class ConcreteAuthService implements AuthService {
         UserDTO userDTO = userDAO.getUserByEmail(email);
         ControllerFactory factory;
         User user;
+
+        if (!BCrypt.checkpw(password, userDTO.getHashedPassword())){
+            throw new UserNotFoundException("Wrong username or password");
+        }
+
         switch (userDTO.getRole()) {
             default:
                 //FIXME: creare l'eccezione corretta e mettere un messaggio decente
