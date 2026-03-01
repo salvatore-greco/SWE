@@ -6,6 +6,7 @@ import java.time.Duration;
 
 public class Event {
 
+    private Integer id;
     private LocalDateTime startDate;
     private Duration eventDuration;
     private String name;
@@ -15,6 +16,7 @@ public class Event {
     private ArrayList<LibraryUser> participants;
 
     public static class EventBuilder {
+        private Integer id = null; ;
         private LocalDateTime startDate;
         private Duration eventDuration;
         private String name;
@@ -52,6 +54,11 @@ public class Event {
             return this;
         }
 
+        public EventBuilder setId(Integer id) {
+            this.id = id;
+            return this;
+        }
+
         public Event build() {
             if (startDate == null)
                 throw new IllegalStateException("Start date required");
@@ -76,6 +83,7 @@ public class Event {
     }
 
     private Event(EventBuilder builder) {
+        this.id = builder.id;
         this.startDate = builder.startDate;
         this.eventDuration = builder.eventDuration;
         this.name = builder.name;
@@ -95,6 +103,9 @@ public class Event {
         return startDate;
     }
 
+    public Integer getId() {
+        return id;
+    }
 
     public Duration getEventDuration() {
         return eventDuration;

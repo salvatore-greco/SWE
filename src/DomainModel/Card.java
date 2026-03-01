@@ -22,6 +22,13 @@ public class Card {
         return expirationDate;
     }
 
+
+    public Card(int id){
+        this.id = id;
+        issueDate = null;
+        expirationDate = null;
+    }
+
     /**
      *
      * @param id

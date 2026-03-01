@@ -1,6 +1,6 @@
 package ORM;
 
-import java.util.LocalDate;
+import java.time.LocalDate;
 
 public class CardDTO {
     private int id;
@@ -10,7 +10,7 @@ public class CardDTO {
     public CardDTO(int id, LocalDate issueDate, LocalDate expiryDate) {
         this.id = id;
         this.issueDate = issueDate;
-        this.expiryDate = expiryDate;
+        this.expirationDate = expiryDate;
     }
 
     public int getId() {
@@ -22,6 +22,6 @@ public class CardDTO {
     }
 
     public LocalDate getExpiryDate() {
-        return expiryDate;
+        return expirationDate;
     }
 }
