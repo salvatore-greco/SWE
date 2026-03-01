@@ -17,7 +17,8 @@ create table if not exists "user"(
 email varchar(254) primary key,
 name varchar(50) ,
 surname varchar(50) ,
-role role
+role role,
+password varchar(72) not null
 );
 
 create table if not exists card(
