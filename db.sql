@@ -32,7 +32,9 @@ create table if not exists loan(
 book varchar(10) constraint book_fk_loan references book primary key,
 card integer constraint card_fk_loan references card not null,
 issueDate timestamp,
-expirationDate timestamp
+expirationDate timestamp,
+granted boolean,
+ended boolean
 );
 
 create table if not exists "library"(
