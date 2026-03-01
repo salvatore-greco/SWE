@@ -9,7 +9,7 @@ public class Book {
         private String ISBN;
         private String title;
         private ArrayList<String> authors;
-        private Boolean onLoan = false;
+        private boolean onLoan = false;
         private String code; //book code to identify multiple copies
 
         // TODO: see how to validate input data(after dao's and db's implementation)
@@ -25,7 +25,7 @@ public class Book {
             this.authors = authors;
             return this;
         }
-        public BookBuilder setOnLoan(Boolean onLoan){
+        public BookBuilder setOnLoan(boolean onLoan){
             this.onLoan = onLoan;
             return this;
         }
@@ -48,7 +48,7 @@ public class Book {
     private String ISBN;
     private String title;
     private ArrayList<String> authors;
-    private Boolean onLoan;
+    private boolean onLoan;
     private String code; //book code to identify multiple copies
 
     public boolean isOnLoan() {
@@ -60,5 +60,21 @@ public class Book {
     }
     public void setAsReturned() {
         this.onLoan = false;
+    }
+
+    public String getISBN() {
+        return ISBN;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public ArrayList<String> getAuthors() {
+        return authors;
+    }
+
+    public String getCode() {
+        return code;
     }
 }
