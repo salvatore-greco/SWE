@@ -28,11 +28,15 @@ public class UserDAO {
                         rs.getString(1),
                         rs.getString(2),
                         rs.getString(3),
-                        rs.getString(4)
+                        rs.getString(4),
+                        rs.getString(5)
                 );
             }
             else
-                throw new UserNotFoundException("Can't find user with given email " + email);
+                throw new UserNotFoundException("Wrong username or password");
+                //dato che lanciamo la stessa eccezione anche nel concrete auth service
+                //per non dare informazioni sul fatto che l'email sia presente o meno nel db
+                //usiamo lo stesso messaggio dell'eccezione
         }
         catch (SQLException e){
             e.printStackTrace();
