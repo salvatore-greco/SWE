@@ -45,7 +45,7 @@ public class Room {
 
         LocalDateTime newEventEnd = start.plus(duration);
         for (Event event : scheduledEvents) {
-            if (start.isBefore(event.getEndDate()) && newEventEnd.isAfter(event.getStart())) {
+            if (start.isBefore(event.getEndDate()) && newEventEnd.isAfter(event.getStartDate())) {
                 return false; // Overlaps with an existing event
             }
         }
@@ -54,7 +54,7 @@ public class Room {
 
     //FIXME: spostare nella business logic
     public void scheduleEvent(Event newEvent) {
-        if (!isAvailable(newEvent))
+        if (!isAvailable(newEvent.getStartDate(), newEvent.getEventDuration()))
             throw new IllegalStateException("Room is not available");
 
         scheduledEvents.add(newEvent);
