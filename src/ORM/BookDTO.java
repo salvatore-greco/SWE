@@ -1,18 +1,14 @@
 package ORM;
 
 public class BookDTO {
-    private String title;
     private String code;
     private String isbn;
+    private String title;
 
-    public BookDTO(String title, String code, String isbn) {
-        this.title = title;
+    public BookDTO(String code, String isbn, String title) {
         this.code = code;
         this.isbn = isbn;
-    }
-
-    public String getTitle() {
-        return title;
+        this.title = title;
     }
 
     public String getCode() {
@@ -21,5 +17,9 @@ public class BookDTO {
 
     public String getIsbn() {
         return isbn;
+    }
+
+    public String getTitle() {
+        return title;
     }
 }
