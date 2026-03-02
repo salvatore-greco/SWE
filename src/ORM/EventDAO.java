@@ -34,4 +34,28 @@ public class EventDAO {
             e.printStackTrace();
         }
     }
+
+    public Integer setEvent(Event event) {
+        try {
+            Connection conn = ConnectionManager.getInstance().getConnection();
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO event (name, description, date, duration, organizer, place) values (?, ?, ?, ?, ?, ?)");
+            stmt.setString(1, event.getName());
+            stmt.setString(2, event.getDescription());
+            stmt.setTimestamp(3, java.sql.Timestamp.valueOf(event.getDate()));
+            stmt.setLong(4, event.getDuration());
+            stmt.setString(5, event.getOrganizer().getEmail());
+            stmt.setInt(6, event.getPlace().getNumber());
+
+            Integer rows = stmt.executeUpdate();
+            if (rows > 0) {
+                ResultSet rs = stmt.getGeneratedKeys();
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
