@@ -9,7 +9,7 @@ public class CardDAO {
     public CardDAO() {
     }
 
-    public Integer setRequestedCard(LibraryUser applicantUser){
+    public int setRequestedCard(LibraryUser applicantUser){
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO card (user) values (?)");
@@ -26,6 +26,6 @@ public class CardDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        throw new RuntimeException("Write on database failed"); //fixme: use an appropriate exception
     }
 }

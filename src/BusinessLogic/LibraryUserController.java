@@ -30,15 +30,12 @@ public class LibraryUserController implements ControllerInterface {
     }
 
     public void requestCard() {
-        if (this.user.getCard() != null) {
+        if (this.user.getCard() != null) { //Null check necessario perchè l'user può non avere una tessera.
             throw new RuntimeException("User already have a card"); //fixme: use an appropriate exception
         }
         CardDAO cardDAO = new CardDAO();
-        Integer cardId = cardDAO.setRequestedCard(this.user);
-        if (cardId != null)
-            this.user.setCard(new Card(cardId));
-        else
-            throw new RuntimeException("Write on database failed"); //fixme: use an appropriate exception
+        int cardId = cardDAO.setRequestedCard(this.user);
+        this.user.setCard(new Card(cardId));
     }
 
     public void eventBooking(Event event){
