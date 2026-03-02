@@ -9,7 +9,7 @@ public class CardDAO {
     public CardDAO() {
     }
 
-    public int setRequestedCard(LibraryUser applicantUser){
+    public Card setRequestedCard(LibraryUser applicantUser){
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO card (user) values (?)");
@@ -20,7 +20,7 @@ public class CardDAO {
                 statement.setString(1, applicantUser.getEmail());
                 ResultSet rs = statement.executeQuery();
                 if(rs.next()){
-                    return rs.getInt("id");
+                    return new Card(rs.getInt(1));
                 }
             }
         } catch (SQLException e) {
