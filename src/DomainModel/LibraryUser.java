@@ -1,6 +1,7 @@
 package DomainModel;
 
 import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
@@ -32,7 +33,7 @@ public class LibraryUser implements User {
         }
 
 
-        public LibraryUserBuilder setCard(int id, LocalTime issueDate, LocalTime expirationDate) {
+        public LibraryUserBuilder setCard(int id, LocalDate issueDate, LocalDate expirationDate) {
             this.card = new Card(id, issueDate, expirationDate);
             return this;
         }

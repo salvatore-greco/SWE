@@ -1,12 +1,13 @@
 package DomainModel;
 
 import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Card {
     private int id;
-    private LocalTime issueDate;
-    private LocalTime expirationDate;
+    private LocalDate issueDate;
+    private LocalDate expirationDate;
 
     //TODO: verify if every getter and setter is needed
 
@@ -14,11 +15,11 @@ public class Card {
         return id;
     }
 
-    public LocalTime getIssueDate() {
+    public LocalDate getIssueDate() {
         return issueDate;
     }
 
-    public LocalTime getExpirationDate() {
+    public LocalDate getExpirationDate() {
         return expirationDate;
     }
 
@@ -36,7 +37,7 @@ public class Card {
      * @param expirationDate
      * @throws DateTimeException when issueDate is after expirationDate
      */
-    public Card(int id, LocalTime issueDate, LocalTime expirationDate) throws DateTimeException {
+    public Card(int id, LocalDate issueDate, LocalDate expirationDate) throws DateTimeException {
         this.id = id;
         if(issueDate.isAfter(expirationDate)){
             throw new DateTimeException("issueDate cannot be after expiration date");
