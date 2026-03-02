@@ -24,8 +24,8 @@ password varchar(72) not null
 create table if not exists card(
 id integer generated always as identity primary key,
 issueDate date,
-expirationDate date,
-"user" varchar(254) constraint user_fk_card references "user" unique not null
+expirationDate date generated always as ( issueDate + interval '3 years') virtual, --generated columns?
+"user" varchar(254) constraint user_fk_card references "user" not null --non può essere unique sennò non può chiedere un'altra tessera se scade l'altra.
 );
 
 create table if not exists loan(
