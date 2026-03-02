@@ -11,7 +11,7 @@ public class Event {
     private Duration eventDuration;
     private String name;
     private String description;
-    private Room place;
+    private EventRoom place;
     private Librarian organizer;
     private ArrayList<LibraryUser> participants;
 
@@ -21,7 +21,7 @@ public class Event {
         private Duration eventDuration;
         private String name;
         private String description;
-        private Room place;
+        private EventRoom place;
         private Librarian organizer;
 
         public EventBuilder setStartDate(LocalDateTime startDate) {
@@ -44,7 +44,7 @@ public class Event {
             return this;
         }
 
-        public EventBuilder setPlace(Room place) {
+        public EventBuilder setPlace(EventRoom place) {
             this.place = place;
             return this;
         }
