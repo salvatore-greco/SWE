@@ -5,6 +5,8 @@ import ORM.CardDAO;
 import ORM.EventDAO;
 import ORM.LoanDAO;
 
+import java.time.LocalDate;
+
 public class LibraryUserController implements ControllerInterface {
     public LibraryUser user;
 
@@ -15,6 +17,9 @@ public class LibraryUserController implements ControllerInterface {
     public Loan requestLoan(Book requestedBook) {
         if (user.getCard() == null) {
             throw new RuntimeException("User must have a card to request a loan"); //FIXME: use an appropriate exception
+        }
+        if (user.getCard().getExpirationDate().isBefore(LocalDate.now())){
+            throw new RuntimeException("User card is expired"); //FIXME: use an appropriate exception
         }
         LoanDAO loanDAO = new LoanDAO();
         Loan loan = new Loan(user.getCard(), requestedBook, false, false);
