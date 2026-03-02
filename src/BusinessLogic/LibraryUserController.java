@@ -34,8 +34,9 @@ public class LibraryUserController implements ControllerInterface {
             throw new RuntimeException("User already have a card"); //fixme: use an appropriate exception
         }
         CardDAO cardDAO = new CardDAO();
-        int cardId = cardDAO.setRequestedCard(this.user);
-        this.user.setCard(new Card(cardId));
+        Card card = cardDAO.setRequestedCard(this.user);
+        this.user.setCard(card);
+        //TODO: surround with try catch when a specific exception is implemented
     }
 
     public void eventBooking(Event event){
@@ -43,4 +44,19 @@ public class LibraryUserController implements ControllerInterface {
         event.addParticipant(this.user);
         eventDAO.addNewParticipant(event, this.user);
     }
+
+    public void reserveSeatStudyRoom(StudyRoom room){
+        room.reserveSeat(this.user);
+    }
+
+    public void leaveSeatStudyRoom(StudyRoom room){
+        room.leaveSeat(this.user);
+    }
+
+    public void cancelEventBooking(Event event){
+        EventDAO eventDAO = new EventDAO();
+        event.removeParticipant(this.user);
+        eventDAO.removeParticipant(event, this.user);
+    }
+
 }

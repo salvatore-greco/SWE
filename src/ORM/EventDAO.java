@@ -23,4 +23,15 @@ public class EventDAO {
             e.printStackTrace();
         }
     }
+    public void removeParticipant(Event event, LibraryUser user) {
+        try {
+            Connection conn = ConnectionManager.getInstance().getConnection();
+            PreparedStatement stmt = conn.prepareStatement("DELETE FROM partecipation WHERE event = ? AND user = ?");
+            stmt.setInt(1, event.getId());
+            stmt.setString(2, user.getEmail());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
