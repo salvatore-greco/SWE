@@ -48,11 +48,16 @@ public class ConcreteAuthService implements AuthService {
 
     @Override
     public void logout() {
-
+        //TODO: implement
     }
 
     @Override
     public void resetPassword() {
+        //TODO: implement
+    }
 
+    @Override
+    public boolean register(String email, String password) {
+        return false; //TODO: implement
     }
 }
