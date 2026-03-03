@@ -1,7 +1,6 @@
 package ORM;
 
-import DomainModel.LibraryUser;
-import DomainModel.User;
+import DomainModel.Library;
 import Exception.data.UserNotFoundException;
 
 import java.sql.*;
@@ -43,5 +42,20 @@ public class UserDAO {
             return null; //FIXME: smell. Refactor
         }
 
+    }
+
+    public Library getLibraryManagedByAdmin(String email){
+       try{
+           Connection conn = ConnectionManager.getInstance().getConnection();
+           PreparedStatement stmt = conn.prepareStatement("SELECT name, budget from manage JOIN library on library.name = manage.library where manage.user = (?)");
+           stmt.setString(1, email);
+           ResultSet rs = stmt.executeQuery();
+              if(rs.next()){
+                    return new Library(rs.getInt(2), rs.getString(2));
+              }
+       } catch (SQLException e) {
+           e.printStackTrace();
+       }
+        return null;
     }
 }

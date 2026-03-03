@@ -5,6 +5,16 @@ public class LibraryAdministrator implements User {
     private String name;
     private String surname;
     private String email;
+    private Library libraryManaged;
+
+    public Library getLibraryManaged() {
+        return libraryManaged;
+    }
+
+    public LibraryAdministrator setLibraryManaged(Library libraryManaged) {
+        this.libraryManaged = libraryManaged;
+        return this;
+    }
 
     public String getName() {
         return name;
@@ -31,6 +41,13 @@ public class LibraryAdministrator implements User {
     public LibraryAdministrator setEmail(String email) {
         this.email = email;
         return this;
+    }
+
+    public LibraryAdministrator(String name, String surname, String email, Library libraryManaged) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.libraryManaged = libraryManaged;
     }
 
     public LibraryAdministrator(String name, String surname, String email) {
