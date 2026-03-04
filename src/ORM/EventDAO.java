@@ -61,4 +61,17 @@ public class EventDAO {
         }
         return null;
     }
+
+    public boolean deleteEvent(Event event) {
+        try {
+            Connection conn = ConnectionManager.getInstance().getConnection();
+            PreparedStatement stmt = conn.prepareStatement("DELETE FROM event WHERE id = ?");
+            stmt.setInt(1, event.getId());
+            int rows = stmt.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

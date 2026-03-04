@@ -28,6 +28,13 @@ public class LibrarianController implements ControllerInterface{
             return event;
         } else
             throw new RuntimeException("Write on database failed");
+    }
 
+    public void cancelEvent(Event event){
+        boolean deleted = eventDAO.deleteEvent(event);
+
+        if(!deleted){
+            throw new RuntimeException("Event not found");
+        }
     }
 }
