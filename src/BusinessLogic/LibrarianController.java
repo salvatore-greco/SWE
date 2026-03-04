@@ -37,4 +37,33 @@ public class LibrarianController implements ControllerInterface{
             throw new RuntimeException("Event not found");
         }
     }
+
+    //TODO: valutare se è necessario un metodo per modificare un evento
+
+    public void requestLoan(Loan loan){
+        if(loanDAO.isBookLoaned(loan.getBook().getCode())){
+            throw new RuntimeException("Book is already loaned");
+        }
+
+        boolean created = loanDAO.setRequestedLoan(loan);
+        if(!created){
+            throw new RuntimeException("Loan request failed");
+        }
+    }
+
+    public void grantLoan(Loan loan){
+        LocalDateTime now = LocalTime.now();
+        LocalDateTime endTime = now.plusDays(30); // TODO: valutare come gestire la durata del prestito
+        boolean updated = loanDAO.grantLoan(loan);
+        if(!updated){
+            throw new IllegalStateException("Loan not found");
+        }
+    }
+
+     public void endLoan(Loan loan){
+        boolean updated = loanDAO.endLoan(loan);
+        if(!updated){
+            throw new IllegalStateException("Loan not found");
+        }
+    }
 }

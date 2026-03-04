@@ -25,4 +25,47 @@ public class LoanDAO {
         }
         return false;
     }
+
+    public boolean isBookLoaned(String code) {
+        try {
+            Connection conn = ConnectionManager.getInstance().getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT 1 FROM loan WHERE book = ? AND ended = FALSE");
+            stmt.setString(1, code);
+            return stmt.executeQuery().next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return true;
+        }
+    }
+
+    public boolean grantLoan(Loan loan, LocalDateTime issueDate, LocalDateTime expirationDate) {
+        try {
+            Connection conn = ConnectionManager.getInstance().getConnection();
+            PreparedStatement stmt = conn.prepareStatement("UPDATE loan SET granted = TRUE, issueDate = ?, expirationDate = ? WHERE book = ? AND card = ? AND ended = FALSE");
+            stmt.setBoolean(1, TimeStamp.valueOf(issueDate));
+            stmt.setBoolean(2, TimeStamp.valueOf(expirationDate));
+            stmt.setInt(3, loan.getCard().getId());
+            stmt.setString(4, loan.getBook().getCode());
+            int row = stmt.executeUpdate();
+            return row > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean endLoan(Loan loan) {
+        try {
+            Connection conn = ConnectionManager.getInstance().getConnection();
+            PreparedStatement stmt = conn.prepareStatement("UPDATE loan SET ended = ? WHERE book = ? AND card = ?");
+            stmt.setBoolean(1, true);
+            stmt.setString(2, loan.getBook().getCode());
+            stmt.setInt(3, loan.getCard().getId());
+            int row = stmt.executeUpdate();
+            return row > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
