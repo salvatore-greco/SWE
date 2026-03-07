@@ -10,7 +10,7 @@ import ORM.UserDTO;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class ConcreteAuthService implements AuthService {
-
+    private User loggedUser;
 
     @Override
     public ControllerInterface login(String email, String password) throws UserNotFoundException {
@@ -33,22 +33,29 @@ public class ConcreteAuthService implements AuthService {
                         .setSurname(userDTO.getSurname())
                         .setEmail(userDTO.getEmail())
                         .build();
+                loggedUser = user;
                 factory = new LibraryUserControllerFactory();
                 return factory.createController(user);
             case "librarian":
                 user = new Librarian(userDTO.getName(), userDTO.getEmail(), userDTO.getSurname());
+                loggedUser = user;
                 factory = new LibrarianControllerFactory();
                 return factory.createController(user);
             case "libraryAdministrator":
                 user = new LibraryAdministrator(userDTO.getName(), userDTO.getSurname(), userDTO.getEmail());
+                loggedUser = user;
                 factory = new LibraryAdministratorControllerFactory();
                 return factory.createController(user);
         }
+    }//TODO: adjust the method to be more readable
+
+    public boolean isLogged() {
+        return loggedUser != null;
     }
 
     @Override
     public void logout() {
-        //TODO: implement
+        loggedUser = null;
     }
 
     @Override
