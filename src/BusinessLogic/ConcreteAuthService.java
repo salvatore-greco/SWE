@@ -59,12 +59,30 @@ public class ConcreteAuthService implements AuthService {
     }
 
     @Override
-    public void resetPassword() {
-        //TODO: implement
+    public void resetPassword(String email, String newPassword) {
+        UserDAO userDAO = new UserDAO();
+        String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+
+        boolean updated = userDAO.updatePassword(email, hashedPassword);
+        if(!updated){
+            throw new RuntimeException("Password reset failed");
+        }
     }
 
     @Override
-    public boolean register(String email, String password) {
-        return false; //TODO: implement
+    public boolean register(String name, String surname, String email, String password) {
+
+        UserDAO userDAO = new UserDAO();
+        if(userDAO.getUserByEmail(email) != null){
+            throw new RuntimeException("User already exists");
+        }
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        UserDTO userDTO = new UserDTO(email, name, surname, hashedPassword, "libraryUser");
+
+        boolean created = userDAO.insertUser(userDTO);
+        if(!created){
+            throw new RuntimeException("User registration failed");
+        }
+        return created;
     }
 }

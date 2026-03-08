@@ -58,4 +58,36 @@ public class UserDAO {
        }
         return null;
     }
+
+    public boolean updatePassword(String email, String newHashedPassword){
+        try {
+            Connection conn = ConnectionManager.getInstance().getConnection();
+            PreparedStatement stmt = conn.prepareStatement("UPDATE user SET hashedPassword = ? WHERE email = ?");
+            stmt.setString(1, newHashedPassword);
+            stmt.setString(2, email);
+            int row = stmt.executeUpdate();
+            return row > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean insertUser(UserDTO userDTO){
+        try {
+            Connection conn = ConnectionManager.getInstance().getConnection();
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO user (email, name, surname, hashedPassword, role) values (?, ?, ?, ?, ?)");
+            stmt.setString(1, userDTO.getEmail());
+            stmt.setString(2, userDTO.getName());
+            stmt.setString(3, userDTO.getSurname());
+            stmt.setString(4, userDTO.getHashedPassword());
+            stmt.setString(5, userDTO.getRole());
+
+            int row = stmt.executeUpdate();
+            return row > 0
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
