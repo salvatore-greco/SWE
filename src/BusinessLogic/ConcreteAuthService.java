@@ -23,7 +23,7 @@ public class ConcreteAuthService implements AuthService {
         }
 
         switch (userDTO.getRole()) {
-            case "libraryUser":
+            case role.libraryUser:
                 loggedUser = new LibraryUser.LibraryUserBuilder()
                         .setName(userDTO.getName())
                         .setSurname(userDTO.getSurname())
@@ -31,11 +31,11 @@ public class ConcreteAuthService implements AuthService {
                         .build();
                 factory = new LibraryUserControllerFactory();
                 break;
-            case "librarian":
+            case role.librarian:
                 loggedUser = new Librarian(userDTO.getName(), userDTO.getEmail(), userDTO.getSurname());
                 factory = new LibrarianControllerFactory();
                 break;
-            case "libraryAdministrator":
+            case role.libraryAdministrator:
                 loggedUser = new LibraryAdministrator(userDTO.getName(), userDTO.getSurname(), userDTO.getEmail());
                 factory = new LibraryAdministratorControllerFactory();
                 break;
@@ -73,7 +73,7 @@ public class ConcreteAuthService implements AuthService {
             throw new RuntimeException("User already exists");
         }
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        UserDTO userDTO = new UserDTO(email, name, surname, "libraryUser", hashedPassword);
+        UserDTO userDTO = new UserDTO(email, name, surname, role.libraryUser, hashedPassword);
 
         boolean created = userDAO.insertUser(userDTO);
         if (!created) {

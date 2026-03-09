@@ -1,5 +1,6 @@
 package ORM;
 
+import BusinessLogic.role;
 import DomainModel.Library;
 import Exception.data.UserNotFoundException;
 
@@ -27,7 +28,7 @@ public class UserDAO {
                         rs.getString(1),
                         rs.getString(2),
                         rs.getString(3),
-                        rs.getString(4),
+                        role.valueOf(rs.getString(4)),
                         rs.getString(5)
                 );
             }
@@ -76,12 +77,13 @@ public class UserDAO {
     public boolean insertUser(UserDTO userDTO){
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO user (email, name, surname, hashedPassword, role) values (?, ?, ?, ?, ?)");
+            //forzo il cast del ruolo nella enum postgre
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO user (email, name, surname, hashedPassword, role) values (?, ?, ?, ?, ?::role)");
             stmt.setString(1, userDTO.getEmail());
             stmt.setString(2, userDTO.getName());
             stmt.setString(3, userDTO.getSurname());
             stmt.setString(4, userDTO.getHashedPassword());
-            stmt.setString(5, userDTO.getRole());
+            stmt.setString(5, userDTO.getRole().name());
 
             int row = stmt.executeUpdate();
             return row > 0;

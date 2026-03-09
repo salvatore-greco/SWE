@@ -1,18 +1,16 @@
 package ORM;
+import BusinessLogic.role;
 
-//enum role{
-//    librarian, libraryUser, libraryAdministrator
-//}
 
 public class UserDTO {
     private String email;
     private String name;
     private String surname;
-    private String role; //In lettura posso trattare un enum postgre come una stringa
+    private role role;
     private String hashedPassword;
 
     // sembra un telescopic constructor ma non so se è appropriato usare un builder
-    public UserDTO(String email, String name, String surname, String role, String hashedPassword) {
+    public UserDTO(String email, String name, String surname, role role, String hashedPassword) {
         this.email = email;
         this.name = name;
         this.surname = surname;
@@ -32,7 +30,7 @@ public class UserDTO {
         return surname;
     }
 
-    public String getRole() {
+    public role getRole() {
         return role;
     }
 
