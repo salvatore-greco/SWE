@@ -19,14 +19,14 @@ public class ConcreteAuthService implements AuthService {
         ControllerFactory factory;
         User user;
 
-        if (!BCrypt.checkpw(password, userDTO.getHashedPassword())){
+        if (!BCrypt.checkpw(password, userDTO.getHashedPassword())) {
             throw new UserNotFoundException("Wrong username or password");
         }
 
         switch (userDTO.getRole()) {
             default:
                 //FIXME: creare l'eccezione corretta e mettere un messaggio decente
-                throw new RuntimeException("broski non esiste il ruolo "+userDTO.getRole());
+                throw new RuntimeException("broski non esiste il ruolo " + userDTO.getRole());
             case "libraryUser":
                 user = new LibraryUser.LibraryUserBuilder()
                         .setName(userDTO.getName())
@@ -64,23 +64,22 @@ public class ConcreteAuthService implements AuthService {
         String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
 
         boolean updated = userDAO.updatePassword(email, hashedPassword);
-        if(!updated){
+        if (!updated) {
             throw new RuntimeException("Password reset failed");
         }
     }
 
     @Override
     public boolean register(String name, String surname, String email, String password) {
-
         UserDAO userDAO = new UserDAO();
-        if(userDAO.getUserByEmail(email) != null){
+        if (userDAO.getUserByEmail(email) != null) {
             throw new RuntimeException("User already exists");
         }
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        UserDTO userDTO = new UserDTO(email, name, surname, hashedPassword, "libraryUser");
+        UserDTO userDTO = new UserDTO(email, name, surname,"libraryUser", hashedPassword);
 
         boolean created = userDAO.insertUser(userDTO);
-        if(!created){
+        if (!created) {
             throw new RuntimeException("User registration failed");
         }
         return created;
