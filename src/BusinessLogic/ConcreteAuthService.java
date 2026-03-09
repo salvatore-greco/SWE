@@ -67,6 +67,7 @@ public class ConcreteAuthService implements AuthService {
     }
 
     @Override
+    //TODO: handle checked exception
     public boolean register(String name, String surname, String email, String password) {
         UserDAO userDAO = new UserDAO();
         if (userDAO.getUserByEmail(email) != null) {

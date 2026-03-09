@@ -12,7 +12,6 @@ public class Book {
         private boolean onLoan = false;
         private String code; //book code to identify multiple copies
 
-        // TODO: see how to validate input data(after dao's and db's implementation)
         public BookBuilder setISBN(String ISBN) {
             this.ISBN = ISBN;
             return this;
@@ -47,8 +46,8 @@ public class Book {
     }
     private String ISBN;
     private String title;
-    private ArrayList<String> authors;
-    private boolean onLoan;
+    private ArrayList<String> authors; //FIXME: togliere o aggiornare db
+    private boolean onLoan; //FIXME: inutilizzato dalla business logic, togliere o utilizzarlo
     private String code; //book code to identify multiple copies
 
     public boolean isOnLoan() {

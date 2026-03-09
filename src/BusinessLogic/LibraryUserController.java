@@ -11,7 +11,7 @@ public class LibraryUserController implements ControllerInterface {
     public LibraryUser user;
 
     public LibraryUserController(User user) {
-        this.user = (LibraryUser) user; //FIXME: this smell
+        this.user = (LibraryUser) user;
     }
 
     public Loan requestLoan(Book requestedBook) {

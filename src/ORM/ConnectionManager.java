@@ -37,7 +37,7 @@ public class ConnectionManager {
         }
         return connection;
     }
-    //TODO: handle java dependency in a unified manner
+
     private Properties getDBProprieties(){
         Dotenv dotenv = Dotenv.load();
         Properties props = new Properties();

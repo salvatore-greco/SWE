@@ -9,7 +9,6 @@ public class Card {
     private LocalDate issueDate;
     private LocalDate expirationDate;
 
-    //TODO: verify if every getter and setter is needed
 
     public int getId() {
         return id;

@@ -40,7 +40,7 @@ public class UserDAO {
         }
         catch (SQLException e){
             e.printStackTrace();
-            return null; //FIXME: smell. Refactor
+            return null;
         }
 
     }

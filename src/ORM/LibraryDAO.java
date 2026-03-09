@@ -23,7 +23,7 @@ public class LibraryDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null; //fixme: smell. Refactor
+        return null;
     }
 
     public boolean increaseBudgetOfLibrary(String name, int budgetIncreased){
