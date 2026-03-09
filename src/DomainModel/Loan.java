@@ -1,14 +1,14 @@
 package DomainModel;
 
 import java.time.DateTimeException;
-import java.time.LocalTime;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Loan {
     private Card card;
     private Book book;
-    private LocalTime issueDate = null;
-    private LocalTime expirationDate = null;
+    private LocalDate issueDate = null;
+    private LocalDate expirationDate = null;
     private boolean granted; // se vero l'utente ha il libro (fisicamente), falso ha fatto solo richiesta
     private boolean ended; // se vero l'utente ha reso il libro alla biblioteca
 
@@ -29,7 +29,7 @@ public class Loan {
      * @param expirationDate
      * @throws DateTimeException when issueDate is after expirationDate
      */
-    public Loan(Card card, Book book, LocalTime issueDate, LocalTime expirationDate, boolean granted, boolean ended) {
+    public Loan(Card card, Book book, LocalDate issueDate, LocalDate expirationDate, boolean granted, boolean ended) {
         this(card,book,granted,ended);
         if(issueDate.isAfter(expirationDate)){
             throw new DateTimeException("issueDate cannot be after expiration date");
@@ -54,19 +54,19 @@ public class Loan {
         this.book = book;
     }
 
-    public LocalTime getIssueDate() {
+    public LocalDate getIssueDate() {
         return issueDate;
     }
 
-    public void setIssueDate(LocalTime issueDate) {
+    public void setIssueDate(LocalDate issueDate) {
         this.issueDate = issueDate;
     }
 
-    public LocalTime getExpirationDate() {
+    public LocalDate getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(LocalTime expirationDate) {
+    public void setExpirationDate(LocalDate expirationDate) {
         this.expirationDate = expirationDate;
     }
 
