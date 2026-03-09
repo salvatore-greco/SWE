@@ -17,37 +17,34 @@ public class ConcreteAuthService implements AuthService {
         UserDAO userDAO = new UserDAO();
         UserDTO userDTO = userDAO.getUserByEmail(email);
         ControllerFactory factory;
-        User user;
 
         if (!BCrypt.checkpw(password, userDTO.getHashedPassword())) {
             throw new UserNotFoundException("Wrong username or password");
         }
 
         switch (userDTO.getRole()) {
-            default:
-                //FIXME: creare l'eccezione corretta e mettere un messaggio decente
-                throw new RuntimeException("broski non esiste il ruolo " + userDTO.getRole());
             case "libraryUser":
-                user = new LibraryUser.LibraryUserBuilder()
+                loggedUser = new LibraryUser.LibraryUserBuilder()
                         .setName(userDTO.getName())
                         .setSurname(userDTO.getSurname())
                         .setEmail(userDTO.getEmail())
                         .build();
-                loggedUser = user;
                 factory = new LibraryUserControllerFactory();
-                return factory.createController(user);
+                break;
             case "librarian":
-                user = new Librarian(userDTO.getName(), userDTO.getEmail(), userDTO.getSurname());
-                loggedUser = user;
+                loggedUser = new Librarian(userDTO.getName(), userDTO.getEmail(), userDTO.getSurname());
                 factory = new LibrarianControllerFactory();
-                return factory.createController(user);
+                break;
             case "libraryAdministrator":
-                user = new LibraryAdministrator(userDTO.getName(), userDTO.getSurname(), userDTO.getEmail());
-                loggedUser = user;
+                loggedUser = new LibraryAdministrator(userDTO.getName(), userDTO.getSurname(), userDTO.getEmail());
                 factory = new LibraryAdministratorControllerFactory();
-                return factory.createController(user);
+                break;
+            default:
+                //FIXME: creare l'eccezione corretta e mettere un messaggio decente
+                throw new RuntimeException("broski non esiste il ruolo " + userDTO.getRole());
         }
-    }//TODO: adjust the method to be more readable
+        return factory.createController(loggedUser);
+    }
 
     public boolean isLogged() {
         return loggedUser != null;
@@ -76,7 +73,7 @@ public class ConcreteAuthService implements AuthService {
             throw new RuntimeException("User already exists");
         }
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        UserDTO userDTO = new UserDTO(email, name, surname,"libraryUser", hashedPassword);
+        UserDTO userDTO = new UserDTO(email, name, surname, "libraryUser", hashedPassword);
 
         boolean created = userDAO.insertUser(userDTO);
         if (!created) {

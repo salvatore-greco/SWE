@@ -84,7 +84,7 @@ public class UserDAO {
             stmt.setString(5, userDTO.getRole());
 
             int row = stmt.executeUpdate();
-            return row > 0
+            return row > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
