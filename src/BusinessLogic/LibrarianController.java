@@ -3,17 +3,20 @@ package BusinessLogic;
 import DomainModel.*;
 import ORM.CardDAO;
 import ORM.EventDAO;
+import ORM.LoanDAO;
 
-public class LibrarianController implements ControllerInterface{
-    private Librarian librarian;
-    private CardDAO cardDAO = new CardDAO();
-    private EventDAO eventDAO = new EventDAO();
+import java.time.LocalDate;
 
-    public LibrarianController(User user){
+public class LibrarianController implements ControllerInterface {
+    private Librarian user;
+    private static final int LOAN_DURATION = 30;
+
+    public LibrarianController(User user) {
         this.user = (Librarian) user;
     }
 
-    public Card createCard(LibraryUser user){
+    public Card createCard(LibraryUser user) {
+        CardDAO cardDAO = new CardDAO();
         Integer cardId = cardDAO.setRequestedCard(user);
         if (cardId != null)
             return new Card(cardId);
@@ -21,7 +24,8 @@ public class LibrarianController implements ControllerInterface{
             throw new RuntimeException("Write on database failed");
     }
 
-    public Event createEvent(Event event){
+    public Event createEvent(Event event) {
+        EventDAO eventDAO = new EventDAO();
         Integer id = eventDAO.setEvent(event);
         if (id != null) {
             event.setId(id);
@@ -30,39 +34,43 @@ public class LibrarianController implements ControllerInterface{
             throw new RuntimeException("Write on database failed");
     }
 
-    public void cancelEvent(Event event){
+    public void cancelEvent(Event event) {
+        EventDAO eventDAO = new EventDAO();
         boolean deleted = eventDAO.deleteEvent(event);
 
-        if(!deleted){
+        if (!deleted) {
             throw new RuntimeException("Event not found");
         }
     }
 
     //TODO: valutare se è necessario un metodo per modificare un evento
 
-    public void requestLoan(Loan loan){
-        if(loanDAO.isBookLoaned(loan.getBook().getCode())){
+    public void requestLoan(Loan loan) {
+        LoanDAO loanDAO = new LoanDAO();
+        if (loanDAO.isBookLoaned(loan.getBook().getCode())) {
             throw new RuntimeException("Book is already loaned");
         }
 
         boolean created = loanDAO.setRequestedLoan(loan);
-        if(!created){
+        if (!created) {
             throw new RuntimeException("Loan request failed");
         }
     }
 
-    public void grantLoan(Loan loan){
-        LocalDateTime now = LocalTime.now();
-        LocalDateTime endTime = now.plusDays(30); // TODO: valutare come gestire la durata del prestito
-        boolean updated = loanDAO.grantLoan(loan);
-        if(!updated){
+    public void grantLoan(Loan loan) {
+        LoanDAO loanDAO = new LoanDAO();
+        LocalDate now = LocalDate.now();
+        LocalDate endTime = now.plusDays(LOAN_DURATION);
+        boolean updated = loanDAO.grantLoan(loan, now, endTime);
+        if (!updated) {
             throw new IllegalStateException("Loan not found");
         }
     }
 
-     public void endLoan(Loan loan){
+    public void endLoan(Loan loan) {
+        LoanDAO loanDAO = new LoanDAO();
         boolean updated = loanDAO.endLoan(loan);
-        if(!updated){
+        if (!updated) {
             throw new IllegalStateException("Loan not found");
         }
     }

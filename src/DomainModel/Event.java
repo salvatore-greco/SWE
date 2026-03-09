@@ -127,6 +127,10 @@ public class Event {
         return participants;
     }
 
+    public Event setId(Integer id) {
+        this.id = id;
+        return this;
+    }
     public void addParticipant(LibraryUser participant){
         if(participants.contains(participant))
             throw new IllegalStateException("User already registered for the event");
