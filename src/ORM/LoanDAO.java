@@ -2,9 +2,8 @@ package ORM;
 
 import DomainModel.Loan;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDate;
 
 public class LoanDAO {
     public LoanDAO(){}
@@ -38,12 +37,12 @@ public class LoanDAO {
         }
     }
 
-    public boolean grantLoan(Loan loan, LocalDateTime issueDate, LocalDateTime expirationDate) {
+    public boolean grantLoan(Loan loan, LocalDate issueDate, LocalDate expirationDate) {
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
             PreparedStatement stmt = conn.prepareStatement("UPDATE loan SET granted = TRUE, issueDate = ?, expirationDate = ? WHERE book = ? AND card = ? AND ended = FALSE");
-            stmt.setBoolean(1, TimeStamp.valueOf(issueDate));
-            stmt.setBoolean(2, TimeStamp.valueOf(expirationDate));
+            stmt.setDate(1, Date.valueOf(issueDate));
+            stmt.setDate(2, Date.valueOf(expirationDate));
             stmt.setInt(3, loan.getCard().getId());
             stmt.setString(4, loan.getBook().getCode());
             int row = stmt.executeUpdate();
