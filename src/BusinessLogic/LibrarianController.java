@@ -17,11 +17,19 @@ public class LibrarianController implements ControllerInterface {
 
     public Card createCard(LibraryUser user) {
         CardDAO cardDAO = new CardDAO();
-        Integer cardId = cardDAO.setRequestedCard(user);
-        if (cardId != null)
-            return new Card(cardId);
+        Card card;
+
+        // User ha già fatto richiesta della tessera
+        if (user.getCard().getIssueDate() != null) {
+            card = cardDAO.createCardFromRequest(user);
+        }
         else
+            card = cardDAO.createCard(user);
+
+        if (card == null)
             throw new RuntimeException("Write on database failed");
+
+        return card;
     }
 
     public Event createEvent(Event event) {
