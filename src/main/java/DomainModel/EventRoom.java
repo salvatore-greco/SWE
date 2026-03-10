@@ -3,6 +3,8 @@ package DomainModel;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.time.Duration;
+import java.util.Collections;
+import java.util.List;
 
 public class EventRoom extends Room{
 
@@ -19,8 +21,8 @@ public class EventRoom extends Room{
     }
 
 
-    public ArrayList<Event> getScheduledEvents() {
-        return scheduledEvents;
+    public List<Event> getScheduledEvents() {
+        return Collections.unmodifiableList(scheduledEvents);
     }
 
     @Override

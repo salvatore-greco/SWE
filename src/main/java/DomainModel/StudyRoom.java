@@ -3,6 +3,8 @@ package DomainModel;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class StudyRoom extends Room{
     private ArrayList<LibraryUser> reservedSeats;
@@ -15,6 +17,10 @@ public class StudyRoom extends Room{
     public StudyRoom(int number, int seats, ArrayList<LibraryUser> reservedSeats){
         super(number,seats);
         this.reservedSeats = reservedSeats;
+    }
+
+    public List<LibraryUser> getReservedSeats() {
+        return Collections.unmodifiableList(reservedSeats);
     }
 
     @Override
