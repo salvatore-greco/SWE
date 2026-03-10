@@ -9,7 +9,6 @@ public class Book {
         private String ISBN;
         private String title;
         private ArrayList<String> authors;
-        private boolean onLoan = false;
         private String code; //book code to identify multiple copies
 
         public BookBuilder setISBN(String ISBN) {
@@ -24,10 +23,7 @@ public class Book {
             this.authors = authors;
             return this;
         }
-        public BookBuilder setOnLoan(boolean onLoan){
-            this.onLoan = onLoan;
-            return this;
-        }
+
         public BookBuilder setCode(String code){
             this.code = code;
             return this;
@@ -40,25 +36,17 @@ public class Book {
     private Book(BookBuilder builder){
         this.ISBN = builder.ISBN;
         this.title = builder.title;
-        this.onLoan = builder.onLoan;
         this.code = builder.code;
         this.authors = builder.authors;
     }
     private String ISBN;
     private String title;
     private ArrayList<String> authors; //FIXME: togliere o aggiornare db
-    private boolean onLoan; //FIXME: inutilizzato dalla business logic, togliere o utilizzarlo
     private String code; //book code to identify multiple copies
 
-    public boolean isOnLoan() {
-        return onLoan;
-    }
-
     public void setAsLoaned() {
-        this.onLoan = true;
     }
     public void setAsReturned() {
-        this.onLoan = false;
     }
 
     public String getISBN() {
