@@ -7,9 +7,14 @@ import java.util.ArrayList;
 public class StudyRoom extends Room{
     private ArrayList<LibraryUser> reservedSeats;
 
-    public StudyRoom(int number, short seats) {
+    public StudyRoom(int number, int seats) {
         super(number, seats);
         reservedSeats = new ArrayList<>();
+    }
+
+    public StudyRoom(int number, int seats, ArrayList<LibraryUser> reservedSeats){
+        super(number,seats);
+        this.reservedSeats = reservedSeats;
     }
 
     @Override

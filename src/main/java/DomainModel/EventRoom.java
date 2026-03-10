@@ -8,12 +8,12 @@ public class EventRoom extends Room{
 
     private ArrayList<Event> scheduledEvents;
 
-    public EventRoom(int number, short seats) {
+    public EventRoom(int number, int seats) {
         super(number, seats);
         this.scheduledEvents = new ArrayList<>();
     }
 
-    public EventRoom(int number, short seats, ArrayList<Event> scheduledEvents) {
+    public EventRoom(int number, int seats, ArrayList<Event> scheduledEvents) {
         super(number, seats);
         this.scheduledEvents = scheduledEvents;
     }
