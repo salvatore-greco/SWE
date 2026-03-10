@@ -14,26 +14,30 @@ public class EventDAO {
     public EventDAO() {
     }
 
-    public void addNewParticipant(Event event, LibraryUser user) {
+    public boolean addNewParticipant(Event event, LibraryUser user) {
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO partecipation (event, user) values (?, ?)");
             stmt.setInt(1, event.getId());
             stmt.setString(2, user.getEmail());
-            stmt.executeUpdate();
+            int row = stmt.executeUpdate();
+            return row > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
-    public void removeParticipant(Event event, LibraryUser user) {
+    public boolean removeParticipant(Event event, LibraryUser user) {
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM partecipation WHERE event = ? AND user = ?");
             stmt.setInt(1, event.getId());
             stmt.setString(2, user.getEmail());
-            stmt.executeUpdate();
+            int row = stmt.executeUpdate();
+            return row > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
     }
 

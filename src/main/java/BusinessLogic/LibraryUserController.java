@@ -4,6 +4,7 @@ import DomainModel.*;
 import ORM.CardDAO;
 import ORM.EventDAO;
 import ORM.LoanDAO;
+import ORM.RoomDAO;
 
 import java.time.LocalDate;
 
@@ -41,23 +42,34 @@ public class LibraryUserController implements ControllerInterface {
 
     public void eventBooking(Event event){
         EventDAO eventDAO = new EventDAO();
+        if (!eventDAO.addNewParticipant(event, this.user)){
+            throw new RuntimeException("Write on database failed");
+        }
         event.addParticipant(this.user);
-        eventDAO.addNewParticipant(event, this.user);
     }
 
-    //TODO: persistenza nel database
     public void reserveSeatStudyRoom(StudyRoom room){
+        RoomDAO roomDAO = new RoomDAO();
+        if (!roomDAO.addSeatReservationStudyRoom(room, this.user)) {
+            throw new RuntimeException("Write on database failed");
+        }
         room.reserveSeat(this.user);
     }
 
     public void leaveSeatStudyRoom(StudyRoom room){
+        RoomDAO roomDAO = new RoomDAO();
+        if (!roomDAO.removeSeatReservationStudyRoom(room, this.user)) {
+            throw new RuntimeException("Write on database failed");
+        }
         room.leaveSeat(this.user);
     }
 
     public void cancelEventBooking(Event event){
         EventDAO eventDAO = new EventDAO();
+        if(!eventDAO.removeParticipant(event, this.user)){
+            throw new RuntimeException("Write on database failed");
+        }
         event.removeParticipant(this.user);
-        eventDAO.removeParticipant(event, this.user);
     }
 
 }
