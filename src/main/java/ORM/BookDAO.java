@@ -67,7 +67,6 @@ public class BookDAO {
         }
         return books;
     }
-    //TODO: valutare se aggiungere altri metodi in generale (tipo update o delete anche se potrebbero non essere necessari)
 
     //FIXME: è necessario rimuoverlo dal db oppure basta settare un flag in tabella?
     public boolean deleteBook(String code) {
@@ -75,6 +74,23 @@ public class BookDAO {
             Connection conn = ConnectionManager.getInstance().getConnection();
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM book WHERE code = ?");
             stmt.setString(1, code);
+            int row = stmt.executeUpdate();
+            return row > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean updateBook(Book book) {
+        try {
+            Connection conn = ConnectionManager.getInstance().getConnection();
+            PreparedStatement stmt = conn.prepareStatement("UPDATE book SET isbn = ?, title = ? WHERE code = ?");
+
+            stmt.setString(1, book.getISBN());
+            stmt.setString(2, book.getTitle());
+            stmt.setString(3, book.getCode());
+
             int row = stmt.executeUpdate();
             return row > 0;
         } catch (SQLException e) {

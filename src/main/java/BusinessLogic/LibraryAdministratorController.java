@@ -33,4 +33,9 @@ public class LibraryAdministratorController implements ControllerInterface {
         BookDAO bookDAO = new BookDAO();
         return bookDAO.deleteBook(book.getCode());
     }
+
+    public boolean updateBookInCatalogue(Book updatedBook) {
+        BookDAO bookDAO = new BookDAO();
+        return bookDAO.updateBook(updatedBook);
+    }
 }
