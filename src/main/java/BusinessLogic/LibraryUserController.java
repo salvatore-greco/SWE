@@ -45,6 +45,7 @@ public class LibraryUserController implements ControllerInterface {
         eventDAO.addNewParticipant(event, this.user);
     }
 
+    //TODO: persistenza nel database
     public void reserveSeatStudyRoom(StudyRoom room){
         room.reserveSeat(this.user);
     }
