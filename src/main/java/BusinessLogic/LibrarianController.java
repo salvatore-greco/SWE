@@ -51,7 +51,13 @@ public class LibrarianController implements ControllerInterface {
         }
     }
 
-    //TODO: valutare se è necessario un metodo per modificare un evento
+    public void modifyEvent(Event event) {
+        EventDAO eventDAO = new EventDAO();
+        boolean edited = eventDAO.editEvent(event);
+        if (!edited) {
+            throw new RuntimeException("Event not found");
+        }
+    }
 
     public void requestLoan(Loan loan) {
         LoanDAO loanDAO = new LoanDAO();

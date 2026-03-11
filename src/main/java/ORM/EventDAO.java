@@ -78,4 +78,24 @@ public class EventDAO {
             return false;
         }
     }
+
+    public boolean editEvent(Event event) {
+        try {
+            Connection conn = ConnectionManager.getInstance().getConnection();
+            PreparedStatement stmt = conn.prepareStatement("UPDATE event SET name = ?, description = ?, date = ?, duration = ?, organizer = ?, room = ? WHERE id = ?");
+            stmt.setString(1, event.getName());
+            stmt.setString(2, event.getDescription());
+            stmt.setTimestamp(3, java.sql.Timestamp.valueOf(event.getStartDate()));
+            stmt.setString(4, event.getEventDuration().toString());
+            stmt.setString(5, event.getOrganizer().getEmail());
+            stmt.setInt(6, event.getPlace().getNumber());
+            stmt.setInt(7, event.getId());
+
+            int rows = stmt.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
