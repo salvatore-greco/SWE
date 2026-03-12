@@ -49,7 +49,9 @@ create table manage(
 
 create table room(
 number smallint primary key,
-seats smallint
+seats smallint,
+is_study_room boolean,
+unique(number,is_study_room)
 );
 
 create table "event"(
@@ -59,12 +61,16 @@ description text,
 date timestamp,
 duration interval,
 organizer varchar(254) constraint user_fk_event references "user" not null,
-room smallint constraint room_fk references room not null
+room smallint, --constraint room_fk references room not null,
+room_type boolean constraint is_study_room_check check (room_type = false),
+foreign key (room, room_type) references room(number, is_study_room)
 );
 
 create table reservation_study_room(
 "user" varchar(254) constraint user_fk_reservation references "user" primary key,
-room smallint constraint room_fk_reservation references room not null
+room smallint, --constraint room_fk_reservation references room not null,
+room_type boolean constraint is_study_room_check check (room_type = true),
+foreign key (room, room_type) references room(number, is_study_room)
 );
 
 create table partecipation(
