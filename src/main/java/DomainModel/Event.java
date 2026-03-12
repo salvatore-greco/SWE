@@ -75,8 +75,8 @@ public class Event {
             if (organizer == null)
                 throw new IllegalStateException("Organizer required");
 
-            if (!place.isAvailable(startDate, eventDuration))
-                throw new IllegalStateException("Room not available");
+//            if (!place.isAvailable(startDate, eventDuration))
+//                throw new IllegalStateException("Room not available");
 
             return new Event(this);
         }
