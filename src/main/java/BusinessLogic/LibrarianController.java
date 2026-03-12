@@ -1,11 +1,11 @@
 package BusinessLogic;
 
 import DomainModel.*;
-import ORM.CardDAO;
-import ORM.EventDAO;
-import ORM.LoanDAO;
+import Exception.data.UserNotFoundException;
+import ORM.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class LibrarianController implements ControllerInterface {
     private Librarian user;
@@ -22,8 +22,7 @@ public class LibrarianController implements ControllerInterface {
         // User ha già fatto richiesta della tessera
         if (user.getCard().getIssueDate() != null) {
             card = cardDAO.createCardFromRequest(user);
-        }
-        else
+        } else
             card = cardDAO.createCard(user);
 
         if (card == null)
@@ -32,14 +31,49 @@ public class LibrarianController implements ControllerInterface {
         return card;
     }
 
-    public Event createEvent(Event event) {
+    public Event createEvent(EventDTO eventDTO) {
+        UserDAO userDAO = new UserDAO();
+        RoomDAO roomDAO = new RoomDAO();
         EventDAO eventDAO = new EventDAO();
-        Integer id = eventDAO.setEvent(event);
-        if (id != null) {
-            event.setId(id);
-            return event;
-        } else
-            throw new RuntimeException("Write on database failed");
+        UserDTO organizer;
+        if (eventDTO.getStartDate().isBefore(LocalDateTime.now()))
+            throw new IllegalArgumentException("Event start date cannot be in the past");
+        if (eventDTO.getEventDuration().isNegative() || eventDTO.getEventDuration().isZero())
+            throw new IllegalArgumentException("Event duration must be positive");
+        if (eventDTO.getStartDate().plus(eventDTO.getEventDuration()).isAfter(eventDTO.getStartDate().plusDays(1)))
+            throw new IllegalArgumentException("Event cannot finish the day after (library probably close earlier)");
+        // questi check possono essere delegati alla vista
+        // ad esempio, con django potremmo usare ModelForm e mostrarlo con CreateView
+        // li metto per completezza, ma in base a come viene costruita la ui possono essere tolti
+        try {
+            organizer = userDAO.getUserByEmail(eventDTO.getOrganizer());
+        } catch (UserNotFoundException e) {
+            throw new IllegalArgumentException("Organizer must exist");
+        }
+        Room room = roomDAO.getRoomByNumber(eventDTO.getPlace());
+        if (room == null){
+            throw new IllegalArgumentException("Room must exist");
+        }
+        if (room instanceof StudyRoom){
+            throw new IllegalArgumentException("Room must be an Event Room");
+        }
+
+        Event eventToBeCreated = new Event.EventBuilder()
+                .setName(eventDTO.getName())
+                .setDescription(eventDTO.getDescription())
+                .setEventDuration(eventDTO.getEventDuration())
+                .setStartDate(eventDTO.getStartDate())
+                .setOrganizer(new Librarian(organizer.getName(), organizer.getEmail(), organizer.getSurname()))
+                .setPlace((EventRoom) room).build();
+
+        Integer id = eventDAO.setEvent(eventToBeCreated);
+        if (id!= null){
+            eventToBeCreated.setId(id);
+            return eventToBeCreated;
+        }
+        else {
+            throw new RuntimeException("Write on db failed");
+        }
     }
 
     public void cancelEvent(Event event) {
@@ -59,6 +93,7 @@ public class LibrarianController implements ControllerInterface {
         }
     }
 
+    //FIXME: questo un bibliotecario non lo può fare!!!
     public void requestLoan(Loan loan) {
         LoanDAO loanDAO = new LoanDAO();
         if (loanDAO.isBookLoaned(loan.getBook().getCode())) {
