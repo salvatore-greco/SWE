@@ -66,6 +66,9 @@ public class LibrarianController implements ControllerInterface {
                 .setOrganizer(new Librarian(organizer.getName(), organizer.getEmail(), organizer.getSurname()))
                 .setPlace((EventRoom) room).build();
 
+        ((EventRoom) room).scheduleEvent(eventToBeCreated);
+
+        //se arrivo qua significa che la stanza è disponibile, posso scrivere l'evento nel db
         Integer id = eventDAO.setEvent(eventToBeCreated);
         if (id!= null){
             eventToBeCreated.setId(id);

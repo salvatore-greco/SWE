@@ -92,7 +92,7 @@ public class Event {
         this.organizer = builder.organizer;
         this.participants = new ArrayList<>();
 
-        place.scheduleEvent(this);
+//        place.scheduleEvent(this);
     }
 
     public String getDescription() {
