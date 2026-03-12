@@ -21,7 +21,7 @@ public class Event {
         private Duration eventDuration;
         private String name;
         private String description;
-        private EventRoom place;
+        private EventRoom place = null;
         private Librarian organizer;
 
         public EventBuilder setStartDate(LocalDateTime startDate) {
@@ -69,8 +69,9 @@ public class Event {
             if (name == null || name.isBlank())
                 throw new IllegalStateException("Name required");
 
-            if (place == null)
-                throw new IllegalStateException("Room required");
+            //questo va settato obbligatoriamente dopo aver creato la stanza
+            /*if (place == null)
+                throw new IllegalStateException("Room required");*/
 
             if (organizer == null)
                 throw new IllegalStateException("Organizer required");
@@ -127,6 +128,10 @@ public class Event {
         return participants;
     }
 
+    public void setPlace(EventRoom place) {
+        this.place = place;
+    }
+
     public Event setId(Integer id) {
         this.id = id;
         return this;
@@ -135,7 +140,7 @@ public class Event {
         if(participants.contains(participant))
             throw new IllegalStateException("User already registered for the event");
 
-        if(participants.size() < place.getSeats())
+        if(getAvailableSeats() > 0)
             participants.add(participant);
             //System.out.println("There are " + place.getAvailableSeats() + " seats available");
         else
@@ -155,6 +160,9 @@ public class Event {
     }
 
     public int getAvailableSeats(){
+        if (place == null) {
+            throw new IllegalStateException("place is uninitialized");
+        }
         return place.getSeats() - participants.size();
     }
 }
