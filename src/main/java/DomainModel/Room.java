@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public abstract class Room {
     private int number;
-    private int seats; //TODO: controlla se va bene FAI COMBACIARE COL DB
+    private int seats;
 
     abstract public boolean isAvailable(LocalDateTime start, Duration duration);
 

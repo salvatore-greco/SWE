@@ -127,6 +127,4 @@ public class RoomDAO {
         return null;
     }
 
-    //TODO: può essere utile ai fini della relazione fare un metodo per prendere il numero di prenotazioni di una stanza
-    // da usare in un ipotetica vista
 }
