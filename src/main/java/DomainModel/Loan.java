@@ -15,9 +15,9 @@ public class Loan {
     public Loan(Card card, Book book, boolean granted, boolean ended) {
         Objects.requireNonNull(card, "Card should not be null");
         Objects.requireNonNull(book, "Book should not be null");
+        if(granted == false && ended == true)
+            throw new IllegalArgumentException("Loan cannot be ended but not granted");
         this.granted = granted;
-        if(ended == true && this.granted == false)
-            throw new IllegalArgumentException("Load cannot be ended but not granted");
         this.ended = ended;
     }
 
@@ -29,7 +29,7 @@ public class Loan {
      * @param expirationDate
      * @throws DateTimeException when issueDate is after expirationDate
      */
-    public Loan(Card card, Book book, LocalDate issueDate, LocalDate expirationDate, boolean granted, boolean ended) {
+    public Loan(Card card, Book book, boolean granted, boolean ended, LocalDate issueDate, LocalDate expirationDate) {
         this(card,book,granted,ended);
         if(issueDate.isAfter(expirationDate)){
             throw new DateTimeException("issueDate cannot be after expiration date");
