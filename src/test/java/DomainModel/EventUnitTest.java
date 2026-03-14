@@ -3,6 +3,7 @@ package DomainModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -30,10 +31,8 @@ public class EventUnitTest {
                 .build();
     }
 
-    /* fixme: il nome di questo test è fuorviante. In room è stato scritto così
-    perchè EventRoom e StudyRoom chiamano il costruttore di Room (super (...))*/
     @Test
-    public void test_Event_CommonConstructor() {
+    public void test_Event_ValidEventCreation() {
         assertEquals("Nome", event.getName(), "Actual event name doesn't match expected");
         assertEquals("lorem ipsum", event.getDescription(), "Description mismatch");
         assertEquals(LocalDateTime.of(2026,3,1,10,0), event.getStartDate(), "Start date mismatch");
@@ -87,6 +86,52 @@ public class EventUnitTest {
                 .build();
 
         assertTrue(event.overlaps(eventB));
+    }
+
+    @Test
+    public void test_Event_addParticipant(){
+        LibraryUser participant = new LibraryUser.LibraryUserBuilder()
+                .setName("luca")
+                .setSurname("bianchi")
+                .setEmail("luca@mail.com")
+                .setCard(2, LocalDate.now(), LocalDate.now().plusYears(3))
+                .build();
+
+        event.addParticipant(participant);
+        assertEquals(1, event.getParticipants().size());
+    }
+
+    @Test
+    public void test_Event_addDuplicateParticipant_throws() {
+        LibraryUser participant = new LibraryUser.LibraryUserBuilder()
+                .setName("luca")
+                .setSurname("bianchi")
+                .setEmail("luca@mail.com")
+                .setCard(2, LocalDate.now(), LocalDate.now().plusYears(3))
+                .build();
+
+        event.addParticipant(participant);
+        assertThrows(IllegalStateException.class, () -> event.addParticipant(participant));
+    }
+
+    @Test
+    public void test_Event_availableSeats(){
+        int seats = event.getAvailableSeats();
+
+        assertEquals(50, seats);
+    }
+
+    @Test
+    public void test_Event_availableSeatsWithoutRoom_throws(){
+        Event eventWithoutRoom = new Event.EventBuilder()
+                .setName("Nome")
+                .setDescription("lorem ipsum")
+                .setStartDate(LocalDateTime.of(2026, 3, 1, 10, 0))
+                .setEventDuration(Duration.of(1, ChronoUnit.HOURS))
+                .setOrganizer(organizerA)
+                .build();
+
+        assertThrows(IllegalStateException.class, () -> eventWithoutRoom.getAvailableSeats());
     }
 
 }
