@@ -30,6 +30,8 @@ public class EventUnitTest {
                 .build();
     }
 
+    /* fixme: il nome di questo test è fuorviante. In room è stato scritto così
+    perchè EventRoom e StudyRoom chiamano il costruttore di Room (super (...))*/
     @Test
     public void test_Event_CommonConstructor() {
         assertEquals("Nome", event.getName(), "Actual event name doesn't match expected");
@@ -55,7 +57,7 @@ public class EventUnitTest {
 
     @Test
     public void test_Event_invalidDuration_throws(){
-        assertThrows(IllegalStateException.class, ()->{
+        assertThrows(IllegalArgumentException.class, ()->{
             new Event.EventBuilder()
                     .setName("Nome")
                     .setPlace(eventRoomA)
