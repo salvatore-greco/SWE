@@ -21,6 +21,7 @@ public class EventDAO {
             stmt.setInt(1, event.getId());
             stmt.setString(2, user.getEmail());
             int row = stmt.executeUpdate();
+            stmt.close();
             return row > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -34,6 +35,7 @@ public class EventDAO {
             stmt.setInt(1, event.getId());
             stmt.setString(2, user.getEmail());
             int row = stmt.executeUpdate();
+            stmt.close();
             return row > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -57,7 +59,9 @@ public class EventDAO {
             if (rows > 0) {
                 ResultSet rs = stmt.getGeneratedKeys();
                 if (rs.next()) {
-                    return rs.getInt(1);
+                    Integer id = rs.getInt(1);
+                    stmt.close();
+                    return id;
                 }
             }
         } catch (SQLException e) {
@@ -72,6 +76,7 @@ public class EventDAO {
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM event WHERE id = ?");
             stmt.setInt(1, event.getId());
             int rows = stmt.executeUpdate();
+            stmt.close();
             return rows > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,6 +97,7 @@ public class EventDAO {
             stmt.setInt(7, event.getId());
 
             int rows = stmt.executeUpdate();
+            stmt.close();
             return rows > 0;
         } catch (SQLException e) {
             e.printStackTrace();

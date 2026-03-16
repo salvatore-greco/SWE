@@ -19,11 +19,13 @@ public class BookDAO {
             stmt.setString(1, code);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return new Book.BookBuilder()
+                Book book = new Book.BookBuilder()
                         .setCode(rs.getString(1))
                         .setISBN(rs.getString(2))
                         .setTitle(rs.getString(3))
                         .build();
+                stmt.close();
+                return book;
             } else
                 throw new BookNotFoundException("Book with code " + code + " not found");
         } catch (SQLException e) {
@@ -41,6 +43,7 @@ public class BookDAO {
             stmt.setString(2, book.getISBN());
             stmt.setString(3, book.getTitle());
             int row = stmt.executeUpdate();
+            stmt.close();
             return row > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -62,6 +65,7 @@ public class BookDAO {
                         .setTitle(rs.getString(3)).build()
                 );
             }
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -75,6 +79,7 @@ public class BookDAO {
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM book WHERE code = ?");
             stmt.setString(1, code);
             int row = stmt.executeUpdate();
+            stmt.close();
             return row > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,6 +97,7 @@ public class BookDAO {
             stmt.setString(3, book.getCode());
 
             int row = stmt.executeUpdate();
+            stmt.close();
             return row > 0;
         } catch (SQLException e) {
             e.printStackTrace();

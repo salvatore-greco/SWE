@@ -24,13 +24,15 @@ public class UserDAO {
             stmt.setString(1, email);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return new UserDTO(
+                UserDTO userDTO =  new UserDTO(
                         rs.getString(1),
                         rs.getString(2),
                         rs.getString(3),
                         role.valueOf(rs.getString(4)),
                         rs.getString(5)
                 );
+                stmt.close();
+                return userDTO;
             }
             else
                 throw new UserNotFoundException("Wrong username or password");
@@ -52,7 +54,9 @@ public class UserDAO {
            stmt.setString(1, email);
            ResultSet rs = stmt.executeQuery();
               if(rs.next()){
-                    return new Library(rs.getInt(2), rs.getString(2));
+                    Library library = new Library(rs.getInt(2), rs.getString(2));
+                    stmt.close();
+                    return library;
               }
        } catch (SQLException e) {
            e.printStackTrace();
@@ -67,6 +71,7 @@ public class UserDAO {
             stmt.setString(1, newHashedPassword);
             stmt.setString(2, email);
             int row = stmt.executeUpdate();
+            stmt.close();
             return row > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -86,6 +91,7 @@ public class UserDAO {
             stmt.setString(5, userDTO.getRole().name());
 
             int row = stmt.executeUpdate();
+            stmt.close();
             return row > 0;
         } catch (SQLException e) {
             e.printStackTrace();

@@ -18,6 +18,7 @@ public class LibraryDAO {
             stmt.setString(1, name);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
+                stmt.close();
                 return new Library(rs.getInt(1), rs.getString(2));
             }
         } catch (SQLException e) {
@@ -33,6 +34,7 @@ public class LibraryDAO {
             stmt.setInt(1, budgetIncreased);
             stmt.setString(2, name);
             int row = stmt.executeUpdate();
+            stmt.close();
             return row > 0;
         }
         catch (SQLException e){

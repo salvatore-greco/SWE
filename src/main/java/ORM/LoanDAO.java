@@ -17,6 +17,7 @@ public class LoanDAO {
             stmt.setBoolean(3, loan.getGranted());
             stmt.setBoolean(4, loan.getEnded());
             int row = stmt.executeUpdate();
+            stmt.close();
             return row > 0;
         }
         catch(SQLException e){
@@ -46,6 +47,7 @@ public class LoanDAO {
             stmt.setInt(3, loan.getCard().getId());
             stmt.setString(4, loan.getBook().getCode());
             int row = stmt.executeUpdate();
+            stmt.close();
             return row > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -61,6 +63,7 @@ public class LoanDAO {
             stmt.setString(2, loan.getBook().getCode());
             stmt.setInt(3, loan.getCard().getId());
             int row = stmt.executeUpdate();
+            stmt.close();
             return row > 0;
         } catch (SQLException e) {
             e.printStackTrace();

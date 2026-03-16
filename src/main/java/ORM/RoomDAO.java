@@ -23,6 +23,7 @@ public class RoomDAO {
             stmt.setString(1, user.getEmail());
             stmt.setInt(2, room.getNumber());
             int row = stmt.executeUpdate();
+            stmt.close();
             return row > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -37,6 +38,7 @@ public class RoomDAO {
             stmt.setString(1, user.getEmail());
             stmt.setInt(2, room.getNumber());
             int row = stmt.executeUpdate();
+            stmt.close();
             return row > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -68,6 +70,7 @@ public class RoomDAO {
                         .setOrganizer(new Librarian(rs.getString("u.name"), rs.getString("u.email"), rs.getString("u.surname")))
                         .build());
             }
+            stmt.close();
             return eventList;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,6 +99,7 @@ public class RoomDAO {
                         .build()
                 );
             }
+            stmt.close();
             return userList;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -118,6 +122,7 @@ public class RoomDAO {
                     for (Event event : eventList) {
                         event.setPlace(eventRoom);
                     }
+                    stmt.close();
                     return eventRoom;
                 }
             }

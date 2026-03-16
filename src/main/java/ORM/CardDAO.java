@@ -19,7 +19,9 @@ public class CardDAO {
             if (row > 0) {
                 ResultSet rs = stmt.getGeneratedKeys();
                 if (rs.next()) {
-                    return new Card(rs.getInt(1));
+                    int id = rs.getInt(1);
+                    stmt.close();
+                    return new Card(id);
                 }
             }
         } catch (SQLException e) {
@@ -40,6 +42,7 @@ public class CardDAO {
                 if (rs.next()) {
                     int id = rs.getInt(1);
                     LocalDate expirationDate = rs.getDate(2).toLocalDate();
+                    stmt.close();
                     return new Card(id, LocalDate.now(), expirationDate);
                 }
             }
@@ -61,6 +64,7 @@ public class CardDAO {
                 if (rs.next()) {
                     int id = rs.getInt(1);
                     LocalDate expirationDate = rs.getDate(2).toLocalDate();
+                    stmt.close();
                     return new Card(id, LocalDate.now(), expirationDate);
                 }
             }
