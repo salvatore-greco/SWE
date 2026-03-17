@@ -19,7 +19,6 @@ import java.util.Properties;
  */
 public class ConnectionManager {
     private Connection connection;
-    private Connection connectionTestSchema = null; //un'altra connessione perchè poi dovrò settare autoCommit = false
     private static ConnectionManager instance = null;
 
     private ConnectionManager() throws SQLException, SQLTimeoutException {
@@ -52,18 +51,6 @@ public class ConnectionManager {
         return connection;
     }
 
-    public Connection getConnectionTestSchema(){
-        if (instance == null){
-            throw new IllegalStateException("getConnection must be called after getInstance");
-        }
-        try {
-            if (connectionTestSchema == null)
-                connectionTestSchema = initializeConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return connectionTestSchema;
-    }
     private Properties getDBProprieties(){
         Dotenv dotenv = Dotenv.configure().directory("./src").load();
         Properties props = new Properties();

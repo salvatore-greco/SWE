@@ -15,7 +15,7 @@ public class DBSeeder {
     private Connection connection;
 
     public DBSeeder() throws SQLException{
-        this.connection = ConnectionManager.getInstance().getConnectionTestSchema();
+        this.connection = ConnectionManager.getInstance().getConnection();
     }
 
     public void createTestSchema() {

@@ -13,8 +13,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 public class BaseDAOUnitTest {
 
     private static DBSeeder dbSeeder;
-    protected static Connection conn;
-    private static Connection connDAO; //connection used by DAOs
+    protected static Connection connDAO; //connection used by DAOs
     private boolean teardownFail = false;
 
 
@@ -34,10 +33,9 @@ public class BaseDAOUnitTest {
         dbSeeder.createTestSchema();
         assertDoesNotThrow(() -> dbSeeder.initDatabaseTest("db.sql", "data.sql"));
         try {
-            conn = ConnectionManager.getInstance().getConnection();
             connDAO = ConnectionManager.getInstance().getConnection();
             setTestSchema();
-            conn.setAutoCommit(false);
+            connDAO.setAutoCommit(false);
         } catch (SQLException e) {
             e.printStackTrace();
             fail("Fail to get connection");
@@ -47,7 +45,6 @@ public class BaseDAOUnitTest {
     @AfterEach
     public void teardown() {
         try {
-            conn.rollback();
             connDAO.rollback();
         } catch (SQLException e) {
             teardownFail = true;
@@ -63,7 +60,7 @@ public class BaseDAOUnitTest {
     @AfterAll
     public static void connectionCloser(){
         try {
-            conn.close();
+            dbSeeder.deleteTestSchema();
             connDAO.close();
         } catch (SQLException e) {
             e.printStackTrace();

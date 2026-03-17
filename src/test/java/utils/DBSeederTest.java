@@ -29,7 +29,7 @@ public class DBSeederTest {
     public void DBSeeder_createSchema() {
         dbSeeder.createTestSchema();
         try {
-            Connection conn = ConnectionManager.getInstance().getConnectionTestSchema();
+            Connection conn = ConnectionManager.getInstance().getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT 1 FROM pg_namespace where nspname = 'test'");
             if (rs.next())
@@ -49,7 +49,7 @@ public class DBSeederTest {
         dbSeeder.initDatabaseTest("db.sql", "data.sql");
         //testing schema search path
         try{
-            Connection connection = ConnectionManager.getInstance().getConnectionTestSchema();
+            Connection connection = ConnectionManager.getInstance().getConnection();
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SHOW search_path");
             if(rs.next()){
@@ -61,7 +61,7 @@ public class DBSeederTest {
         }
         // testing ddl and insert into
         try{
-            Connection connection = ConnectionManager.getInstance().getConnectionTestSchema();
+            Connection connection = ConnectionManager.getInstance().getConnection();
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT email from \"user\" where email='prova@email.com'");
             if(rs.next()){
@@ -79,7 +79,7 @@ public class DBSeederTest {
     public void DBSeeder_deleteSchema() {
         dbSeeder.deleteTestSchema();
         try {
-            Connection conn = ConnectionManager.getInstance().getConnectionTestSchema();
+            Connection conn = ConnectionManager.getInstance().getConnection();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT 1 FROM pg_namespace where nspname = 'test'");
             if (rs.next())
