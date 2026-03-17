@@ -18,8 +18,9 @@ public class LibraryDAO {
             stmt.setString(1, name);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
+                Library library = new Library(rs.getInt("budget"), rs.getString("name"));
                 stmt.close();
-                return new Library(rs.getInt(1), rs.getString(2));
+                return library;
             }
         } catch (SQLException e) {
             e.printStackTrace();

@@ -39,7 +39,7 @@ ended boolean
 
 create table "library"(
 name varchar(50) primary key,
-budget smallint 
+budget integer
 );
 
 create table manage(

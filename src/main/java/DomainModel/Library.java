@@ -14,9 +14,8 @@ public class Library {
         return budget;
     }
 
-    public Library setBudget(int budget) {
+    public void setBudget(int budget) {
         this.budget = budget;
-        return this;
     }
 
     public String getName() {

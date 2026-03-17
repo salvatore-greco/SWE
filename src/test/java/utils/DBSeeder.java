@@ -50,7 +50,7 @@ public class DBSeeder {
                 new FileSystemResource(filenameDDL), //file must be in root directory
                 new FileSystemResource(filenameData)
         );
-        populator.setContinueOnError(true);
+//        populator.setContinueOnError(true);
         populator.populate(this.connection);
     }
 }
