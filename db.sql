@@ -4,13 +4,13 @@ ISBN character(13),
 title text
 );
 -- non posso usare if not exists su create type quindi:
-DO $$
-BEGIN
-	if not exists(select 1 from pg_type where typname = 'role') then
+--DO $$
+--BEGIN
+--	if not exists(select 1 from pg_type where typname = 'role') then
 		CREATE type role AS ENUM ('librarian', 'libraryUser', 'libraryAdministrator');
-	end if;
-end;
-$$;
+--	end if;
+--end;
+--$$;
 
 -- user è una parola chiave per postgresql, per chiamare la tabella user devo racchiuderla fra virgolette
 create table "user"(
