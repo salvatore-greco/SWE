@@ -1,21 +1,33 @@
 package ORM;
 
-import org.junit.jupiter.api.BeforeEach;
+import BusinessLogic.role;
+
+import Exception.data.UserNotFoundException;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Connection;
-import java.sql.Statement;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class UserDAOUnitTest {
-    private UserDAO userDAO;
+public class UserDAOUnitTest extends BaseDAOUnitTest{
+    private UserDAO userDAO = new UserDAO();
 
-    @BeforeEach
-    public void init() throws Exception {
-        userDAO = new UserDAO();
+    @Test
+    public void UserDAO_getUserByEmail_returnsObject() {
+        UserDTO user = new UserDTO(
+                "prova@email.com",
+                "Mario",
+                "Rossi",
+                role.valueOf("librarian"),
+                "hashedPSW"
+        );
 
-        Connection conn = ConnectionManager.getInstance().getConnection();
-        Statement stmt = conn.createStatement();
+        userDAO.insertUser(user);
+        UserDTO retrievedUser = userDAO.getUserByEmail("prova@email.com");
+        assertNotNull(retrievedUser);
+        assertEquals("Mario", retrievedUser.getName());
+    }
 
-        stmt.executeUpdate("DELETE FROM \"user\"");
+    @Test
+    public void UserDAO_getUserByEmail_throwsExceptionIfNotExist() {
+        assertThrows(UserNotFoundException.class, () -> userDAO.getUserByEmail("prova2@email.com"));
     }
 }
