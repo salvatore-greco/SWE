@@ -34,7 +34,10 @@ public class LibraryUser implements User {
 
 
         public LibraryUserBuilder setCard(int id, LocalDate issueDate, LocalDate expirationDate) {
-            this.card = new Card(id, issueDate, expirationDate);
+            if (issueDate == null || expirationDate == null)
+                this.card = new Card(id);
+            else
+                this.card = new Card(id, issueDate, expirationDate);
             return this;
         }
 

@@ -20,10 +20,12 @@ INSERT INTO "user"(email, name, surname, role, password) VALUES ('admin@email.co
                                                                  'hashedPassword');
 --cards
 INSERT INTO card(issuedate, "user") VALUES ('2026-03-17', 'email@email.com'); --valid card
-INSERT INTO card("user") VALUES ('email@email.com'); --requested card
+INSERT INTO card("user") VALUES ('lampa.dario@email.com'); --requested card
 --rooms
 INSERT INTO room(number, seats, is_study_room) VALUES (1, 50, false);
 INSERT INTO room(number, seats, is_study_room) VALUES (2, 35, true);
+INSERT INTO room(number, seats, is_study_room) VALUES (3, 20, false);
+INSERT INTO room(number, seats, is_study_room) VALUES (4, 35, true);
 --events
 INSERT INTO event(name, description, date, duration, organizer, room, room_type)
 VALUES ('presentazione libro aaa bbb',
@@ -39,4 +41,6 @@ INSERT INTO manage("user", library) VALUES ('admin@email.com', 'biblioteca libri
 --book
 INSERT INTO book(code, isbn, title) VALUES ('A001', '1234567890123', 'titolo di un libro');
 INSERT INTO book(code, isbn, title) VALUES ('A002', '1234567890124', 'titolo di un altro libro');
-
+--reservation study room
+INSERT INTO reservation_study_room("user", room, room_type)
+VALUES ('lampa.dario@email.com', 2, true);

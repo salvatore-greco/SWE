@@ -4,11 +4,9 @@ import DomainModel.*;
 import BusinessLogic.role;
 import org.postgresql.util.PGInterval;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class RoomDAO {
@@ -49,7 +47,7 @@ public class RoomDAO {
     private ArrayList<Event> getEventForRoomNumber(int number) {
         try {
             String query = """
-                     SELECT e.*, u.*\s
+                     SELECT e.*, u.*, u.name as user_name\s
                      FROM room as r JOIN event as e on r.number = e.room\s
                      JOIN "user" as u on u.email = e.organizer\s
                      WHERE r.number = ?
@@ -67,7 +65,7 @@ public class RoomDAO {
                         .setDescription(rs.getString("description"))
                         .setStartDate(rs.getTimestamp("date").toLocalDateTime())
                         .setEventDuration(PGIntervalToDuration(pgInterval))
-                        .setOrganizer(new Librarian(rs.getString("u.name"), rs.getString("u.email"), rs.getString("u.surname")))
+                        .setOrganizer(new Librarian(rs.getString("user_name"), rs.getString("email"), rs.getString("surname")))
                         .build());
             }
             stmt.close();
@@ -82,20 +80,32 @@ public class RoomDAO {
         return Duration.ofHours(duration.getHours()).plusMinutes(duration.getMinutes()).plusSeconds(duration.getWholeSeconds());
     }
 
+    private LocalDate toLocalDateOrNull(Date date){
+        if (date == null)
+            return null;
+        else
+            return date.toLocalDate();
+    }
     private ArrayList<LibraryUser> getReservedSeatForRoomNumber(int number) {
         try {
+            String query = """
+                    SELECT u.*, c.*\s
+                    FROM reservation_study_room as res join "user" as u on res."user"=u.email\s
+                    join card as c on c.user = u.email\s
+                    where res.room = ? and u.role = ?::role
+                   \s""";
             Connection conn = ConnectionManager.getInstance().getConnection();
-            PreparedStatement stmt = conn.prepareStatement("SELECT u.* FROM reservation_study_room as res join \"user\" as u on res.\"user\"=u.email join card as c on c.user = u.email where res.room = ? and u.role = ?");
+            PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, number);
             stmt.setString(2, role.libraryUser.name());
             ResultSet rs = stmt.executeQuery();
             ArrayList<LibraryUser> userList = new ArrayList<>();
             if (rs.next()) {
                 userList.add(new LibraryUser.LibraryUserBuilder()
-                        .setName(rs.getString("u.name"))
-                        .setSurname(rs.getString("u.surname"))
-                        .setEmail("u.email")
-                        .setCard(rs.getInt("c.id"), rs.getDate("c.issuedate").toLocalDate(), rs.getDate("c.expirationdate").toLocalDate())
+                        .setName(rs.getString("name"))
+                        .setSurname(rs.getString("surname"))
+                        .setEmail(rs.getString("email"))
+                        .setCard(rs.getInt("id"), toLocalDateOrNull(rs.getDate("issuedate")), toLocalDateOrNull(rs.getDate("expirationdate")))
                         .build()
                 );
             }
@@ -114,18 +124,23 @@ public class RoomDAO {
             stmt.setInt(1, number);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                if (rs.getBoolean("is_study_room"))
-                    return new StudyRoom(rs.getInt("number"), rs.getInt("seats"), getReservedSeatForRoomNumber(number));
+                if (rs.getBoolean("is_study_room")) {
+                    Room room = new StudyRoom(rs.getInt("number"), rs.getInt("seats"), getReservedSeatForRoomNumber(number));
+                    stmt.close();
+                    return room;
+                }
                 else {
                     ArrayList<Event> eventList = getEventForRoomNumber(number);
                     EventRoom eventRoom = new EventRoom(rs.getInt("number"), rs.getInt("seats"));
                     for (Event event : eventList) {
                         event.setPlace(eventRoom);
                     }
+                    eventRoom.setScheduledEvents(eventList);
                     stmt.close();
                     return eventRoom;
                 }
             }
+            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

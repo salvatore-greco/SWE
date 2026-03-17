@@ -20,6 +20,9 @@ public class EventRoom extends Room{
         this.scheduledEvents = scheduledEvents;
     }
 
+    public void setScheduledEvents(ArrayList<Event> scheduledEvents) {
+        this.scheduledEvents = scheduledEvents;
+    }
 
     public List<Event> getScheduledEvents() {
         return Collections.unmodifiableList(scheduledEvents);
