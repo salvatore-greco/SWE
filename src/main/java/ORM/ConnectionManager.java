@@ -18,12 +18,19 @@ import java.util.Properties;
 
  */
 public class ConnectionManager {
-    private final Connection connection;
+    private Connection connection;
+    private Connection connectionTestSchema = null; //un'altra connessione perchè poi dovrò settare autoCommit = false
     private static ConnectionManager instance = null;
 
     private ConnectionManager() throws SQLException, SQLTimeoutException {
+        this.connection = initializeConnection();
+    }
+
+    private Connection initializeConnection() throws SQLException {
+        Connection connection;
         Properties props = getDBProprieties();
         connection = DriverManager.getConnection(props.getProperty("url"), props);
+        return connection;
     }
 
     public static ConnectionManager getInstance() throws SQLException, SQLTimeoutException{
@@ -35,15 +42,37 @@ public class ConnectionManager {
         if (instance == null){
             throw new IllegalStateException("getConnection must be called after getInstance");
         }
+        try {
+            if (connection.isClosed()){
+                this.connection = initializeConnection();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return connection;
     }
 
+    public Connection getConnectionTestSchema(){
+        if (instance == null){
+            throw new IllegalStateException("getConnection must be called after getInstance");
+        }
+        try {
+            if (connectionTestSchema == null)
+                connectionTestSchema = initializeConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return connectionTestSchema;
+    }
     private Properties getDBProprieties(){
-        Dotenv dotenv = Dotenv.load();
+        Dotenv dotenv = Dotenv.configure().directory("./src").load();
         Properties props = new Properties();
         props.setProperty("url", dotenv.get("DB_URL"));
         props.setProperty("user", dotenv.get("DB_USER"));
         props.setProperty("password", dotenv.get("DB_PASS"));
         return props;
+    }
+    public String getDBUsername(){
+        return getDBProprieties().getProperty("user");
     }
 }
