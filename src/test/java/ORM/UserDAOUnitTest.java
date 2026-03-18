@@ -66,4 +66,28 @@ public class UserDAOUnitTest extends BaseDAOUnitTest{
         Library library = userDAO.getLibraryManagedByAdmin("notExist@email.com");
         assertNull(library);
     }
+
+    @Test
+    public void UserDAO_updatePassword_returnsTrue(){
+        UserDTO user = new UserDTO(
+                "admin@email.com",
+                "Amministratore",
+                "Accanito",
+                role.valueOf("libraryAdministrator"),
+                "oldPassword");
+
+        userDAO.insertUser(user);
+
+        boolean updated = userDAO.updatePassword("admin@email.com", "newHashedPassword");
+
+        assertTrue(updated);
+        UserDTO updatedUser = userDAO.getUserByEmail("admin@email.com");
+        assertEquals("newHashedPassword", updatedUser.getHashedPassword());
+    }
+
+    @Test
+    public void UserDAO_updatePassword_userNotFound(){
+        boolean updated = userDAO.updatePassword("notFound@email.com", "newHashedPassword");
+        assertFalse(updated);
+    }
 }
