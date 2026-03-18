@@ -2,6 +2,7 @@ package ORM;
 
 import BusinessLogic.role;
 
+import DomainModel.Library;
 import Exception.data.UserNotFoundException;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +18,7 @@ public class UserDAOUnitTest extends BaseDAOUnitTest{
                 "Mario",
                 "Rossi",
                 role.valueOf("librarian"),
-                "hashedPSW"
+                "hashedPassword"
         );
 
         userDAO.insertUser(user);
@@ -29,5 +30,40 @@ public class UserDAOUnitTest extends BaseDAOUnitTest{
     @Test
     public void UserDAO_getUserByEmail_throwsExceptionIfNotExist() {
         assertThrows(UserNotFoundException.class, () -> userDAO.getUserByEmail("prova2@email.com"));
+    }
+
+    @Test
+    public void UserDAO_getLibraryManagedByAdmin_returnsObject() {
+        UserDTO user = new UserDTO(
+                "admin@email.com",
+                "Amministratore",
+                "Accanito",
+                role.valueOf("libraryAdministrator"),
+                "hashedPassword");
+
+        userDAO.insertUser(user);
+        Library library = userDAO.getLibraryManagedByAdmin("admin@email.com");
+        assertNotNull(library);
+    }
+
+    @Test
+    public void UserDAO_getLibraryManagedByAdmin_userNotAdmin_returnsNull() {
+        UserDTO user = new UserDTO(
+                "prova@email.com",
+                "Mario",
+                "Rossi",
+                role.valueOf("librarian"),
+                "hashedPassword"
+        );
+        userDAO.insertUser(user);
+
+        Library library = userDAO.getLibraryManagedByAdmin("prova@email.com");
+        assertNull(library);
+    }
+
+    @Test
+    public void UserDAO_getLibraryManagedByAdmin_userNotExist_returnsNull() {
+        Library library = userDAO.getLibraryManagedByAdmin("notExist@email.com");
+        assertNull(library);
     }
 }
