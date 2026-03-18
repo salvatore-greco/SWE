@@ -101,7 +101,11 @@ public class UserDAOUnitTest extends BaseDAOUnitTest{
                 "hashedPassword");
 
         userDAO.insertUser(user);
-        assertNotNull(user);
-        assertEquals("prova@email.com", user.getEmail());
+
+        UserDTO retrieved = userDAO.getUserByEmail("prova@email.com");
+
+        assertNotNull(retrieved);
+        assertEquals("prova@email.com", retrieved.getEmail());
+        assertEquals("Mario", retrieved.getName());
     }
 }
