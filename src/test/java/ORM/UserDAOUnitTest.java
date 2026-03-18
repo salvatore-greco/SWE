@@ -90,4 +90,18 @@ public class UserDAOUnitTest extends BaseDAOUnitTest{
         boolean updated = userDAO.updatePassword("notFound@email.com", "newHashedPassword");
         assertFalse(updated);
     }
+
+    @Test
+    public void UserDAO_saveUser_returnsTrue(){
+        UserDTO user = new UserDTO(
+                "prova@email.com",
+                "Mario",
+                "Rossi",
+                role.valueOf("librarian"),
+                "hashedPassword");
+
+        userDAO.insertUser(user);
+        assertNotNull(user);
+        assertEquals("prova@email.com", user.getEmail());
+    }
 }
