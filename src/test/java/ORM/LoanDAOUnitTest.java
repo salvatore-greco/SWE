@@ -26,18 +26,18 @@ public class LoanDAOUnitTest extends BaseDAOUnitTest{
 
     private Card createCardTest(){
         UserDTO user = new UserDTO(
-                "prova@email.com",
-                "Mario",
-                "Rossi",
+                "prova3@email.com",
+                "UtenteTest",
+                "cognomeTest",
                 role.valueOf("libraryUser"),
                 "hashedPassword"
         );
         userDAO.insertUser(user);
 
         LibraryUser libraryUser = new LibraryUser.LibraryUserBuilder()
-                .setName("Mario")
-                .setSurname("Rossi")
-                .setEmail("prova@email.com")
+                .setName("UtenteTest")
+                .setSurname("cognomeTest")
+                .setEmail("prova3@email.com")
                 .build();
 
         Card card = cardDAO.setRequestedCard(libraryUser);

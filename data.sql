@@ -44,3 +44,5 @@ INSERT INTO book(code, isbn, title) VALUES ('A002', '1234567890124', 'titolo di 
 --reservation study room
 INSERT INTO reservation_study_room("user", room, room_type)
 VALUES ('lampa.dario@email.com', 2, true);
+--loan
+INSERT INTO loan(book, card, issueDate, expirationDate, granted, ended) VALUES ('A001', 1, '2026-03-17', '2026-04-17', true, false);
