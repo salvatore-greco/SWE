@@ -44,8 +44,8 @@ public class LoanDAO {
             PreparedStatement stmt = conn.prepareStatement("UPDATE loan SET granted = TRUE, issueDate = ?, expirationDate = ? WHERE book = ? AND card = ? AND ended = FALSE");
             stmt.setDate(1, Date.valueOf(issueDate));
             stmt.setDate(2, Date.valueOf(expirationDate));
-            stmt.setInt(3, loan.getCard().getId());
-            stmt.setString(4, loan.getBook().getCode());
+            stmt.setString(3, loan.getBook().getCode());
+            stmt.setInt(4, loan.getCard().getId());
             int row = stmt.executeUpdate();
             stmt.close();
             return row > 0;

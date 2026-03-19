@@ -5,6 +5,8 @@ import DomainModel.*;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LoanDAOUnitTest extends BaseDAOUnitTest{
@@ -67,4 +69,29 @@ public class LoanDAOUnitTest extends BaseDAOUnitTest{
      public void LoanDAO_isBookLoaned_returnsFalse() {
          assertFalse(loanDAO.isBookLoaned("A002"));
      }
+
+     @Test
+    public void LoanDAO_grantLoan_returnsTrue(){
+        Book book = createBookTest();
+        Card card = createCardTest();
+        Loan loan = createLoanTest(book, card);
+
+        loanDAO.setRequestedLoan(loan);
+
+        boolean result = loanDAO.grantLoan(loan, LocalDate.now(), LocalDate.now().plusDays(30));
+
+        assertTrue(result);
+     }
+
+     @Test
+    public void LoanDAO_grantLoan_loanNotGranted_returnsFalse() {
+        Book book = createBookTest();
+        Card card = createCardTest();
+        Loan loan = createLoanTest(book, card);
+
+        boolean result = loanDAO.grantLoan(loan, LocalDate.now(), LocalDate.now().plusDays(30));
+
+        assertFalse(result);
+     }
+
 }
