@@ -14,17 +14,16 @@ public class UserDAOUnitTest extends BaseDAOUnitTest{
     @Test
     public void UserDAO_getUserByEmail_returnsObject() {
         UserDTO user = new UserDTO(
-                "prova@email.com",
-                "Mario",
-                "Rossi",
-                role.valueOf("librarian"),
-                "hashedPassword"
-        );
+                "prova3@email.com",
+                "Utente",
+                "Cognome",
+                role.valueOf("libraryUser"),
+                "hashedPassword");
 
         userDAO.insertUser(user);
-        UserDTO retrievedUser = userDAO.getUserByEmail("prova@email.com");
+        UserDTO retrievedUser = userDAO.getUserByEmail("prova3@email.com");
         assertNotNull(retrievedUser);
-        assertEquals("Mario", retrievedUser.getName());
+        assertEquals("Utente", retrievedUser.getName());
     }
 
     @Test
@@ -35,14 +34,16 @@ public class UserDAOUnitTest extends BaseDAOUnitTest{
     @Test
     public void UserDAO_getLibraryManagedByAdmin_returnsObject() {
         UserDTO user = new UserDTO(
-                "admin@email.com",
-                "Amministratore",
-                "Accanito",
+                "adminTest@email.com",
+                "AmministratoreTest",
+                "CognomeTest",
                 role.valueOf("libraryAdministrator"),
                 "hashedPassword");
-
         userDAO.insertUser(user);
-        Library library = userDAO.getLibraryManagedByAdmin("admin@email.com");
+
+        //fixme
+        Library library = new Library(1000, "BibliotecaTest");
+        library = userDAO.getLibraryManagedByAdmin("adminTest@email.com");
         assertNotNull(library);
     }
 
@@ -70,18 +71,18 @@ public class UserDAOUnitTest extends BaseDAOUnitTest{
     @Test
     public void UserDAO_updatePassword_returnsTrue(){
         UserDTO user = new UserDTO(
-                "admin@email.com",
-                "Amministratore",
-                "Accanito",
-                role.valueOf("libraryAdministrator"),
+                "prova3@email.com",
+                "Utente",
+                "Cognome",
+                role.valueOf("libraryUser"),
                 "oldPassword");
 
         userDAO.insertUser(user);
 
-        boolean updated = userDAO.updatePassword("admin@email.com", "newHashedPassword");
+        boolean updated = userDAO.updatePassword("prova3@email.com", "newHashedPassword");
 
         assertTrue(updated);
-        UserDTO updatedUser = userDAO.getUserByEmail("admin@email.com");
+        UserDTO updatedUser = userDAO.getUserByEmail("prova3@email.com");
         assertEquals("newHashedPassword", updatedUser.getHashedPassword());
     }
 
@@ -94,18 +95,18 @@ public class UserDAOUnitTest extends BaseDAOUnitTest{
     @Test
     public void UserDAO_saveUser_returnsTrue(){
         UserDTO user = new UserDTO(
-                "prova@email.com",
-                "Mario",
-                "Rossi",
-                role.valueOf("librarian"),
+                "prova3@email.com",
+                "Utente",
+                "Cognome",
+                role.valueOf("libraryUser"),
                 "hashedPassword");
 
         userDAO.insertUser(user);
 
-        UserDTO retrieved = userDAO.getUserByEmail("prova@email.com");
+        UserDTO retrieved = userDAO.getUserByEmail("prova3@email.com");
 
         assertNotNull(retrieved);
-        assertEquals("prova@email.com", retrieved.getEmail());
-        assertEquals("Mario", retrieved.getName());
+        assertEquals("prova3@email.com", retrieved.getEmail());
+        assertEquals("Utente", retrieved.getName());
     }
 }

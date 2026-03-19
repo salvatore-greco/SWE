@@ -20,7 +20,7 @@ public class UserDAO {
     public UserDTO getUserByEmail(String email) throws UserNotFoundException {
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM user WHERE email = ?");
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM \"user\" WHERE email = ?");
             stmt.setString(1, email);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -67,7 +67,7 @@ public class UserDAO {
     public boolean updatePassword(String email, String newHashedPassword){
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
-            PreparedStatement stmt = conn.prepareStatement("UPDATE user SET hashedPassword = ? WHERE email = ?");
+            PreparedStatement stmt = conn.prepareStatement("UPDATE \"user\" SET password = ? WHERE email = ?");
             stmt.setString(1, newHashedPassword);
             stmt.setString(2, email);
             int row = stmt.executeUpdate();
@@ -83,7 +83,7 @@ public class UserDAO {
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
             //forzo il cast del ruolo nella enum postgre
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO user (email, name, surname, hashedPassword, role) values (?, ?, ?, ?, ?::role)");
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO \"user\" (email, name, surname, password, role) values (?, ?, ?, ?, ?::role)");
             stmt.setString(1, userDTO.getEmail());
             stmt.setString(2, userDTO.getName());
             stmt.setString(3, userDTO.getSurname());
