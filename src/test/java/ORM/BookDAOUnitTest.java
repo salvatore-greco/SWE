@@ -49,8 +49,8 @@ public class BookDAOUnitTest extends BaseDAOUnitTest {
     @Test
     public void BookDAO_deleteBook_returnsTrue() {
         BookDAO bookDAO = new BookDAO();
-        assertTrue(bookDAO.deleteBook("A001"));
-        assertThrows(BookNotFoundException.class, () -> bookDAO.getBookByCode("A001"));
+        assertTrue(bookDAO.deleteBook("A002"));
+        assertThrows(BookNotFoundException.class, () -> bookDAO.getBookByCode("A002"));
     }
 
     @Test
