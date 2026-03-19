@@ -33,31 +33,12 @@ public class UserDAOUnitTest extends BaseDAOUnitTest{
 
     @Test
     public void UserDAO_getLibraryManagedByAdmin_returnsObject() {
-        UserDTO user = new UserDTO(
-                "adminTest@email.com",
-                "AmministratoreTest",
-                "CognomeTest",
-                role.valueOf("libraryAdministrator"),
-                "hashedPassword");
-        userDAO.insertUser(user);
-
-        //fixme
-        Library library = new Library(1000, "BibliotecaTest");
-        library = userDAO.getLibraryManagedByAdmin("adminTest@email.com");
+        Library library = userDAO.getLibraryManagedByAdmin("admin@email.com");
         assertNotNull(library);
     }
 
     @Test
     public void UserDAO_getLibraryManagedByAdmin_userNotAdmin_returnsNull() {
-        UserDTO user = new UserDTO(
-                "prova@email.com",
-                "Mario",
-                "Rossi",
-                role.valueOf("librarian"),
-                "hashedPassword"
-        );
-        userDAO.insertUser(user);
-
         Library library = userDAO.getLibraryManagedByAdmin("prova@email.com");
         assertNull(library);
     }
