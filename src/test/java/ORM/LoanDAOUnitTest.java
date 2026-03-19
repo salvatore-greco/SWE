@@ -66,9 +66,14 @@ public class LoanDAOUnitTest extends BaseDAOUnitTest{
      }
 
      @Test
-     public void LoanDAO_isBookLoaned_returnsFalse() {
+     public void LoanDAO_isBookLoaned_bookNotOnLoan_returnsFalse() {
          assertFalse(loanDAO.isBookLoaned("A002"));
      }
+
+      @Test
+      public void LoanDAO_isBookLoaned_bookNotExist_returnsFalse(){
+          assertFalse(loanDAO.isBookLoaned("B003"));
+      }
 
      @Test
     public void LoanDAO_grantLoan_returnsTrue(){
@@ -94,4 +99,28 @@ public class LoanDAOUnitTest extends BaseDAOUnitTest{
         assertFalse(result);
      }
 
+     @Test
+    public void LoanDAO_endLoan_existingLoan_returnsTrue() {
+        Book book = createBookTest();
+        Card card = createCardTest();
+        Loan loan = createLoanTest(book, card);
+
+        loanDAO.setRequestedLoan(loan);
+        loanDAO.grantLoan(loan, LocalDate.now(), LocalDate.now().plusDays(30));
+
+        boolean result = loanDAO.endLoan(loan);
+
+        assertTrue(result);
+     }
+
+     @Test
+     public void LoanDAO_endLoan_notExistingLoan_returnsFalse(){
+            Book book = createBookTest();
+            Card card = createCardTest();
+            Loan loan = createLoanTest(book, card);
+
+            boolean result = loanDAO.endLoan(loan);
+
+            assertFalse(result);
+     }
 }
