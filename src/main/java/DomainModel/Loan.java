@@ -17,6 +17,8 @@ public class Loan {
         Objects.requireNonNull(book, "Book should not be null");
         if(granted == false && ended == true)
             throw new IllegalArgumentException("Loan cannot be ended but not granted");
+        this.card = card;
+        this.book = book;
         this.granted = granted;
         this.ended = ended;
     }
