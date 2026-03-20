@@ -22,6 +22,7 @@ public class LoanUnitTest {
     public void Loan_constructor_requireCardNotNull() {
         NullPointerException e = assertThrows(NullPointerException.class, () -> new Loan(null, book, false, false));
         assertEquals("Card should not be null", e.getMessage());
+
     }
 
     @Test
@@ -43,5 +44,12 @@ public class LoanUnitTest {
     public void Loan_constructor_illegalDateThrows(){
         DateTimeException e = assertThrows(DateTimeException.class, () -> new Loan(card, book, true, false, LocalDate.now(), LocalDate.now().minusDays(1)));
         assertEquals("issueDate cannot be after expiration date", e.getMessage());
+    }
+
+    @Test
+    public void Loan_constructor_CardBookCorrectness(){
+        Loan loan = new Loan(card, book, true, false);
+        assertEquals(card, loan.getCard());
+        assertEquals(book, loan.getBook());
     }
 }
