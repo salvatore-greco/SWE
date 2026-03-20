@@ -33,7 +33,7 @@ public class CardDAOUnitTest extends BaseDAOUnitTest{
     }
 
     @Test
-    public void CardDAO_setReuqestedCard_returnsObject(){
+    public void CardDAO_setRequestedCard_returnsObject(){
         LibraryUser user = createLibraryUser();
 
         Card card = cardDAO.setRequestedCard(user);
@@ -41,5 +41,31 @@ public class CardDAOUnitTest extends BaseDAOUnitTest{
         assertTrue(card.getId() > 0);
     }
 
+    @Test
+    public void CardDAO_createCard_returnsObject(){
+        LibraryUser user = createLibraryUser();
 
+        Card card = cardDAO.createCard(user);
+        assertNotNull(card);
+        assertTrue(card.getId() > 0);
+        assertNotNull(card.getExpirationDate());
+    }
+
+    @Test
+    public void CardDAO_createCardFromRequest_returnsCard(){
+        LibraryUser user = createLibraryUser();
+
+        cardDAO.setRequestedCard(user);
+        Card card = cardDAO.createCardFromRequest(user);
+        assertTrue(card.getId() > 0);
+        assertNotNull(card);
+    }
+
+    @Test
+    public void CardDAO_createCardFromRequest_noRequest_returnsNull(){
+        LibraryUser user = createLibraryUser();
+
+        Card card = cardDAO.createCardFromRequest(user);
+        assertNull(card);
+    }
 }
