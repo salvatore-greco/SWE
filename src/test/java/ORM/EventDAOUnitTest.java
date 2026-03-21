@@ -71,15 +71,16 @@ public class EventDAOUnitTest extends BaseDAOUnitTest{
                 .setPlace(room)
                 .build();
 
+        Integer eventId = eventDAO.setEvent(event);
+        event.setId(eventId);
+
         return event;
     }
 
     @Test
-    public void EventDAO_setEvent_returnsIntegert(){
+    public void EventDAO_setEvent_returnsInteger(){
         Event event = createEvent();
-
-        Integer eventId = eventDAO.setEvent(event);
-        assertNotNull(eventId);
+        assertNotNull(event.getId());
     }
 
     @Test
@@ -89,6 +90,8 @@ public class EventDAOUnitTest extends BaseDAOUnitTest{
         event.setPlace(invalidRoom);
 
         Integer eventId = eventDAO.setEvent(event);
+        event.setId(eventId);
+
         assertNull(eventId);
     }
 
@@ -96,9 +99,6 @@ public class EventDAOUnitTest extends BaseDAOUnitTest{
     public void EventDAO_addNewParticipant_returnsTrue(){
         Event event = createEvent();
         LibraryUser user = createLibraryUser();
-
-        Integer eventId = eventDAO.setEvent(event);
-        assertNotNull(eventId);
 
         boolean result = eventDAO.addNewParticipant(event, user);
         assertTrue(result);
@@ -113,10 +113,40 @@ public class EventDAOUnitTest extends BaseDAOUnitTest{
                 .setEmail("nulluser@email.com")
                 .build();
 
-        Integer eventId = eventDAO.setEvent(event);
-        event.setId(eventId);
-
         boolean result = eventDAO.addNewParticipant(event, user);
+        assertFalse(result);
+    }
+
+    @Test
+    public void EventDAO_removeParticipant_returnsTrue(){
+        Event event = createEvent();
+        LibraryUser user = createLibraryUser();
+
+        eventDAO.addNewParticipant(event, user);
+
+        boolean result = eventDAO.removeParticipant(event, user);
+        assertTrue(result);
+    }
+
+    @Test
+    public void EventDAO_removeParticipant_notAddedParticipant_returnsTrue(){
+        Event event = createEvent();
+        LibraryUser user = createLibraryUser();
+
+        boolean result = eventDAO.removeParticipant(event, user);
+        assertFalse(result);
+    }
+
+    @Test
+    public void EventDAO_removeParticipant_notExistingParticipant_returnsFalse(){
+        Event event = createEvent();
+        LibraryUser user = new LibraryUser.LibraryUserBuilder()
+                .setName("NonExistingUser")
+                .setSurname("User")
+                .setEmail("nulluser@email.com")
+                .build();
+
+        boolean result = eventDAO.removeParticipant(event, user);
         assertFalse(result);
     }
 }
