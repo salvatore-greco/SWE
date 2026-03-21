@@ -4,10 +4,7 @@ import DomainModel.Event;
 import DomainModel.LibraryUser;
 import org.postgresql.util.PGInterval;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class EventDAO {
 
@@ -17,13 +14,16 @@ public class EventDAO {
     public boolean addNewParticipant(Event event, LibraryUser user) {
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO partecipation (event, user) values (?, ?)");
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO partecipation (event, \"user\") values (?, ?)");
             stmt.setInt(1, event.getId());
             stmt.setString(2, user.getEmail());
             int row = stmt.executeUpdate();
             stmt.close();
             return row > 0;
         } catch (SQLException e) {
+            if (e.getSQLState().startsWith("23")) { // codice SQLState per vincoli violati (ad esempio utenti inesistenti)
+                return false;
+            }
             e.printStackTrace();
             return false;
         }
@@ -31,7 +31,7 @@ public class EventDAO {
     public boolean removeParticipant(Event event, LibraryUser user) {
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
-            PreparedStatement stmt = conn.prepareStatement("DELETE FROM partecipation WHERE event = ? AND user = ?");
+            PreparedStatement stmt = conn.prepareStatement("DELETE FROM partecipation WHERE event = ? AND \"user\" = ?");
             stmt.setInt(1, event.getId());
             stmt.setString(2, user.getEmail());
             int row = stmt.executeUpdate();
@@ -46,7 +46,7 @@ public class EventDAO {
     public Integer setEvent(Event event) {
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO event (name, description, date, duration, organizer, room) values (?, ?, ?, ?, ?, ?)");
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO event (name, description, date, duration, organizer, room) values (?, ?, ?, CAST(? AS interval), ?, ?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, event.getName());
             stmt.setString(2, event.getDescription());
             stmt.setTimestamp(3, java.sql.Timestamp.valueOf(event.getStartDate()));
@@ -61,6 +61,7 @@ public class EventDAO {
                 if (rs.next()) {
                     Integer id = rs.getInt(1);
                     stmt.close();
+                    event.setId(id);
                     return id;
                 }
             }
