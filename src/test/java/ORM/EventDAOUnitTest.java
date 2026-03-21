@@ -149,4 +149,29 @@ public class EventDAOUnitTest extends BaseDAOUnitTest{
         boolean result = eventDAO.removeParticipant(event, user);
         assertFalse(result);
     }
+
+    @Test
+    public void EventDAO_deleteEvent_returnsTrue(){
+        Event event = createEvent();
+
+        boolean result = eventDAO.deleteEvent(event);
+        assertTrue(result);
+    }
+
+    @Test
+    public void EventDAO_deleteEvent_notExistingEvent_returnsFalse(){
+        Event event = new Event.EventBuilder()
+                .setName("NonExistingEvent")
+                .setDescription("DescrizioneTest")
+                .setStartDate(LocalDateTime.now())
+                .setEventDuration(Duration.ofHours(2))
+                .setOrganizer(createLibrarian())
+                .setPlace(createEventRoom())
+                .build();
+
+        event.setId(-1);
+
+        boolean result = eventDAO.deleteEvent(event);
+        assertFalse(result);
+    }
 }
