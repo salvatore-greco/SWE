@@ -93,7 +93,7 @@ public class EventDAO {
     public boolean editEvent(Event event) {
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
-            PreparedStatement stmt = conn.prepareStatement("UPDATE event SET name = ?, description = ?, date = ?, duration = ?, organizer = ?, room = ? WHERE id = ?");
+            PreparedStatement stmt = conn.prepareStatement("UPDATE event SET name = ?, description = ?, date = ?, duration = CAST(? AS interval), organizer = ?, room = ? WHERE id = ?");
             stmt.setString(1, event.getName());
             stmt.setString(2, event.getDescription());
             stmt.setTimestamp(3, java.sql.Timestamp.valueOf(event.getStartDate()));

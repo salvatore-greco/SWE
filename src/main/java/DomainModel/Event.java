@@ -165,4 +165,18 @@ public class Event {
         }
         return place.getSeats() - participants.size();
     }
+
+    public void setName(String name) {
+        if(name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Name required");
+        }
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        if(description == null || description.isBlank()) {
+            throw new IllegalArgumentException("Description required");
+        }
+        this.description = description;
+    }
 }

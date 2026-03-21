@@ -174,4 +174,32 @@ public class EventDAOUnitTest extends BaseDAOUnitTest{
         boolean result = eventDAO.deleteEvent(event);
         assertFalse(result);
     }
+
+    @Test
+    public void EventDAO_editEvent_returnsTrue(){
+        Event event = createEvent();
+
+        event.setName("nome modificato");
+        event.setDescription("descrizione modificata");
+
+        boolean updated = eventDAO.editEvent(event);
+        assertTrue(updated);
+    }
+
+    @Test
+    public void EventDAO_editEvent_notExistingEvent_returnsFalse(){
+        Event event = new Event.EventBuilder()
+                .setName("NonExistingEvent")
+                .setDescription("DescrizioneTest")
+                .setStartDate(LocalDateTime.now())
+                .setEventDuration(Duration.ofHours(2))
+                .setOrganizer(createLibrarian())
+                .setPlace(createEventRoom())
+                .build();
+
+        event.setId(-1);
+
+        boolean result = eventDAO.editEvent(event);
+        assertFalse(result);
+    }
 }
