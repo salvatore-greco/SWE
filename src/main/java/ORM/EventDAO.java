@@ -53,6 +53,10 @@ public class EventDAO {
             //Postgre è compatibile con il to string di duration per gli oggetti di tipo interval
             stmt.setString(4, event.getEventDuration().toString());
             stmt.setString(5, event.getOrganizer().getEmail());
+            //se la stanza non esiste o il numero della stanza non è valido, restituisco null senza eseguire la query
+            if (event.getPlace() == null || event.getPlace().getNumber() <= 0) {
+                return null;
+            }
             stmt.setInt(6, event.getPlace().getNumber());
 
             Integer rows = stmt.executeUpdate();
@@ -67,6 +71,7 @@ public class EventDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
         return null;
     }

@@ -75,6 +75,24 @@ public class EventDAOUnitTest extends BaseDAOUnitTest{
     }
 
     @Test
+    public void EventDAO_setEvent_returnsIntegert(){
+        Event event = createEvent();
+
+        Integer eventId = eventDAO.setEvent(event);
+        assertNotNull(eventId);
+    }
+
+    @Test
+    public void EventDAO_setEvent_invalidRoom_returnsNull(){
+        Event event = createEvent();
+        EventRoom invalidRoom = new EventRoom(-1, 100); // Numero di stanza non esistente
+        event.setPlace(invalidRoom);
+
+        Integer eventId = eventDAO.setEvent(event);
+        assertNull(eventId);
+    }
+
+    @Test
     public void EventDAO_addNewParticipant_returnsTrue(){
         Event event = createEvent();
         LibraryUser user = createLibraryUser();
