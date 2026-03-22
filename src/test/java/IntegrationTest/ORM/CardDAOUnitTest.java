@@ -5,6 +5,8 @@ import ORM.*;
 import DomainModel.Card;
 
 import DomainModel.LibraryUser;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,30 +15,29 @@ public class CardDAOUnitTest extends BaseDAOUnitTest{
     private CardDAO cardDAO = new CardDAO();
 
     private UserDAO userDAO = new UserDAO();
+    private LibraryUser user;
 
-    private LibraryUser createLibraryUser(){
-        UserDTO user = new UserDTO(
+    @BeforeEach
+    public void createLibraryUser(){
+        userDAO = new UserDAO();
+        UserDTO userDTO = new UserDTO(
                 "prova3@email.com",
                 "UtenteTest",
                 "cognomeTest",
-                role.valueOf("libraryUser"),
+                role.libraryUser,
                 "hashedPassword"
         );
-        userDAO.insertUser(user);
+        userDAO.insertUser(userDTO);
 
-        LibraryUser libraryUser = new LibraryUser.LibraryUserBuilder()
+        user = new LibraryUser.LibraryUserBuilder()
                 .setName("UtenteTest")
                 .setSurname("cognomeTest")
                 .setEmail("prova3@email.com")
                 .build();
-
-        return libraryUser;
     }
 
     @Test
     public void CardDAO_setRequestedCard_returnsObject(){
-        LibraryUser user = createLibraryUser();
-
         Card card = cardDAO.setRequestedCard(user);
         assertNotNull(card);
         assertTrue(card.getId() > 0);
@@ -44,8 +45,6 @@ public class CardDAOUnitTest extends BaseDAOUnitTest{
 
     @Test
     public void CardDAO_createCard_returnsObject(){
-        LibraryUser user = createLibraryUser();
-
         Card card = cardDAO.createCard(user);
         assertNotNull(card);
         assertTrue(card.getId() > 0);
@@ -54,8 +53,6 @@ public class CardDAOUnitTest extends BaseDAOUnitTest{
 
     @Test
     public void CardDAO_createCardFromRequest_returnsCard(){
-        LibraryUser user = createLibraryUser();
-
         cardDAO.setRequestedCard(user);
         Card card = cardDAO.createCardFromRequest(user);
         assertTrue(card.getId() > 0);
@@ -64,9 +61,17 @@ public class CardDAOUnitTest extends BaseDAOUnitTest{
 
     @Test
     public void CardDAO_createCardFromRequest_noRequest_returnsNull(){
-        LibraryUser user = createLibraryUser();
-
         Card card = cardDAO.createCardFromRequest(user);
         assertNull(card);
+    }
+
+    @Test
+    public void CardDAO_getCardByEmail_returnsCard(){
+        Card card = cardDAO.getCardByEmail("email@email.com");
+        // è una tessera valida (data.sql)
+        assertNotNull(card);
+        assertTrue(card.getId() > 0);
+        assertNotNull(card.getIssueDate());
+        assertNotNull(card.getExpirationDate());
     }
 }

@@ -13,7 +13,7 @@ public class CardDAO {
     public Card setRequestedCard(LibraryUser applicantUser) {
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO card (\"user\") values (?)" , Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO card (\"user\") values (?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, applicantUser.getEmail());
             int row = stmt.executeUpdate();
             if (row > 0) {
@@ -33,7 +33,7 @@ public class CardDAO {
     public Card createCard(LibraryUser applicantUser) {
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO card (\"user\", issuedate) values (?, ?)" , Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO card (\"user\", issuedate) values (?, ?)", Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, applicantUser.getEmail());
             stmt.setDate(2, Date.valueOf(LocalDate.now())); //Approvo la creazione della tessera e imposto la data di scadenza a oggi
             int row = stmt.executeUpdate();
@@ -52,10 +52,10 @@ public class CardDAO {
         return null;
     }
 
-    public Card createCardFromRequest(LibraryUser applicantUser){
+    public Card createCardFromRequest(LibraryUser applicantUser) {
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
-            PreparedStatement stmt = conn.prepareStatement("UPDATE card set issuedate = ? where \"user\" = ?" , Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmt = conn.prepareStatement("UPDATE card set issuedate = ? where \"user\" = ?", Statement.RETURN_GENERATED_KEYS);
             stmt.setDate(1, Date.valueOf(LocalDate.now())); //Approvo la creazione della tessera e imposto la data di scadenza a oggi
             stmt.setString(2, applicantUser.getEmail());
             int row = stmt.executeUpdate();
@@ -73,4 +73,24 @@ public class CardDAO {
         }
         return null;
     }
+
+    public Card getCardByEmail(String email) {
+        try {
+            Connection conn = ConnectionManager.getInstance().getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM card WHERE \"user\" = ?");
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                LocalDate issueDate = Utils.toLocalDateOrNull(rs.getDate("issueDate"));
+                LocalDate expirationDate = Utils.toLocalDateOrNull(rs.getDate("expirationDate"));
+                stmt.close();
+                return new Card(id, issueDate, expirationDate);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
