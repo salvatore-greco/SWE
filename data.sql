@@ -1,13 +1,14 @@
 --users
 INSERT INTO "user"(email, name, surname, role, password) VALUES ('prova@email.com',
                                                                  'Mario',
-                                                                 'Rossi', 'librarian'::role,
-                                                                 'hashedPassword');
+                                                                 'Rossi',
+                                                                 'librarian'::role,
+                                                                 '$2y$10$w3w4T3M1ddIhahKNE6nTG.GwI1l6aWXLIBGY.2xgM1533pltSlO.K'); -- hash di "bibliotecario"
 INSERT INTO "user"(email, name, surname, role, password) VALUES ('email@email.com',
                                                                  'Luca',
                                                                  'Bianchi',
                                                                  'libraryUser'::role,
-                                                                 'hashedPassword');
+                                                                 '$2y$10$ZWvVs10j.qMdOH9H3Cg1S.ZREIdFwSwvf9Vd8pQnEWTFXt1I78v9O'); --hash di "libraryUser"
 INSERT INTO "user"(email, name, surname, role, password) VALUES ('lampa.dario@email.com',
                                                                  'Dario',
                                                                  'Lampa',
