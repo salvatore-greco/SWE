@@ -29,12 +29,13 @@ expirationDate date generated always as ( issueDate + interval '3 years') virtua
 );
 
 create table loan(
-book varchar(10) constraint book_fk_loan references book primary key,
+book varchar(10) constraint book_fk_loan references book,
 card integer constraint card_fk_loan references card not null,
 issueDate date,
 expirationDate date,
 granted boolean,
-ended boolean
+ended boolean,
+primary key (book, card)
 );
 
 create table "library"(
