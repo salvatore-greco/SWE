@@ -1,4 +1,4 @@
-package utils;
+package UnitTest.utils;
 
 import ORM.ConnectionManager;
 import org.springframework.core.io.ClassPathResource;

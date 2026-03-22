@@ -1,9 +1,9 @@
-package ORM;
+package UnitTest.ORM;
 
 import DomainModel.Book;
 import Exception.data.BookNotFoundException;
 import org.junit.jupiter.api.Test;
-
+import ORM.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BookDAOUnitTest extends BaseDAOUnitTest {

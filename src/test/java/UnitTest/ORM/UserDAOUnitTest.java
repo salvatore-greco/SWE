@@ -1,5 +1,6 @@
-package ORM;
+package UnitTest.ORM;
 
+import ORM.*;
 import BusinessLogic.role;
 
 import DomainModel.Library;
@@ -64,7 +65,7 @@ public class UserDAOUnitTest extends BaseDAOUnitTest{
 
         assertTrue(updated);
         UserDTO updatedUser = userDAO.getUserByEmail("prova3@email.com");
-        assertEquals("newHashedPassword", updatedUser.getHashedPassword());
+        assertEquals("newHashedPassword", updatedUser.getPassword());
     }
 
     @Test

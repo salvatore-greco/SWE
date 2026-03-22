@@ -1,5 +1,6 @@
-package DomainModel;
+package UnitTest.DomainModel;
 
+import DomainModel.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

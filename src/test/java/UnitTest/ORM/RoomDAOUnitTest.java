@@ -1,15 +1,14 @@
-package ORM;
+package UnitTest.ORM;
 
+import ORM.*;
 import DomainModel.EventRoom;
 import DomainModel.LibraryUser;
-import DomainModel.Room;
 import DomainModel.StudyRoom;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.util.Arrays;
 
 import org.junit.jupiter.api.*;
 

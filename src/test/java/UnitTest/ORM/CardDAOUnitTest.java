@@ -1,6 +1,7 @@
-package ORM;
+package UnitTest.ORM;
 
 import BusinessLogic.role;
+import ORM.*;
 import DomainModel.Card;
 
 import DomainModel.LibraryUser;

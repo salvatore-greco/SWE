@@ -1,5 +1,6 @@
-package ORM;
+package UnitTest.ORM;
 
+import ORM.*;
 import BusinessLogic.role;
 import DomainModel.*;
 

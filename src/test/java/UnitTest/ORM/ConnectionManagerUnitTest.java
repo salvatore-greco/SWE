@@ -1,7 +1,8 @@
-package ORM;
+package UnitTest.ORM;
 
 import org.junit.jupiter.api.Test;
 
+import ORM.*;
 import java.sql.Connection;
 import java.sql.SQLException;
 
