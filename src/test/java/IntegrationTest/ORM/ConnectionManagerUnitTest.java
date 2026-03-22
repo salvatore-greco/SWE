@@ -1,4 +1,4 @@
-package UnitTest.ORM;
+package IntegrationTest.ORM;
 
 import org.junit.jupiter.api.Test;
 

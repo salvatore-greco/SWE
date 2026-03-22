@@ -1,4 +1,4 @@
-package UnitTest.ORM;
+package IntegrationTest.ORM;
 
 import DomainModel.Book;
 import Exception.data.BookNotFoundException;
