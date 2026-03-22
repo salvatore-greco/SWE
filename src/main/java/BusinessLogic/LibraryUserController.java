@@ -13,6 +13,7 @@ public class LibraryUserController implements ControllerInterface {
 
     public LibraryUserController(User user) {
         this.user = (LibraryUser) user;
+        this.user.setCard(new CardDAO().getCardByEmail(this.user.getEmail()));
     }
 
     public Loan requestLoan(Book requestedBook) {
@@ -25,7 +26,7 @@ public class LibraryUserController implements ControllerInterface {
         LoanDAO loanDAO = new LoanDAO();
         Loan loan = new Loan(user.getCard(), requestedBook, false, false);
         if (!loanDAO.setRequestedLoan(loan)) {
-            throw new RuntimeException("Write on database failed");
+            throw new RuntimeException("Write on database failed or book is already loaned");
         }
         return loan;
     }
