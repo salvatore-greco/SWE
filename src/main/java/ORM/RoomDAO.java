@@ -5,8 +5,6 @@ import BusinessLogic.role;
 import org.postgresql.util.PGInterval;
 
 import java.sql.*;
-import java.time.Duration;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class RoomDAO {
@@ -64,7 +62,7 @@ public class RoomDAO {
                         .setName(rs.getString("name"))
                         .setDescription(rs.getString("description"))
                         .setStartDate(rs.getTimestamp("date").toLocalDateTime())
-                        .setEventDuration(PGIntervalToDuration(pgInterval))
+                        .setEventDuration(Utils.PGIntervalToDuration(pgInterval))
                         .setOrganizer(new Librarian(rs.getString("user_name"), rs.getString("email"), rs.getString("surname")))
                         .build());
             }
@@ -76,16 +74,7 @@ public class RoomDAO {
         throw new RuntimeException("non ho trovato una sega nel db");
     }
 
-    private static Duration PGIntervalToDuration(PGInterval duration) {
-        return Duration.ofHours(duration.getHours()).plusMinutes(duration.getMinutes()).plusSeconds(duration.getWholeSeconds());
-    }
 
-    private LocalDate toLocalDateOrNull(Date date){
-        if (date == null)
-            return null;
-        else
-            return date.toLocalDate();
-    }
     private ArrayList<LibraryUser> getReservedSeatForRoomNumber(int number) {
         try {
             String query = """
@@ -105,7 +94,7 @@ public class RoomDAO {
                         .setName(rs.getString("name"))
                         .setSurname(rs.getString("surname"))
                         .setEmail(rs.getString("email"))
-                        .setCard(rs.getInt("id"), toLocalDateOrNull(rs.getDate("issuedate")), toLocalDateOrNull(rs.getDate("expirationdate")))
+                        .setCard(rs.getInt("id"), Utils.toLocalDateOrNull(rs.getDate("issuedate")), Utils.toLocalDateOrNull(rs.getDate("expirationdate")))
                         .build()
                 );
             }
