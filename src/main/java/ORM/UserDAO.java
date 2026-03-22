@@ -87,7 +87,7 @@ public class UserDAO {
             stmt.setString(1, userDTO.getEmail());
             stmt.setString(2, userDTO.getName());
             stmt.setString(3, userDTO.getSurname());
-            stmt.setString(4, userDTO.getHashedPassword());
+            stmt.setString(4, userDTO.getPassword());
             stmt.setString(5, userDTO.getRole().name());
 
             int row = stmt.executeUpdate();

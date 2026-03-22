@@ -7,15 +7,15 @@ public class UserDTO {
     private String name;
     private String surname;
     private role role;
-    private String hashedPassword;
+    private String password;
 
     // sembra un telescopic constructor ma non so se è appropriato usare un builder
-    public UserDTO(String email, String name, String surname, role role, String hashedPassword) {
+    public UserDTO(String email, String name, String surname, role role, String password) {
         this.email = email;
         this.name = name;
         this.surname = surname;
         this.role = role;
-        this.hashedPassword = hashedPassword;
+        this.password = password;
     }
 
     public String getEmail() {
@@ -34,7 +34,7 @@ public class UserDTO {
         return role;
     }
 
-    public String getHashedPassword() {
-        return hashedPassword;
+    public String getPassword() {
+        return password;
     }
 }

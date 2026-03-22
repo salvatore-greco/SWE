@@ -11,14 +11,17 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class ConcreteAuthService implements AuthService {
     private User loggedUser;
+    private UserDAO userDAO;
 
+    public ConcreteAuthService(UserDAO userDAO){
+        this.userDAO = userDAO;
+    }
     @Override
     public ControllerInterface login(String email, String password) throws UserNotFoundException {
-        UserDAO userDAO = new UserDAO();
         UserDTO userDTO = userDAO.getUserByEmail(email);
         ControllerFactory factory;
 
-        if (!BCrypt.checkpw(password, userDTO.getHashedPassword())) {
+        if (!BCrypt.checkpw(password, userDTO.getPassword())) {
             throw new UserNotFoundException("Wrong username or password");
         }
 
@@ -57,7 +60,6 @@ public class ConcreteAuthService implements AuthService {
 
     @Override
     public void resetPassword(String email, String newPassword) {
-        UserDAO userDAO = new UserDAO();
         String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
 
         boolean updated = userDAO.updatePassword(email, hashedPassword);
@@ -67,14 +69,11 @@ public class ConcreteAuthService implements AuthService {
     }
 
     @Override
-    //TODO: handle checked exception
-    public boolean register(String name, String surname, String email, String password) {
-        UserDAO userDAO = new UserDAO();
-        if (userDAO.getUserByEmail(email) != null) {
+    public boolean register(UserDTO userDTO) {
+        if (userDAO.getUserByEmail(userDTO.getEmail()) != null) {
             throw new RuntimeException("User already exists");
         }
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        UserDTO userDTO = new UserDTO(email, name, surname, role.libraryUser, hashedPassword);
+        String hashedPassword = BCrypt.hashpw(userDTO.getPassword(), BCrypt.gensalt());
 
         boolean created = userDAO.insertUser(userDTO);
         if (!created) {
