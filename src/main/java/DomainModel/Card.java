@@ -38,7 +38,7 @@ public class Card {
      */
     public Card(int id, LocalDate issueDate, LocalDate expirationDate) throws DateTimeException {
         this.id = id;
-        if(issueDate.isAfter(expirationDate)){
+        if(issueDate!=null && issueDate.isAfter(expirationDate)){
             throw new DateTimeException("issueDate cannot be after expiration date");
         }
         this.issueDate = issueDate;

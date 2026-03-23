@@ -19,8 +19,11 @@ public class LibrarianController implements ControllerInterface {
         CardDAO cardDAO = new CardDAO();
         Card card;
 
+        if(user.getCard()!= null && user.getCard().getIssueDate() != null)
+            throw new RuntimeException("User already has a card");
+
         // User ha già fatto richiesta della tessera
-        if (user.getCard().getIssueDate() != null) {
+        if (user.getCard()!=null && user.getCard().getIssueDate() == null) {
             card = cardDAO.createCardFromRequest(user);
         } else
             card = cardDAO.createCard(user);

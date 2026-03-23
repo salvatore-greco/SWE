@@ -74,4 +74,11 @@ public class CardDAOUnitTest extends BaseDAOUnitTest{
         assertNotNull(card.getIssueDate());
         assertNotNull(card.getExpirationDate());
     }
+
+    @Test
+    public void CardDAO_getCardByEmail_inexistentCard_returnNull(){
+        Card card = cardDAO.getCardByEmail("neri.neri@email.com");
+        // è una tessera valida (data.sql)
+        assertNull(card);
+    }
 }

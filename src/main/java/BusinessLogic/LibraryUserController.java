@@ -9,13 +9,17 @@ import ORM.RoomDAO;
 import java.time.LocalDate;
 
 public class LibraryUserController implements ControllerInterface {
-    public LibraryUser user;
+
+    private LibraryUser user;
 
     public LibraryUserController(User user) {
         this.user = (LibraryUser) user;
         this.user.setCard(new CardDAO().getCardByEmail(this.user.getEmail()));
     }
 
+    public LibraryUser getUser() {
+        return user;
+    }
     public Loan requestLoan(Book requestedBook) {
         LoanDAO loanDAO = new LoanDAO();
         if (user.getCard() == null) {
