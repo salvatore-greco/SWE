@@ -19,9 +19,20 @@ INSERT INTO "user"(email, name, surname, role, password) VALUES ('admin@email.co
                                                                  'Accanito',
                                                                  'libraryAdministrator'::role,
                                                                  'hashedPassword');
+INSERT INTO "user"(email, name, surname, role, password) VALUES ('neri.neri@email.com',
+                                                                 'Neri',
+                                                                 'Neri',
+                                                                 'libraryUser'::role,
+                                                                 '$2y$10$YDUcy27VAQK9qs5RnzvDcOL4yxllqN6htvPoQOjC0f9B4wEekmcju'); --hash di "NeriNeri"
+INSERT INTO "user"(email, name, surname, role, password) VALUES ('gino.verdi@email.com',
+                                                                 'Gino',
+                                                                 'Verdi',
+                                                                 'libraryUser'::role,
+                                                             '$2y$10$Wn6bGp7zidi.v4OBUHCUvu1RlmhqDnfF5fH.mrTlK/Ei0WZ5rk3mi'); --HASH DI "gino"
 --cards
 INSERT INTO card(issuedate, "user") VALUES ('2026-03-17', 'email@email.com'); --valid card
 INSERT INTO card("user") VALUES ('lampa.dario@email.com'); --requested card
+INSERT INTO card("user", issuedate) VALUES ('gino.verdi@email.com', '2023-01-01'); --expired card
 --rooms
 INSERT INTO room(number, seats, is_study_room) VALUES (1, 50, false);
 INSERT INTO room(number, seats, is_study_room) VALUES (2, 35, true);

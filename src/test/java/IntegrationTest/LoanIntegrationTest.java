@@ -16,7 +16,13 @@ public class LoanIntegrationTest extends BaseDAOUnitTest {
 
     private static LibraryUserController libraryUserController;
 
+    private static LibraryUserController userWithoutCardController;
+
+    private static LibraryUserController userWithExpiredCardController;
+
     private static BookDAO bookDAO;
+
+
 
     @BeforeAll
     public static void init() {
@@ -25,6 +31,8 @@ public class LoanIntegrationTest extends BaseDAOUnitTest {
         AuthService authService = new ConcreteAuthService(new UserDAO());
         librarianController = assertDoesNotThrow(() -> (LibrarianController) authService.login("prova@email.com", "bibliotecario"));
         libraryUserController = assertDoesNotThrow(() -> (LibraryUserController) authService.login("email@email.com", "libraryUser"));
+        userWithoutCardController = assertDoesNotThrow(() -> (LibraryUserController) authService.login("neri.neri@email.com", "NeriNeri"));
+        userWithExpiredCardController = assertDoesNotThrow(() -> (LibraryUserController) authService.login("gino.verdi@email.com", "gino"));
         bookDAO = new BookDAO();
     }
 
@@ -58,4 +66,22 @@ public class LoanIntegrationTest extends BaseDAOUnitTest {
         assertTrue(loanEnded.getEnded());
     }
 
+    @Test
+    public void requestLoan_loanedBook_throws(){
+        Book book = new BookDAO().getBookByCode("A001");
+        var e = assertThrows(RuntimeException.class, () -> libraryUserController.requestLoan(book));
+        assertEquals("Book is already loaned", e.getMessage());
+    }
+    @Test
+    public void requestLoan_noCard_throws() {
+        Book book = new BookDAO().getBookByCode("A002");
+        var e = assertThrows(RuntimeException.class, () -> userWithoutCardController.requestLoan(book));
+        assertEquals("User must have a card to request a loan", e.getMessage());
+    }
+    @Test
+    public void requestLoan_expiredCard_throws() {
+        Book book = new BookDAO().getBookByCode("A002");
+        var e = assertThrows(RuntimeException.class, () -> userWithExpiredCardController.requestLoan(book));
+        assertEquals("User card is expired", e.getMessage());
+    }
 }
