@@ -126,4 +126,8 @@ public class LibrarianController implements ControllerInterface {
             throw new IllegalStateException("Loan not found");
         }
     }
+
+    public Librarian getUser() {
+        return user;
+    }
 }
