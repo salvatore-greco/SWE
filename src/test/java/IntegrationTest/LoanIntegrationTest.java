@@ -5,6 +5,7 @@ import BusinessLogic.*;
 import ORM.*;
 import DomainModel.*;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,8 +35,27 @@ public class LoanIntegrationTest extends BaseDAOUnitTest {
         assertFalse(requestedLoan.getGranted());
         assertFalse(requestedLoan.getEnded());
         assertDoesNotThrow(() -> librarianController.grantLoan(requestedLoan));
-//        Loan grantedLoan = new LoanDAO().
+        Loan grantedLoan = new LoanDAO().getLoanByBookAndCard(bookToLoan.getCode(), requestedLoan.getCard().getId());
+        assertTrue(grantedLoan.getGranted());
+        assertFalse(grantedLoan.getEnded());
     }
 
+    @Disabled
+    @Test
+    public void grantLoan_notRequested(){
+        //A quanto pare nel LibrarianController non si può concedere prestiti senza che un utente li richieda
+        //Che biblioteca computer centrica.
+    }
+
+    @Test
+    public void loanTermination(){
+        Loan loanToEnd = assertDoesNotThrow(() -> new LoanDAO().getLoanByBookAndCard("A001", 1)); //Loan presente nel db come dato iniziale (riscontrare con data.sql)
+        assertNotNull(loanToEnd);
+        assertTrue(loanToEnd.getGranted());
+        assertFalse(loanToEnd.getEnded());
+        librarianController.endLoan(loanToEnd);
+        Loan loanEnded = assertDoesNotThrow(() -> new LoanDAO().getLoanByBookAndCard("A001", 1));
+        assertTrue(loanEnded.getEnded());
+    }
 
 }

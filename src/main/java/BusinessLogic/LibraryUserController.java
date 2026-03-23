@@ -17,16 +17,18 @@ public class LibraryUserController implements ControllerInterface {
     }
 
     public Loan requestLoan(Book requestedBook) {
+        LoanDAO loanDAO = new LoanDAO();
         if (user.getCard() == null) {
             throw new RuntimeException("User must have a card to request a loan"); //FIXME: use an appropriate exception
         }
         if (user.getCard().getExpirationDate().isBefore(LocalDate.now())){
             throw new RuntimeException("User card is expired"); //FIXME: use an appropriate exception
         }
-        LoanDAO loanDAO = new LoanDAO();
+        if (loanDAO.isBookLoaned(requestedBook.getCode()))
+            throw new RuntimeException("Book is already loaned");
         Loan loan = new Loan(user.getCard(), requestedBook, false, false);
         if (!loanDAO.setRequestedLoan(loan)) {
-            throw new RuntimeException("Write on database failed or book is already loaned");
+            throw new RuntimeException("Write on database failed");
         }
         return loan;
     }
