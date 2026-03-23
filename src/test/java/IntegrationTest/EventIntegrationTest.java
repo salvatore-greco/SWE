@@ -18,17 +18,11 @@ public class EventIntegrationTest extends BaseDAOUnitTest {
     private static LibrarianController librarianController;
     private static LibraryUserController libraryUserController;
 
-    private static EventDAO eventDAO;
-    private static RoomDAO roomDAO;
-
     @BeforeAll
     public static void init() {
         AuthService authService = new ConcreteAuthService(new UserDAO());
         librarianController = assertDoesNotThrow(() -> (LibrarianController) authService.login("prova@email.com", "bibliotecario"));
         libraryUserController = assertDoesNotThrow(() -> (LibraryUserController) authService.login("email@email.com", "libraryUser"));
-
-        eventDAO = new EventDAO();
-        roomDAO = new RoomDAO();
     }
 
     private Event createEventTest(){
@@ -136,5 +130,50 @@ public class EventIntegrationTest extends BaseDAOUnitTest {
         eventToModify.setId(-1);
         var e = assertThrows(RuntimeException.class, () -> librarianController.modifyEvent(eventToModify));
         assertEquals("Event not found", e.getMessage());
+    }
+
+    //test del library user
+    @Test
+    public void eventBooking(){
+        Event event = createEventTest();
+        assertDoesNotThrow(() -> libraryUserController.eventBooking(event));
+    }
+
+    @Test
+    public void eventBooking_notExistingEvent_throws(){
+        Event event = createEventTest();
+        event.setId(-1);
+        var e = assertThrows(RuntimeException.class, () -> libraryUserController.eventBooking(event));
+        assertEquals("Write on database failed", e.getMessage());
+    }
+
+    @Test
+    public void eventBooking_alreadyBooked_throws(){
+        Event event = createEventTest();
+        libraryUserController.eventBooking(event);
+        var e = assertThrows(RuntimeException.class, () -> libraryUserController.eventBooking(event));
+        assertEquals("Write on database failed", e.getMessage());
+    }
+
+    @Test
+    public void cancelEventBooking(){
+        Event event = createEventTest();
+        libraryUserController.eventBooking(event);
+        assertDoesNotThrow(() -> libraryUserController.cancelEventBooking(event));
+    }
+
+    @Test
+    public void cancelEventBooking_notExistingEvent_throws(){
+        Event event = createEventTest();
+        event.setId(-1);
+        var e = assertThrows(RuntimeException.class, () -> libraryUserController.cancelEventBooking(event));
+        assertEquals("Write on database failed", e.getMessage());
+    }
+
+    @Test
+    public void cancelEventBooking_notBooked_throws(){
+        Event event = createEventTest();
+        var e = assertThrows(RuntimeException.class, () -> libraryUserController.cancelEventBooking(event));
+        assertEquals("Write on database failed", e.getMessage());
     }
 }
