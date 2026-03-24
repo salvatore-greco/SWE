@@ -85,7 +85,7 @@ public class LoanDAO {
             stmt.setString(1, code);
             stmt.setInt(2, card);
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
+            while(rs.next()) {
                 int cardId = rs.getInt("card");
                 String user = rs.getString("user");
                 LocalDate cardIssueDate = Utils.toLocalDateOrNull(rs.getDate("issuedate"));
