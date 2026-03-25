@@ -10,8 +10,11 @@ public class LibraryAdministratorController implements ControllerInterface {
 
     public LibraryAdministratorController(User user) {
         this.user = (LibraryAdministrator) user;
-        UserDAO userDao = new UserDAO();
-        this.user.setLibraryManaged(userDao.getLibraryManagedByAdmin(this.user.getEmail()));
+        if (this.user.getLibraryManaged() == null) {
+            UserDAO userDao = new UserDAO();
+            this.user.setLibraryManaged(userDao.getLibraryManagedByAdmin(this.user.getEmail())
+            );
+        }
     }
 
     public boolean increaseBudget(int increase) {
@@ -37,5 +40,9 @@ public class LibraryAdministratorController implements ControllerInterface {
     public boolean updateBookInCatalogue(Book updatedBook) {
         BookDAO bookDAO = new BookDAO();
         return bookDAO.updateBook(updatedBook);
+    }
+
+    public LibraryAdministrator getUser() {
+        return user;
     }
 }
