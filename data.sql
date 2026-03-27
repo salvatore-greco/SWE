@@ -38,11 +38,19 @@ INSERT INTO room(number, seats, is_study_room) VALUES (1, 50, false);
 INSERT INTO room(number, seats, is_study_room) VALUES (2, 35, true);
 INSERT INTO room(number, seats, is_study_room) VALUES (3, 20, false);
 INSERT INTO room(number, seats, is_study_room) VALUES (4, 35, true);
+INSERT INTO room(number, seats, is_study_room) VALUES (5, 2, true);
 --events
 INSERT INTO event(name, description, date, duration, organizer, room, room_type)
 VALUES ('presentazione libro aaa bbb',
         'descrizione',
         '2026-03-17 10:00:00',
+        '1 hour',
+        'prova@email.com',
+        1, false);
+INSERT INTO event(name, description, date, duration, organizer, room, room_type)
+VALUES ('presentazione libro aaa bbb ccc',
+        'descrizione',
+        '2026-03-17 12:00:00',
         '1 hour',
         'prova@email.com',
         1, false);
@@ -56,5 +64,9 @@ INSERT INTO book(code, isbn, title) VALUES ('A002', '1234567890124', 'titolo di 
 --reservation study room
 INSERT INTO reservation_study_room("user", room, room_type)
 VALUES ('lampa.dario@email.com', 2, true);
+INSERT INTO reservation_study_room("user", room, room_type)
+VALUES ('gino.verdi@email.com', 5, true);
+INSERT INTO reservation_study_room("user", room, room_type)
+VALUES ('neri.neri@email.com', 5, true);
 --loan
 INSERT INTO loan(book, card, issueDate, expirationDate, granted, ended) VALUES ('A001', 1, '2026-03-17', '2026-04-17', true, false);
