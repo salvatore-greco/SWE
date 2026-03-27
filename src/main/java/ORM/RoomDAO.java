@@ -55,7 +55,7 @@ public class RoomDAO {
             stmt.setInt(1, number);
             ResultSet rs = stmt.executeQuery();
             ArrayList<Event> eventList = new ArrayList<>();
-            if (rs.next()) {
+            while (rs.next()) {
                 PGInterval pgInterval = (PGInterval) rs.getObject("duration");
                 eventList.add(new Event.EventBuilder()
                         .setId(rs.getInt("id"))
@@ -80,7 +80,7 @@ public class RoomDAO {
             String query = """
                     SELECT u.*, c.*\s
                     FROM reservation_study_room as res join "user" as u on res."user"=u.email\s
-                    join card as c on c.user = u.email\s
+                    left join card as c on c.user = u.email\s
                     where res.room = ? and u.role = ?::role
                    \s""";
             Connection conn = ConnectionManager.getInstance().getConnection();
@@ -89,7 +89,7 @@ public class RoomDAO {
             stmt.setString(2, role.libraryUser.name());
             ResultSet rs = stmt.executeQuery();
             ArrayList<LibraryUser> userList = new ArrayList<>();
-            if (rs.next()) {
+            while (rs.next()) {
                 userList.add(new LibraryUser.LibraryUserBuilder()
                         .setName(rs.getString("name"))
                         .setSurname(rs.getString("surname"))
@@ -112,7 +112,7 @@ public class RoomDAO {
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM room WHERE number = ?");
             stmt.setInt(1, number);
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
+            if(rs.next()) {
                 if (rs.getBoolean("is_study_room")) {
                     Room room = new StudyRoom(rs.getInt("number"), rs.getInt("seats"), getReservedSeatForRoomNumber(number));
                     stmt.close();

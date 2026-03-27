@@ -73,14 +73,16 @@ public class RoomDAOUnitTest extends BaseDAOUnitTest {
 
     @Test
 //    @Order(3)
-    public void RoomDAO_getStudyRoom_hasReservation(){
+    public void RoomDAO_getStudyRoom_hasEveryReservation(){
         RoomDAO roomDAO = new RoomDAO();
         //questi magic numbers dipendono dai dati inseriti nel db di test -> controllare data.sql
-        StudyRoom studyRoom = (StudyRoom) roomDAO.getRoomByNumber(2);
-        assertEquals(2, studyRoom.getNumber());
-        assertEquals(35, studyRoom.getSeats());
+        StudyRoom studyRoom = (StudyRoom) roomDAO.getRoomByNumber(5);
+        assertEquals(5, studyRoom.getNumber());
+        assertEquals(2, studyRoom.getSeats());
         var reservedSeat = studyRoom.getReservedSeats();
-        assertEquals("lampa.dario@email.com", reservedSeat.getFirst().getEmail());
+        assertEquals(2, reservedSeat.size());
+        assertAll(() -> assertEquals("gino.verdi@email.com", reservedSeat.getFirst().getEmail()),
+                () -> assertEquals("neri.neri@email.com", reservedSeat.getLast().getEmail()));
     }
     @Test
     public void RoomDAO_getStudyRoom_withNoReservation(){
@@ -94,13 +96,15 @@ public class RoomDAOUnitTest extends BaseDAOUnitTest {
     }
 
     @Test
-    public void RoomDAO_getEventRoom_hasEvents(){
+    public void RoomDAO_getEventRoom_hasEveryEvents(){
         RoomDAO roomDAO = new RoomDAO();
         EventRoom eventRoom = (EventRoom) roomDAO.getRoomByNumber(1);
         assertEquals(1,eventRoom.getNumber());
         assertEquals(50, eventRoom.getSeats());
         var scheduledEvents = eventRoom.getScheduledEvents();
+        assertEquals(2, scheduledEvents.size());
         assertEquals("presentazione libro aaa bbb", scheduledEvents.getFirst().getName());
+        assertEquals("presentazione libro aaa bbb ccc", scheduledEvents.getLast().getName());
     }
 
     @Test
