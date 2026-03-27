@@ -29,16 +29,25 @@ public class StudyRoom extends Room{
     }
 
     public void reserveSeat(LibraryUser user){
-        if (reservedSeats.contains(user)){
+        if (hasUserReserved(user)){
             throw new IllegalStateException("User already has a reserved seat in this room");
         }
-        if (reservedSeats.size() >= getSeats()){
+        if (isSeatAvailable()){
             throw new IllegalStateException("No more seats available in this room");
         }
         reservedSeats.add(user);
     }
+
+    public boolean isSeatAvailable() {
+        return reservedSeats.size() >= getSeats();
+    }
+
+    public boolean hasUserReserved(LibraryUser user) {
+        return reservedSeats.contains(user);
+    }
+
     public void leaveSeat(LibraryUser user){
-        if (!reservedSeats.contains(user)){
+        if (!hasUserReserved(user)){
             throw new IllegalStateException("User does not have a reserved seat in this room");
         }
         reservedSeats.remove(user);
