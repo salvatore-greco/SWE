@@ -69,6 +69,9 @@ public class LibraryUserController implements ControllerInterface {
 
     public void leaveSeatStudyRoom(StudyRoom room){
         RoomDAO roomDAO = new RoomDAO();
+        if (!room.hasUserReserved(user)){
+            throw new IllegalStateException("User does not have a reserved seat in this room");
+        }
         if (!roomDAO.removeSeatReservationStudyRoom(room, this.user)) {
             throw new RuntimeException("Write on database failed");
         }

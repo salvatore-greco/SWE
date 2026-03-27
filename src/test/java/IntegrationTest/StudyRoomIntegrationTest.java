@@ -53,4 +53,28 @@ public class StudyRoomIntegrationTest extends BaseDAOUnitTest {
         var e = assertThrows(IllegalStateException.class, () -> libraryUserController.reserveSeatStudyRoom(studyRoom));
         assertEquals("User already has a reserved seat in this room", e.getMessage());
     }
+
+    @Test
+    public void leaveSeatStudyRoom_success() {
+        RoomDAO roomDAO = new RoomDAO();
+        StudyRoom studyRoom = (StudyRoom) roomDAO.getRoomByNumber(2);
+        assertDoesNotThrow(() -> libraryUserController.reserveSeatStudyRoom(studyRoom));
+        assertTrue(studyRoom.getReservedSeats().contains(libraryUserController.getUser()));
+
+        assertDoesNotThrow(() -> libraryUserController.leaveSeatStudyRoom(studyRoom));
+        assertFalse(studyRoom.getReservedSeats().contains(libraryUserController.getUser()));
+
+        //verifica che effettivamente sia stato rimosso dal database
+        StudyRoom roomAfterInsertion = (StudyRoom) roomDAO.getRoomByNumber(2);
+        assertFalse(roomAfterInsertion.getReservedSeats().contains(libraryUserController.getUser()));
+    }
+    @Test
+    public void leaveSeatStudyRoom_notReserved_throws() {
+        RoomDAO roomDAO = new RoomDAO();
+        StudyRoom studyRoom = (StudyRoom) roomDAO.getRoomByNumber(2);
+        assertFalse(studyRoom.getReservedSeats().contains(libraryUserController.getUser()));
+
+        var e = assertThrows(IllegalStateException.class, () -> libraryUserController.leaveSeatStudyRoom(studyRoom));
+        assertEquals("User does not have a reserved seat in this room", e.getMessage());
+    }
 }
