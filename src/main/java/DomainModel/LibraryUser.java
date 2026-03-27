@@ -5,10 +5,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class LibraryUser implements User {
-    private String name;
-    private String surname;
-    private String email;
+public class LibraryUser extends User {
+//    private String name;
+//    private String surname;
+//    private String email;
     private Card card;
 
     public static class LibraryUserBuilder{
@@ -71,4 +71,11 @@ public class LibraryUser implements User {
     public void setCard(Card card) {
         this.card = card;
     }
+
+    @Override
+    public boolean equals(Object obj){
+        if (getClass() != obj.getClass()) return false;
+        return super.equals(obj) && card.equals(((LibraryUser) obj).card);
+    }
+
 }

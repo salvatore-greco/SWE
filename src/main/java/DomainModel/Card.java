@@ -44,4 +44,12 @@ public class Card {
         this.issueDate = issueDate;
         this.expirationDate = expirationDate;
     }
+
+    @Override
+    public boolean equals(Object obj){
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Card card = (Card) obj;
+        return id == card.id && issueDate.equals(card.issueDate) && expirationDate.equals(card.expirationDate);
+    }
 }

@@ -1,10 +1,10 @@
 package DomainModel;
 
 
-public class LibraryAdministrator implements User {
-    private String name;
-    private String surname;
-    private String email;
+public class LibraryAdministrator extends User {
+//    private String name;
+//    private String surname;
+//    private String email;
     private Library libraryManaged;
 
     public Library getLibraryManaged() {
@@ -54,5 +54,11 @@ public class LibraryAdministrator implements User {
         this.name = name;
         this.surname = surname;
         this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if (getClass() != obj.getClass()) return false;
+        return super.equals(obj) && libraryManaged.equals(((LibraryAdministrator) obj).libraryManaged);
     }
 }

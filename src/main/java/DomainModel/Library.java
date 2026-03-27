@@ -21,4 +21,12 @@ public class Library {
     public String getName() {
         return name;
     }
-}
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Library library = (Library) obj;
+        return budget == library.budget && name.equals(library.name);
+    }
+    }
