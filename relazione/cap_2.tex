@@ -1,1 +1,71 @@
 \section{Progettazione}
+
+\subsection{Use Case Template}
+Di seguito vengono descritti i template per i casi d'uso indicati nello Use Case Diagram.
+\subsubsection{Login}
+\begin{table}[h!]
+    \begin{tabularx}{\textwidth}{|c|X|}
+    \hline
+        \textbf{Use Case Template} \#1 & Login  \\ \hline
+        \textbf{Descrizione} & L'utente accede al sistema attraverso le proprie credenziali \\ \hline
+        \textbf{Livello} & User Goal \\ \hline
+        \textbf{Attori} & Library User, Librarian o Library Administrator \\ \hline 
+        \textbf{Pre Condizioni} & L'utente è nella pagina appropriata e non ha già fatto il login \\ \hline
+        \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
+            \item L'utente inserisce il nome utente e password 
+            \item L'utente invia le credenziali 
+            \item Il sistema controlla le credenziali 
+            \item Il sistema autentica l'utente, istanziandone il proprio controller 
+        \end{enumerate} \\ \hline
+        \textbf{Alternative Flow} & 3a. Se le credenziali sono errate il sistema restituisce un errore permettendo di ritentare  \\ \hline
+        \textbf{Post Condizioni} & L'utente è autenticato. Viene istanziato il controller appropriato\\ \hline
+        \textbf{Test} & 1,2,3 \\ \hline
+    \end{tabularx}
+    \caption{Login UCT}
+    \label{tab:Login UCT}
+\end{table}
+
+\subsubsection{Registrazione}
+\begin{table}[h!]
+    \begin{tabularx}{\textwidth}{|c|X|}
+    \hline
+        \textbf{Use Case Template} \#1 & Registrazione  \\ \hline
+        \textbf{Descrizione} & L'utente sprovvisto di credenziali si registra \\ \hline
+        \textbf{Livello} & User Goal \\ \hline
+        \textbf{Attori} & Library User, Librarian o Library Administrator \\ \hline 
+        \textbf{Pre Condizioni} & L'utente è nella pagina appropriata e non ha fatto il login \\ \hline
+        \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
+            \item L'utente inserisce nome, cognome, email, password 
+            \item L'utente invia le credenziali 
+            \item Il sistema controlla che non esista già un utente con l'email inserita 
+            \item Il sistema crea l'account 
+        \end{enumerate} \\ \hline
+        \textbf{Alternative Flow} & 3a. Se l'utente esiste già restituisce un errore permettendo di ritentare  \\ \hline
+        \textbf{Post Condizioni} & Viene creato l'account, permettendo all'utente di fare il login\\ \hline
+        \textbf{Test} & 1,2,3 \\ \hline
+    \end{tabularx}
+    \caption{Registrazione UCT}
+    \label{tab:Registrazione UCT}
+\end{table}
+
+\subsubsection{Reset password}
+\begin{table}[H]
+    \begin{tabularx}{\textwidth}{|c|X|}
+    \hline
+        \textbf{Use Case Template} \#1 & Reset password  \\ \hline
+        \textbf{Descrizione} & Permette all'utente che si è dimenticato la propria password di recuperare il profilo reimpostando la password \\ \hline
+        \textbf{Livello} & User Goal \\ \hline
+        \textbf{Attori} & Library User, Librarian o Library Administrator \\ \hline 
+        \textbf{Pre Condizioni} & L'utente è nella pagina appropriata, dopo aver ricevuto la possibiltà di recuperare la password confermando la propria identità \\ \hline
+        \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
+            \item L'utente inserisce la nuova password, confermandola 
+            \item L'utente invia le credenziali 
+            \item Il sistema cambia la password con quella indicata 
+        \end{enumerate} \\ \hline
+        \textbf{Alternative Flow} & -  \\ \hline
+        \textbf{Post Condizioni} & Viene resettata la password\\ \hline
+        \textbf{Test} & 1,2,3 \\ \hline
+    \end{tabularx}
+    \caption{Reset password UCT}
+    \label{tab:Reset password UCT}
+\end{table}
