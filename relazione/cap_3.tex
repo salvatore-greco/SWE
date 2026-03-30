@@ -1,1 +1,62 @@
 \section{Implementazione}
+In questa sezione vengono descritte le principali classi e interfacce implementate, organizzate nei rispettivi package in base al loro ruolo all'interno del sistema.
+
+\subsection{Domain Model}
+Il Domain Model, mostrato in Figura~\ref{fig:domain_model}, rappresenta l'insieme delle entità fondamentali del dominio applicativo e le relazioni tra di esse. 
+Ogni classe modella un concetto reale presente nel sistema di gestione della biblioteca.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{images/domain_model.png}
+    \caption{Domain Model del sistema}
+    \label{fig:domain_model}
+\end{figure}
+
+    \subsubsection{Library}
+    Questa classe rappresenta la biblioteca. È caratterizzata da un nome ed un budget che ha a disposizione.\\
+    Per l'istanza di una Library viene utilizzato il design pattern del \textbf{singleton}, in modo tale da avere un unica istanza in tutto il sistema.
+    
+    \subsubsection{Book}
+    Questa classe rappresenta un libro.\\
+    Questo può essere aggiunto o rimosso dal catalogo di tutti i libri della biblioteca da parte dell'amministratore della biblioteca. Se presente nel catalogo, può essere preso in prestito da un utente ed è identificato tramite ISBN, titolo e codice. Inoltre su questo è riportato anche il nome degli autori.\\
+    Per la creazione di un oggetto Book viene usato il \textbf{BookBuilder}, che implementa il design pattern del \textbf{builder}.\\
+
+    \subsubsection{Loan}
+    Questa classe rappresenta un prestito di un libro da parte di un utente.\\
+
+    \subsubsection{User}
+    Questa classe rappresenta un utente astratto, caratterizzato da nome, cognome ed email. La classe appunto è definita come astratta.\\
+
+     \subsubsection{LibraryUser}
+    Questa classe rappresenta un utente che può usufruire i servizi messi a disposizione dalla biblioteca, come il prestito di libri, l'iscrizione ad eventi o la prenotazione posti nelle aule studio.\\
+    La creazione degli oggetti avviene tramite il design pattern \textbf{Builder}.
+    
+    \subsubsection{Librarian}
+    Questa classe rappresenta un bibliotecario, un utente con permessi aggiuntivi, che lavora all'interno della biblioteca. Può gestire gli eventi, creare/rinnovare tessere della biblioteca e monitorare i prestiti.\\
+    
+    \subsubsection{LibraryAdministrator}
+    Questa classe rappresenta l'amministratore della biblioteca.\\
+    Oltre alla gestione del catalogo libri, è anche responsabile dei fondi della biblioteca.
+    
+    \subsubsection{Card}
+    Questa classe rappresenta una tessera della biblioteca associata a un utente.\\
+    La tessera consente l'accesso ai servizi della biblioteca, come il prestito di libri e la prenotazione di risorse ed è identificata tramite id, data di emissione e scadenza della carta.\\
+    
+    \subsubsection{Event}
+    Questa classe rappresenta un evento organizzato dalla biblioteca.\\
+    È identificato tramite un id univoco e caratterizzato da nome, descrizione, data, durata e luogo.\\
+    La creazione degli oggetti avviene tramite l'\textbf{EventBuilder}, che implementa il design pattern \textbf{Builder}.\\
+
+    \subsubsection{Room}
+    Questa classe rappresenta una stanza generica della biblioteca.\\
+    È identificata tramite un numero, la sua capacità e un attributo che indica se si tratta di un aula studio.\\
+    
+    \subsubsection{EventRoom}
+    Questa classe rappresenta una stanza che può essere adibita allo svolgimento di eventi.\\
+    
+    \subsubsection{StudyRoom}
+    Questa classe rappresenta una stanza dedicata esclusivamente per lo studio.\\
+    
+
+\subsection{Business Logic}
+
+\subsection{ORM}
