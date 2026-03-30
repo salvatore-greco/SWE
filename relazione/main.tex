@@ -1,0 +1,61 @@
+\documentclass{article}
+%Packages
+\usepackage{graphicx} % Required for inserting images
+\usepackage{titling} % per l'uso di \theauthor, \thetitle
+\usepackage[a4paper, margin=2cm]{geometry}
+% === per indice
+\usepackage{makeidx}
+\usepackage{tocloft}
+%====
+\usepackage{fancyhdr} % per il layout di intestazione e piè di pagina
+\usepackage{tcolorbox} % per le box colorate
+\usepackage{float} % per il posizionamento delle immagini
+\usepackage{caption} % per impostare figura invece di figure
+\usepackage[hidelinks]{hyperref} % per \nameref e hyperlink ai riferimenti
+% ==== matematica
+\usepackage{amsmath}
+\usepackage{amssymb}
+% === snippet di codice ==== %
+\usepackage{minted}
+\usepackage[svgnames]{xcolor}
+% ========================== %
+\usepackage{subfigure}  % allineare le immagini comodamente
+%Package per tabella test
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{geometry}
+% Titolo bibliografia in italiano
+\renewcommand{\refname}{Bibliografia}
+% Percorso delle immagini 
+\graphicspath{{./images/}}
+
+\title{Relazione Ingegneria del software}
+\author{Salvatore Greco, Stefano Marianelli}
+
+\captionsetup[figure] {name=Figura} 
+\captionsetup[table] {name=Tabella} 
+\captionsetup[listing] {name=Codice} 
+%Impostazioni dell'indice
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}} % per avere i puntini fra titolo del paragrafo e numero di pagina
+\setlength{\cftbeforesecskip}{8pt} 
+\renewcommand{\contentsname}{Indice} % Titolo dell'indice
+% ================ %
+\begin{document}
+% Frontespizio
+\include{title.tex}
+%Indice
+\tableofcontents
+\newpage
+%Capitolo 1
+\include{cap_1.tex}
+%Capitolo 2
+\include{cap_2}
+%Capitolo 3
+\include{cap_3}
+%Capitolo 4
+\include{cap_4}
+%tabella test
+\include{tabella_test.tex}
+
+\end{document}
