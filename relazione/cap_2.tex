@@ -374,5 +374,17 @@ Di seguito vengono mostrati i mockup di una possibile interfaccia utente per que
     \caption{Richieste tessere bibliotecario}
     \label{fig:Richieste tessere bibliotecario}
 \end{figure}
+\subsection{Modello concettuale Database}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{images/Er diagram.png}
+    \caption{Schema ER database}
+    \label{fig:Schema ER database}
+\end{figure}
+Il diagramma in figura è stato realizzato attraverso \url{draw.io}\\
+Esso descrive in modo concettuale il database. La ristrutturazione e la traduzione nel modello relazionale verranno trattate nella sezione successiva. Ogni tabella è stata mappata a una classe nel package \texttt{DomainModel}. \\
+Per gli utenti è stato scelto di accorparli in un entità sola fin dal principio dato che hanno molti attributi in comune, evitando di fare una generalizzazione per poi risolverla in fase di ristrutturazione; per differenziare il loro ruolo è stato scelto un flag \texttt{role}.
+Per la relazione fra \texttt{User} e \texttt{Card} è stato scelto di farla 1:N con partecipazione opzionale da parte di \texttt{User} per dare modo di potersi registrare e richiedere la tessera in un secondo momento. \\
+Sono state scelte fin da subito le chiavi primarie, evitando di farle in fase di ristrutturazione. Esse sono indicate col pallino pieno nell'attributo. 
 
 
