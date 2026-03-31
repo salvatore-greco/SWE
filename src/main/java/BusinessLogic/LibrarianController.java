@@ -99,14 +99,15 @@ public class LibrarianController implements ControllerInterface {
         }
     }
 
-    //FIXME: questo un bibliotecario non lo può fare!!!
     public void requestLoan(Loan loan) {
         LoanDAO loanDAO = new LoanDAO();
         if (loanDAO.isBookLoaned(loan.getBook().getCode())) {
             throw new RuntimeException("Book is already loaned");
         }
+        loan.setGranted(true);
+        loan.setEnded(false);
 
-        boolean created = loanDAO.setRequestedLoan(loan);
+        boolean created = loanDAO.setLoan(loan);
         if (!created) {
             throw new RuntimeException("Loan request failed");
         }

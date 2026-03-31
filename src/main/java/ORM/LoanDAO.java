@@ -11,7 +11,7 @@ public class LoanDAO {
     public LoanDAO() {
     }
 
-    public boolean setRequestedLoan(Loan loan) {
+    public boolean setLoan(Loan loan) {
         try {
             Connection conn = ConnectionManager.getInstance().getConnection();
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO loan(book, card, granted, ended) values(?, ?, ?, ?) ");

@@ -58,7 +58,7 @@ public class LoanDAOUnitTest extends BaseDAOUnitTest {
         Card card = createCardTest();
         Loan loan = createLoanTest(book, card);
 
-        assertTrue(loanDAO.setRequestedLoan(loan));
+        assertTrue(loanDAO.setLoan(loan));
     }
 
     @Test
@@ -82,7 +82,7 @@ public class LoanDAOUnitTest extends BaseDAOUnitTest {
         Card card = createCardTest();
         Loan loan = createLoanTest(book, card);
 
-        loanDAO.setRequestedLoan(loan);
+        loanDAO.setLoan(loan);
 
         boolean result = loanDAO.grantLoan(loan, LocalDate.now(), LocalDate.now().plusDays(30));
 
@@ -106,7 +106,7 @@ public class LoanDAOUnitTest extends BaseDAOUnitTest {
         Card card = createCardTest();
         Loan loan = createLoanTest(book, card);
 
-        loanDAO.setRequestedLoan(loan);
+        loanDAO.setLoan(loan);
         loanDAO.grantLoan(loan, LocalDate.now(), LocalDate.now().plusDays(30));
 
         boolean result = loanDAO.endLoan(loan);

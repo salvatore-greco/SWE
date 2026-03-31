@@ -31,7 +31,7 @@ public class LibraryUserController implements ControllerInterface {
         if (loanDAO.isBookLoaned(requestedBook.getCode()))
             throw new RuntimeException("Book is already loaned");
         Loan loan = new Loan(user.getCard(), requestedBook, false, false);
-        if (!loanDAO.setRequestedLoan(loan)) {
+        if (!loanDAO.setLoan(loan)) {
             throw new RuntimeException("Write on database failed");
         }
         return loan;
