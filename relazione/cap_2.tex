@@ -1,16 +1,36 @@
 \section{Progettazione}
-
+\subsection{Use Case Diagram}
+Di seguito vengono mostrati i diagrammi per i casi d'uso degli attori del sistema progettato. Ogni operazione di livello "User Goal" viene descritta nel dettaglio nella prossima sezione
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{images/use case diagram/cittadino.jpg}
+    \caption{Use Case Diagram per LibraryUser}
+    \label{fig:Use Case Diagram per LibraryUser}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{images/use case diagram/amministratore.jpg}
+    \caption{Use Case Diagram per Library Administrator}
+    \label{fig:Use Case Diagram per Library Administrator}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{images/use case diagram/bibliotecario.jpg}
+    \caption{Use Case Diagram per Librarian}
+    \label{fig:Use Case Diagram per Librarian}
+\end{figure}
 \subsection{Use Case Template}
-Di seguito vengono descritti i template per i casi d'uso indicati nello Use Case Diagram.
-\subsubsection{Login}
-\begin{table}[h!]
+Di seguito vengono descritti i template per i casi d'uso di livello User Goal indicati nello Use Case Diagram. \\
+Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post condizioni, basic flow, alternative flow e test associati.
+\subsubsection{Autenticazione}
+\begin{table}[H]
     \begin{tabularx}{\textwidth}{|c|X|}
     \hline
-        \textbf{Use Case Template} \#1 & Login  \\ \hline
+        \textbf{Use Case Template} \#\usecasenumber & Autenticazione  \\ \hline
         \textbf{Descrizione} & L'utente accede al sistema attraverso le proprie credenziali \\ \hline
         \textbf{Livello} & User Goal \\ \hline
         \textbf{Attori} & Library User, Librarian o Library Administrator \\ \hline 
-        \textbf{Pre Condizioni} & L'utente è nella pagina appropriata e non ha già fatto il login \\ \hline
+        \textbf{Pre Condizioni} & L'utente è nella pagina appropriata e non ha già fatto il autenticazione \\ \hline
         \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
             \item L'utente inserisce il nome utente e password 
             \item L'utente invia le credenziali 
@@ -21,15 +41,15 @@ Di seguito vengono descritti i template per i casi d'uso indicati nello Use Case
         \textbf{Post Condizioni} & L'utente è autenticato. Viene istanziato il controller appropriato\\ \hline
         \textbf{Test} & 1,2,3 \\ \hline
     \end{tabularx}
-    \caption{Login UCT}
-    \label{tab:Login UCT}
+    \caption{Autenticazione UCT}
+    \label{tab:Autenticazione UCT}
 \end{table}
 
 \subsubsection{Registrazione}
-\begin{table}[h!]
+\begin{table}[H]
     \begin{tabularx}{\textwidth}{|c|X|}
     \hline
-        \textbf{Use Case Template} \#1 & Registrazione  \\ \hline
+        \textbf{Use Case Template} \#\usecasenumber & Registrazione  \\ \hline
         \textbf{Descrizione} & L'utente sprovvisto di credenziali si registra \\ \hline
         \textbf{Livello} & User Goal \\ \hline
         \textbf{Attori} & Library User, Librarian o Library Administrator \\ \hline 
@@ -52,7 +72,7 @@ Di seguito vengono descritti i template per i casi d'uso indicati nello Use Case
 \begin{table}[H]
     \begin{tabularx}{\textwidth}{|c|X|}
     \hline
-        \textbf{Use Case Template} \#1 & Reset password  \\ \hline
+        \textbf{Use Case Template} \#\usecasenumber & Reset password  \\ \hline
         \textbf{Descrizione} & Permette all'utente che si è dimenticato la propria password di recuperare il profilo reimpostando la password \\ \hline
         \textbf{Livello} & User Goal \\ \hline
         \textbf{Attori} & Library User, Librarian o Library Administrator \\ \hline 
@@ -69,3 +89,290 @@ Di seguito vengono descritti i template per i casi d'uso indicati nello Use Case
     \caption{Reset password UCT}
     \label{tab:Reset password UCT}
 \end{table}
+\subsubsection{Riserva un libro}
+\begin{table}[H]
+    \begin{tabularx}{\textwidth}{|c|X|}
+    \hline
+        \textbf{Use Case Template} \#\usecasenumber & Riserva un libro  \\ \hline
+        \textbf{Descrizione} & L'utente richiede un libro in prestito (l'effettivo prestito deve essere approvato dal bibliotecario) \\ \hline
+        \textbf{Livello} & User Goal \\ \hline
+        \textbf{Attori} & Library User \\ \hline 
+        \textbf{Pre Condizioni} & L'utente ha fatto il login e ha una tessera valida \\ \hline
+        \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
+            \item L'utente cerca il libro da chiedere in prestito 
+            \item L'utente seleziona il libro e preme "Prenota" Mockup x 
+            \item Il sistema invia la richiesta e salva la prenotazione permettendo al bibliotecario di approvarla e consegnare il libro all'utente 
+        \end{enumerate} \\ \hline
+        \textbf{Alternative Flow} & 2a. Se il libro è già in prestito il sistema respinge la richiesta mostrando un errore  \\ \hline
+        \textbf{Post Condizioni}  & La richiesta viene registrata \\ \hline
+        \textbf{Test} & 1,2,3 \\ \hline
+    \end{tabularx}
+    \caption{Riserva un libro UCT}
+    \label{tab:Riserva un libro UCT}
+\end{table}
+\subsubsection{Richiede tessera biblioteca}
+\begin{table}[H]
+    \begin{tabularx}{\textwidth}{|c|X|}
+    \hline
+        \textbf{Use Case Template} \#\usecasenumber & Richiede tessera biblioteca  \\ \hline
+        \textbf{Descrizione} & L'utente richiede sprovvisto di tessera ne fa richiesta \\ \hline
+        \textbf{Livello} & User Goal \\ \hline
+        \textbf{Attori} & Library User \\ \hline 
+        \textbf{Pre Condizioni} & L'utente ha fatto il login e non ha una tessera \\ \hline
+        \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
+            \item L'utente seleziona la pagina "Richiesta tessera" 
+            \item L'utente fa la richiesta  
+            \item Il sistema invia la richiesta permettendo al bibliotecario di approvarla e di rilasciare fisicamente la tessera
+        \end{enumerate} \\ \hline
+        \textbf{Alternative Flow} & -  \\ \hline
+        \textbf{Post Condizioni}  & La richiesta viene registrata \\ \hline
+        \textbf{Test} & 1,2,3 \\ \hline
+    \end{tabularx}
+    \caption{Richiede tessera biblioteca UCT}
+    \label{tab:Richiede tessera biblioteca UCT}
+\end{table}
+\subsubsection{Prenotazione ad evento}
+\begin{table}[H]
+    \begin{tabularx}{\textwidth}{|c|X|}
+    \hline
+        \textbf{Use Case Template} \#\usecasenumber & Prenotazione ad evento  \\ \hline
+        \textbf{Descrizione} & L'utente prenota un posto ad un evento \\ \hline
+        \textbf{Livello} & User Goal \\ \hline
+        \textbf{Attori} & Library User \\ \hline 
+        \textbf{Pre Condizioni} & L'utente ha fatto il login \\ \hline
+        \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
+            \item L'utente seleziona la pagina "Lista eventi" 
+            \item L'utente sceglie l'evento a cui vuole partecipare 
+            \item L'utente clicca il tasto "Prenota"
+            \item Il sistema invia la richiesta e riserva il posto per l'utente
+        \end{enumerate} \\ \hline
+        \textbf{Alternative Flow} & 2a. Se l'utente ha già effettuato una prenotazione per l'evento o la stanza è piena il sistema respinge la richiesta mostrando un errore  \\ \hline
+        \textbf{Post Condizioni}  & La richiesta viene registrata \\ \hline
+        \textbf{Test} & 1,2,3 \\ \hline
+    \end{tabularx}
+    \caption{Prenotazione ad evento UCT}
+    \label{tab:Richiesta tessera UCT}
+\end{table}
+\subsubsection{Prenota posto aula studio}
+\begin{table}[H]
+    \begin{tabularx}{\textwidth}{|c|X|}
+    \hline
+        \textbf{Use Case Template} \#\usecasenumber & Prenota posto aula studio  \\ \hline
+        \textbf{Descrizione} & L'utente prenota un posto in un aula studio \\ \hline
+        \textbf{Livello} & User Goal \\ \hline
+        \textbf{Attori} & Library User \\ \hline 
+        \textbf{Pre Condizioni} & L'utente ha fatto il login \\ \hline
+        \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
+            \item L'utente seleziona la pagina "Prenota posto" 
+            \item L'utente sceglie l'aula in cui vuole riservare un posto
+            \item L'utente clicca il tasto "Prenota"
+            \item Il sistema invia la richiesta e riserva il posto per l'utente
+        \end{enumerate} \\ \hline
+        \textbf{Alternative Flow} & 2a. Se l'utente ha già riservato un posto in quell'aula o l'aula è piena il sistema respinge la richiesta mostrando un errore  \\ \hline
+        \textbf{Post Condizioni}  & La richiesta viene registrata \\ \hline
+        \textbf{Test} & 1,2,3 \\ \hline
+    \end{tabularx}
+    \caption{Prenota posto aula studio UCT}
+    \label{tab:Prenota posto aula studio UCT}
+\end{table}
+\subsubsection{Approva richiesta tessera}
+\begin{table}[H]
+    \begin{tabularx}{\textwidth}{|c|X|}
+    \hline
+        \textbf{Use Case Template} \#\usecasenumber & Approva richiesta tessera  \\ \hline
+        \textbf{Descrizione} & Il bibliotecario rilascia una tessera all'utente che ne ha fatto richiesta \\ \hline
+        \textbf{Livello} & User Goal \\ \hline
+        \textbf{Attori} & Librarian \\ \hline 
+        \textbf{Pre Condizioni} & Il bibliotecario ha fatto il login e l'utente che fa richiesta non ha una tessera o la ha scaduta \\ \hline
+        \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
+            \item Il bibliotecario seleziona la pagina "Richieste tessere"
+            \item Il bibliotecario seleziona la richiesta dell'utente
+            \item Il bibliotecario clicca il tasto "Approva"
+            \item Il sistema invia la richiesta e crea la tessera all'utente associato
+            \item Il sistema assegna un numero d'ordine alla tessera
+            \item Il bibliotecario rilascia fisicamente la tessera
+        \end{enumerate} \\ \hline
+        \textbf{Alternative Flow} & - \\ \hline
+        \textbf{Post Condizioni}  & Viene creata la tessera e associata all'utente \\ \hline
+        \textbf{Test} & 1,2,3 \\ \hline
+    \end{tabularx}
+    \caption{Approva richiesta tessera UCT}
+    \label{tab:Approva richiesta tessera UCT}
+\end{table}
+\subsubsection{Rilascia tessere}
+\begin{table}[H]
+    \begin{tabularx}{\textwidth}{|c|X|}
+    \hline
+        \textbf{Use Case Template} \#\usecasenumber & Rilascia tessere  \\ \hline
+        \textbf{Descrizione} & Il bibliotecario rilascia una tessera all'utente (a differenza del precedente, l'utente non fa richiesta tramite il sistema ma va fisicamente in biblioteca a chiederla al bibliotecario) \\ \hline
+        \textbf{Livello} & User Goal \\ \hline
+        \textbf{Attori} & Librarian \\ \hline 
+        \textbf{Pre Condizioni} & Il bibliotecario ha fatto il login e l'utente non ha una tessera o la ha scaduta \\ \hline
+        \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
+            \item Il bibliotecario seleziona la pagina "Rilascio tessere"
+            \item Il bibliotecario seleziona l'utente a cui rilasciare la tessera
+            \item Il bibliotecario clicca il tasto "Rilascia"
+            \item Il sistema invia la richiesta e crea la tessera all'utente associato
+            \item Il sistema assegna un numero d'ordine alla tessera
+            \item Il bibliotecario rilascia fisicamente la tessera
+        \end{enumerate} \\ \hline
+        \textbf{Alternative Flow} & -  \\ \hline
+        \textbf{Post Condizioni}  & Viene creata la tessera e associata all'utente \\ \hline
+        \textbf{Test} & 1,2,3 \\ \hline
+    \end{tabularx}
+    \caption{Rilascia tessere UCT}
+    \label{tab:Rilascia tessere UCT}
+\end{table}
+\subsubsection{Registra prestito}
+\begin{table}[H]
+    \begin{tabularx}{\textwidth}{|c|X|}
+    \hline
+        \textbf{Use Case Template} \#\usecasenumber & Registra prestito  \\ \hline
+        \textbf{Descrizione} & Il bibliotecario registra il prestito di un libro \\ \hline
+        \textbf{Livello} & User Goal \\ \hline
+        \textbf{Attori} & Librarian \\ \hline 
+        \textbf{Pre Condizioni} & Il bibliotecario ha fatto il login e l'utente che chiede il prestito ha la tessera \\ \hline
+        \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
+            \item Il bibliotecario seleziona la pagina "Registra prestiti"
+            \item Il bibliotecario seleziona il codice del libro da registrare come prestato e la tessera a cui associarlo
+            \item Il bibliotecario clicca il tasto "Registra"
+            \item Il sistema invia la richiesta e registra il prestito all'utente associato alla tessera
+            \item Il bibliotecario presta il libro all'utente
+        \end{enumerate} \\ \hline
+        \textbf{Alternative Flow} & 2a. Se il libro è già in prestito il sistema restituisce un errore respingendo l'operazione \\ \hline
+        \textbf{Post Condizioni}  & Viene creato il prestito \\ \hline
+        \textbf{Test} & 1,2,3 \\ \hline
+    \end{tabularx}
+    \caption{Registra prestito UCT}
+    \label{tab:Registra prestito UCT}
+\end{table}
+\subsubsection{Approva richiesta prestito}
+\begin{table}[H]
+    \begin{tabularx}{\textwidth}{|c|X|}
+    \hline
+        \textbf{Use Case Template} \#\usecasenumber & Approva richiesta prestito  \\ \hline
+        \textbf{Descrizione} & Il bibliotecario approva la richiesta di un prestito pervenuta dall'utente \\ \hline
+        \textbf{Livello} & User Goal \\ \hline
+        \textbf{Attori} & Librarian \\ \hline 
+        \textbf{Pre Condizioni} & Il bibliotecario ha fatto il login e l'utente che chiede il prestito ha la tessera \\ \hline
+        \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
+            \item Il bibliotecario seleziona la pagina "Richieste prestiti"
+            \item Il bibliotecario seleziona il libro da mandare in prestito e lo approva
+            \item Il sistema invia la richiesta e registra il prestito all'utente associato alla tessera
+            \item Il bibliotecario presta il libro all'utente
+        \end{enumerate} \\ \hline
+        \textbf{Alternative Flow} & 2a. Se il libro è già in prestito il sistema restituisce un errore respingendo l'operazione \\ \hline
+        \textbf{Post Condizioni}  & Viene creato il prestito \\ \hline
+        \textbf{Test} & 1,2,3 \\ \hline
+    \end{tabularx}
+    \caption{Approva richiesta prestito UCT}
+    \label{tab:Approva richiesta prestito UCT}
+\end{table}
+\subsubsection{Gestisce eventi}
+Questo caso d'uso è di livello \textless \textless summary\textgreater \textgreater{} dato che sono operazioni CRUD. Si documenta il sotto caso "Crea evento", di particolare rilevanza per le molteplici condizioni da rispettare.
+\begin{table}[H]
+    \begin{tabularx}{\textwidth}{|c|X|}
+    \hline
+        \textbf{Use Case Template} \#\usecasenumber & Crea evento  \\ \hline
+        \textbf{Descrizione} & Il bibliotecario crea un evento \\ \hline
+        \textbf{Livello} & User Goal \\ \hline
+        \textbf{Attori} & Librarian\\ \hline 
+        \textbf{Pre Condizioni} & Il bibliotecario ha fatto il login \\ \hline
+        \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
+            \item Il bibliotecario entra nella pagina di creazione eventi
+            \item Il bibliotecario inserisce nome, descrizione, data, durata, aula e organizzatore. 
+            \item Il sistema controlla la validità di quanto inserito, validando data, durata, stanza e organizzatore
+            \item Il sistema crea l'evento 
+        \end{enumerate} \\ \hline
+        \textbf{Alternative Flow} & Il sistema respinge l'operazione restituendo un errore se
+        \begin{itemize}[nosep, leftmargin=* ,before=\vspace{-0.1\baselineskip}]
+            \item La data inserita è nel passato
+            \item La durata dell'evento è negativa
+            \item La stanza scelta non esiste
+            \item L'organizzatore scelto non esiste
+            \item La stanza scelta è un aula studio invece di un aula eventi
+        \end{itemize}  \\ \hline
+        \textbf{Post Condizioni} & Viene creato l'evento\\ \hline
+        \textbf{Test} & 1,2,3 \\ \hline
+    \end{tabularx}
+    \caption{Crea evento UCT}
+    \label{tab:Crea evento UCT}
+\end{table}
+\subsubsection{Aumenta il budget}
+\begin{table}[H]
+    \begin{tabularx}{\textwidth}{|c|X|}
+    \hline
+        \textbf{Use Case Template} \#\usecasenumber & Aumenta il budget  \\ \hline
+        \textbf{Descrizione} & L'utente accede al sistema attraverso le proprie credenziali \\ \hline
+        \textbf{Livello} & User Goal \\ \hline
+        \textbf{Attori} & Library Administrator \\ \hline 
+        \textbf{Pre Condizioni} & L'amministratore è autenticato, modifica il budget della biblioteca che gestisce \\ \hline
+        \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
+            \item L'amministratore entra nella pagina corretta per aumentare il budget 
+            \item L'amministratore inserisce l'aumento di budget desiderato
+            \item Il sistema controlla la validità di quanto inserito
+            \item Il sistema registra l'aumento 
+        \end{enumerate} \\ \hline
+        \textbf{Alternative Flow} & 3a. Se l'aumento è negativo il sistema respinge l'operazione visualizzando un errore  \\ \hline
+        \textbf{Post Condizioni} & Viene aumentato il budget \\ \hline
+        \textbf{Test} & 1,2,3 \\ \hline
+    \end{tabularx}
+    \caption{Aumenta il budget UCT}
+    \label{tab:Aumenta il budget UCT}
+\end{table}
+\subsection{Mockup}
+Di seguito vengono mostrati i mockup di una possibile interfaccia utente per questo sistema gestionale. Sono stati realizzati con \url{figma.com}.
+\begin{enumerate}
+    \item Mostra la login page
+    \item Mostra la pagina di registrazione
+    \item Mostra la home page dell'utente
+    \item Mostra la pagina di catalogo libri dal quale è possibile prenotarne uno per chiederlo in prestito
+    \item Mostra la pagina di lista degli eventi dal quale è possibile prenotarsi
+    \item Mostra la pagina di prenotazione per le aule studio nel quale è possibile vedere i posti disponibili e prenotarsi
+    \item Mostra la pagina di richiesta prestiti del bibliotecario, dal quale approva i prestiti che gli utenti hanno richiesto
+    \item Mostra la pagina di richiesta tessere del bibliotecario dal quale approva e rilascia le tessere agli utenti che ne hanno fatto richiesta
+\end{enumerate}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{images/mockup/Login mockup.png}
+    \caption{Login page}
+    \label{fig:login page}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{images/mockup/Register mockup.png}
+    \caption{Register page}
+    \label{fig:register page}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{images/mockup/Catalogo libri.png}
+    \caption{Catalogo libri}
+    \label{fig:catalogo libri}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{images/mockup/Lista eventi.png}
+    \caption{Lista eventi}
+    \label{fig:Lista eventi}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{images/mockup/Lista aule studio.png}
+    \caption{Prenotazione aula studio}
+    \label{fig:Prenotazione aula studio}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{images/mockup/Richieste prestito.png}
+    \caption{Richieste prestito bibliotecario}
+    \label{fig:richieste prestito bibliotecario}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{images/mockup/Richieste tessera.png}
+    \caption{Richieste tessere bibliotecario}
+    \label{fig:Richieste tessere bibliotecario}
+\end{figure}
+
+

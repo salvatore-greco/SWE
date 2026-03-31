@@ -3,23 +3,26 @@
 \usepackage{graphicx} % Required for inserting images
 \usepackage{titling} % per l'uso di \theauthor, \thetitle
 \usepackage[a4paper, margin=2cm]{geometry}
+% per usare il carattere " per virgolette aperte e chiuse (che roba inutile...)
+\usepackage[autostyle, italian=guillemets]{csquotes}
+\MakeOuterQuote{"}
 % === per indice
 \usepackage{makeidx}
 \usepackage{tocloft}
 %====
 \usepackage{fancyhdr} % per il layout di intestazione e piè di pagina
-\usepackage{tcolorbox} % per le box colorate
 \usepackage{float} % per il posizionamento delle immagini
 \usepackage{caption} % per impostare figura invece di figure
 \usepackage[hidelinks]{hyperref} % per \nameref e hyperlink ai riferimenti
-% ==== matematica
-\usepackage{amsmath}
-\usepackage{amssymb}
 % === snippet di codice ==== %
 \usepackage{minted}
 \usepackage[svgnames]{xcolor}
 % ========================== %
 \usepackage{subfigure}  % allineare le immagini comodamente
+% tabelle carine
+\usepackage{tabularx}
+% per configurare enumerate
+\usepackage{enumitem}
 %Package per tabella test
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -40,6 +43,13 @@
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}} % per avere i puntini fra titolo del paragrafo e numero di pagina
 \setlength{\cftbeforesecskip}{8pt} 
 \renewcommand{\contentsname}{Indice} % Titolo dell'indice
+%=================%
+% Contatore per Use Case Template (grazie gemini :) )
+\newcounter{usecasecnt}
+\newcommand{\usecasenumber}{
+  \stepcounter{usecasecnt}% Incrementa il contatore
+  \arabic{usecasecnt}% Stampa il numero in formato arabo
+}
 % ================ %
 \begin{document}
 % Frontespizio
