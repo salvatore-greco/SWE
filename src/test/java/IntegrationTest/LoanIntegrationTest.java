@@ -48,11 +48,11 @@ public class LoanIntegrationTest extends BaseDAOUnitTest {
         assertFalse(grantedLoan.getEnded());
     }
 
-    @Disabled
     @Test
     public void grantLoan_notRequested(){
-        //A quanto pare nel LibrarianController non si può concedere prestiti senza che un utente li richieda
-        //Che biblioteca computer centrica.
+        Book bookToLoan = assertDoesNotThrow(() -> bookDAO.getBookByCode("A002"));
+        Loan loan = new Loan(libraryUserController.getUser().getCard(), bookToLoan, false, false);
+        assertDoesNotThrow(() -> librarianController.registerLoan(loan));
     }
 
     @Test

@@ -99,13 +99,15 @@ public class LibrarianController implements ControllerInterface {
         }
     }
 
-    public void requestLoan(Loan loan) {
+    public void registerLoan(Loan loan) {
         LoanDAO loanDAO = new LoanDAO();
         if (loanDAO.isBookLoaned(loan.getBook().getCode())) {
             throw new RuntimeException("Book is already loaned");
         }
         loan.setGranted(true);
         loan.setEnded(false);
+        loan.setIssueDate(LocalDate.now());
+        loan.setExpirationDate(LocalDate.now().plusDays(LOAN_DURATION));
 
         boolean created = loanDAO.setLoan(loan);
         if (!created) {
