@@ -123,6 +123,79 @@ La Business Logic, mostrata in Figura~\ref{fig:business_logic}, contiene tutte l
         \item aggiornare un libro nel catalogo con \textbf{updateBookInCatalogue}.
     \end{itemize}
 
-\subsection{ORM}
+\subsection{ORM (Object-Relational Mapping)}
+L'ORM, mostrato in Figura~\ref{fig:orm}, si occupa della gestione della persistenza dei dati nel database. Questo livello è implementato tramite classi DAO (Data Access Object), che forniscono metodi per eseguire operazioni CRUD con le QUERY, eseguite tramite JDBC.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{images/class diagram/orm.png}
+    \caption{ORM del sistema}
+    \label{fig:orm}
+\end{figure}
+
+    \subsubsection{Connection Manager}
+    La classe si occupa di gestire la connessione al database per tutte le classi DAO tramite il metodo \textbf{getConnection}. Essendo implementata seguendo il design pattern del \textbf{Singleton} non è possibile che due DAO si colleghino contemporaneamente al database e quindi che si verifichino perdite di dati.\\
+    Per realizzare la connessione al DB è necessaria la creazione di un file \texttt{.env}, con dentro inserite le credenziali per accederci.
+
+    \subsubsection{Utils}
+    La classe \texttt{Utils} è una classe di supporto, utilizzata in alcuni DAO, che implementa due metodi, \textbf{toLocalDateOrNull e PGIntervalToDuration}, e servono per avere un tipo di ritorno in alcune QUERY.
+
+    \subsubsection{UserDAO e UserDTO}
+    La classe \texttt{UserDAO} permette l'accesso al sistema a qualunque tipo di utente e implementa i metodi per:
+    \begin{itemize}
+        \item ricercare un utente in base all'email tramite \textbf{getUserByEmail};
+        \item ricercare una biblioteca in base all'email degli amministratori tramite \textbf{getLibraryManagedByAdmin};
+        \item aggiornare la password di utente tramite email del richiedente con \textbf{getLibraryManagedByAdmin};
+        \item inserire un nuovo utente nel database tramite \textbf{insertUser}.
+    \end{itemize}\\
+    In particolare per gli User, è stata creata la classe \texttt{UserDTO} (Data Transfer Object), un design pattern che serve per il trasferimento dati tra l'interfaccia utente e il database, incapsulandoli in oggetti. Contiene solo gli attributi di un utente e i relativi getter.
+
+    \subsubsection{BookDAO} 
+    La classe \texttt{BookDAO} garantisce l'accesso al sistema dei libri con le seguenti funzionalità:
+    \begin{itemize}
+        \item ricercare un libro in base al suo codice tramite \textbf{getBookByCode};
+        \item inserire un nuovo libro nel database tramite \textbf{saveBook};
+        \item ottenere una lista di tutti i libri tramite \textbf{getAllBooks};
+        \item rimuovere un libro in base al suo codice tramite \textbf{removeBook};
+        \item aggiornare i parametri di un libro, selezionandolo in base al codice, tramite \textbf{updateBook}.
+    \end{itemize}
+
+    \subsubsection{LoanDAO}
+    La classe \texttt{LoanDAO} serve per gestire la relazione dei prestiti del sistema tramite le funzionalità che permettono di:
+    \begin{itemize}
+        \item creare un prestito tramite \textbf{setLoan};
+        \item vedere se un libro è in prestito tramite \textbf{isBookLoaned};
+        \item garantire un prestito tramite \textbf{grantLoan};
+        \item terminare un prestito tramite \textbf{endLoan};
+        \item cercare un prestito nel database in base al libro preso in prestito e tessera di chi ha richiesto il prestito, tramite \textbf{getLoanByBookAndCard}.
+    \end{itemize}
+
+    \subsubsection{EventDAO}
+    La classe \texttt{EventDAO} permette l'accesso a tutte le funzionalità riguardanti gli eventi, e loro partecipazione, permettendo di:
+    \begin{itemize}
+        \item aggiungere un partecipante all'evento tramite \textbf{addNewParticipant};
+        \item rimuovere un partecipante all'evento tramite \textbf{removeParticipant};
+        \item ottenere una lista di tutti i libri tramite \textbf{getAllBooks};
+        \item rimuovere un libro in base al suo codice tramite \textbf{removeBook};
+        \item aggiornare i parametri di un libro, selezionandolo in base al codice, tramite \textbf{updateBook};
+    \end{itemize}
+
+    \subsubsection{CardDAO}
+    La classe \texttt{CardDAO} permette l'accesso a tutte le funzionalità riguardanti le tessere permettendo di:
+    \begin{itemize}
+        \item creare una tessera su richiesta tramite \textbf{setRequestedCard};
+        \item creare una tessera tramite \textbf{createCard};
+        \item rinnovare una tessera su richiesta tramite \textbf{createCardFromRequest};
+        \item cercare una tessera tramite email del richiedente con \textbf{getCardByEmail}
+    \end{itemize}
+
+    \subsubsection{RoomDAO}
+    La classe \texttt{RoomDAO} permette l'accesso a tutte le funzionalità riguardanti le stanze, e le prenotazioni dei posti nelle stanze, permettendo di:
+    \begin{itemize}
+        \item aggiungere un posto prenotato tramite \textbf{addSeatReservationStudyRoom};
+        \item rimuovere un posto prenotato tramite \textbf{removeSeatReservationStudyRoom};
+        \item vedere quali eventi sono ospitati in una stanza  tramite \textbf{getEventForRoomNumber};
+        \item vedere quali utenti hanno prenotato un posto nella stanza tramite \textbf{getReservedSeatForRoomNumber};
+        \item cercare una stanza in base al numero tramite \textbf{getRoomByNumber}.
+    \end{itemize}
 
 \subsection{Modello relazionale Database}
