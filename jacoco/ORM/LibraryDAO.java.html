@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LibraryDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Biblioteche-SWE</a> &gt; <a href="index.source.html" class="el_package">ORM</a> &gt; <span class="el_source">LibraryDAO.java</span></div><h1>LibraryDAO.java</h1><pre class="source lang-java linenums">package ORM;
+
+import DomainModel.*;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class LibraryDAO {
+<span class="fc" id="L11">    public LibraryDAO() {</span>
+<span class="fc" id="L12">    }</span>
+
+    public Library getLibraryByName(String name) {
+        try {
+<span class="fc" id="L16">            Connection conn = ConnectionManager.getInstance().getConnection();</span>
+<span class="fc" id="L17">            PreparedStatement stmt = conn.prepareStatement(&quot;SELECT * FROM library WHERE name = ?&quot;);</span>
+<span class="fc" id="L18">            stmt.setString(1, name);</span>
+<span class="fc" id="L19">            ResultSet rs = stmt.executeQuery();</span>
+<span class="fc bfc" id="L20" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L21">                Library library = new Library(rs.getInt(&quot;budget&quot;), rs.getString(&quot;name&quot;));</span>
+<span class="fc" id="L22">                stmt.close();</span>
+<span class="fc" id="L23">                return library;</span>
+            }
+<span class="nc" id="L25">        } catch (SQLException e) {</span>
+<span class="nc" id="L26">            e.printStackTrace();</span>
+<span class="fc" id="L27">        }</span>
+<span class="fc" id="L28">        return null;</span>
+    }
+
+    public boolean increaseBudgetOfLibrary(String name, int budgetIncreased){
+        try{
+<span class="fc" id="L33">            Connection conn = ConnectionManager.getInstance().getConnection();</span>
+<span class="fc" id="L34">            PreparedStatement stmt = conn.prepareStatement(&quot;UPDATE library set budget = (?) where name = (?)&quot;);</span>
+<span class="fc" id="L35">            stmt.setInt(1, budgetIncreased);</span>
+<span class="fc" id="L36">            stmt.setString(2, name);</span>
+<span class="fc" id="L37">            int row = stmt.executeUpdate();</span>
+<span class="fc" id="L38">            stmt.close();</span>
+<span class="fc bfc" id="L39" title="All 2 branches covered.">            return row &gt; 0;</span>
+        }
+<span class="nc" id="L41">        catch (SQLException e){</span>
+<span class="nc" id="L42">            e.printStackTrace();</span>
+        }
+<span class="nc" id="L44">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

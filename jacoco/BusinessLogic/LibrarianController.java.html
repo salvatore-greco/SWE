@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LibrarianController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Biblioteche-SWE</a> &gt; <a href="index.source.html" class="el_package">BusinessLogic</a> &gt; <span class="el_source">LibrarianController.java</span></div><h1>LibrarianController.java</h1><pre class="source lang-java linenums">package BusinessLogic;
+
+import DomainModel.*;
+import Exception.data.UserNotFoundException;
+import ORM.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+public class LibrarianController implements ControllerInterface {
+    private Librarian user;
+    private static final int LOAN_DURATION = 30;
+
+<span class="fc" id="L14">    public LibrarianController(User user) {</span>
+<span class="fc" id="L15">        this.user = (Librarian) user;</span>
+<span class="fc" id="L16">    }</span>
+
+    public Card createCard(LibraryUser user) {
+<span class="fc" id="L19">        CardDAO cardDAO = new CardDAO();</span>
+        Card card;
+
+<span class="fc bfc" id="L22" title="All 4 branches covered.">        if(user.getCard()!= null &amp;&amp; user.getCard().getIssueDate() != null)</span>
+<span class="fc" id="L23">            throw new RuntimeException(&quot;User already has a card&quot;);</span>
+
+        // User ha già fatto richiesta della tessera
+<span class="pc bpc" id="L26" title="1 of 4 branches missed.">        if (user.getCard()!=null &amp;&amp; user.getCard().getIssueDate() == null) {</span>
+<span class="fc" id="L27">            card = cardDAO.createCardFromRequest(user);</span>
+        } else
+<span class="fc" id="L29">            card = cardDAO.createCard(user);</span>
+
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">        if (card == null)</span>
+<span class="nc" id="L32">            throw new RuntimeException(&quot;Write on database failed&quot;);</span>
+
+<span class="fc" id="L34">        return card;</span>
+    }
+
+    public Event createEvent(EventDTO eventDTO) {
+<span class="fc" id="L38">        UserDAO userDAO = new UserDAO();</span>
+<span class="fc" id="L39">        RoomDAO roomDAO = new RoomDAO();</span>
+<span class="fc" id="L40">        EventDAO eventDAO = new EventDAO();</span>
+        UserDTO organizer;
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        if (eventDTO.getStartDate().isBefore(LocalDateTime.now()))</span>
+<span class="fc" id="L43">            throw new IllegalArgumentException(&quot;Event start date cannot be in the past&quot;);</span>
+<span class="pc bpc" id="L44" title="1 of 4 branches missed.">        if (eventDTO.getEventDuration().isNegative() || eventDTO.getEventDuration().isZero())</span>
+<span class="fc" id="L45">            throw new IllegalArgumentException(&quot;Event duration must be positive&quot;);</span>
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        if (eventDTO.getStartDate().plus(eventDTO.getEventDuration()).isAfter(eventDTO.getStartDate().plusDays(1)))</span>
+<span class="nc" id="L47">            throw new IllegalArgumentException(&quot;Event cannot finish the day after (library probably close earlier)&quot;);</span>
+        // questi check possono essere delegati alla vista
+        // ad esempio, con django potremmo usare ModelForm e mostrarlo con CreateView
+        // li metto per completezza, ma in base a come viene costruita la ui possono essere tolti
+        try {
+<span class="fc" id="L52">            organizer = userDAO.getUserByEmail(eventDTO.getOrganizer());</span>
+<span class="nc" id="L53">        } catch (UserNotFoundException e) {</span>
+<span class="nc" id="L54">            throw new IllegalArgumentException(&quot;Organizer must exist&quot;);</span>
+<span class="fc" id="L55">        }</span>
+<span class="fc" id="L56">        Room room = roomDAO.getRoomByNumber(eventDTO.getPlace());</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (room == null){</span>
+<span class="fc" id="L58">            throw new IllegalArgumentException(&quot;Room must exist&quot;);</span>
+        }
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (room instanceof StudyRoom){</span>
+<span class="fc" id="L61">            throw new IllegalArgumentException(&quot;Room must be an Event Room&quot;);</span>
+        }
+
+<span class="fc" id="L64">        Event eventToBeCreated = new Event.EventBuilder()</span>
+<span class="fc" id="L65">                .setName(eventDTO.getName())</span>
+<span class="fc" id="L66">                .setDescription(eventDTO.getDescription())</span>
+<span class="fc" id="L67">                .setEventDuration(eventDTO.getEventDuration())</span>
+<span class="fc" id="L68">                .setStartDate(eventDTO.getStartDate())</span>
+<span class="fc" id="L69">                .setOrganizer(new Librarian(organizer.getName(), organizer.getEmail(), organizer.getSurname()))</span>
+<span class="fc" id="L70">                .setPlace((EventRoom) room).build();</span>
+
+<span class="fc" id="L72">        ((EventRoom) room).scheduleEvent(eventToBeCreated);</span>
+
+        //se arrivo qua significa che la stanza è disponibile, posso scrivere l'evento nel db
+<span class="fc" id="L75">        Integer id = eventDAO.setEvent(eventToBeCreated);</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        if (id!= null){</span>
+<span class="fc" id="L77">            eventToBeCreated.setId(id);</span>
+<span class="fc" id="L78">            return eventToBeCreated;</span>
+        }
+        else {
+<span class="nc" id="L81">            throw new RuntimeException(&quot;Write on db failed&quot;);</span>
+        }
+    }
+
+    public void cancelEvent(Event event) {
+<span class="fc" id="L86">        EventDAO eventDAO = new EventDAO();</span>
+<span class="fc" id="L87">        boolean deleted = eventDAO.deleteEvent(event);</span>
+
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        if (!deleted) {</span>
+<span class="fc" id="L90">            throw new RuntimeException(&quot;Event not found&quot;);</span>
+        }
+<span class="fc" id="L92">    }</span>
+
+    public void modifyEvent(Event event) {
+<span class="fc" id="L95">        EventDAO eventDAO = new EventDAO();</span>
+<span class="fc" id="L96">        boolean edited = eventDAO.editEvent(event);</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        if (!edited) {</span>
+<span class="fc" id="L98">            throw new RuntimeException(&quot;Event not found&quot;);</span>
+        }
+<span class="fc" id="L100">    }</span>
+
+    public void registerLoan(Loan loan) {
+<span class="fc" id="L103">        LoanDAO loanDAO = new LoanDAO();</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">        if (loanDAO.isBookLoaned(loan.getBook().getCode())) {</span>
+<span class="nc" id="L105">            throw new RuntimeException(&quot;Book is already loaned&quot;);</span>
+        }
+<span class="fc" id="L107">        loan.setGranted(true);</span>
+<span class="fc" id="L108">        loan.setEnded(false);</span>
+<span class="fc" id="L109">        loan.setIssueDate(LocalDate.now());</span>
+<span class="fc" id="L110">        loan.setExpirationDate(LocalDate.now().plusDays(LOAN_DURATION));</span>
+
+<span class="fc" id="L112">        boolean created = loanDAO.setLoan(loan);</span>
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">        if (!created) {</span>
+<span class="nc" id="L114">            throw new RuntimeException(&quot;Loan request failed&quot;);</span>
+        }
+<span class="fc" id="L116">    }</span>
+
+    public void grantLoan(Loan loan) {
+<span class="fc" id="L119">        LoanDAO loanDAO = new LoanDAO();</span>
+<span class="fc" id="L120">        LocalDate now = LocalDate.now();</span>
+<span class="fc" id="L121">        LocalDate endTime = now.plusDays(LOAN_DURATION);</span>
+<span class="fc" id="L122">        boolean updated = loanDAO.grantLoan(loan, now, endTime);</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">        if (!updated) {</span>
+<span class="nc" id="L124">            throw new IllegalStateException(&quot;Loan not found&quot;);</span>
+        }
+<span class="fc" id="L126">    }</span>
+
+    public void endLoan(Loan loan) {
+<span class="fc" id="L129">        LoanDAO loanDAO = new LoanDAO();</span>
+<span class="fc" id="L130">        boolean updated = loanDAO.endLoan(loan);</span>
+<span class="pc bpc" id="L131" title="1 of 2 branches missed.">        if (!updated) {</span>
+<span class="nc" id="L132">            throw new IllegalStateException(&quot;Loan not found&quot;);</span>
+        }
+<span class="fc" id="L134">    }</span>
+
+    public Librarian getUser() {
+<span class="fc" id="L137">        return user;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

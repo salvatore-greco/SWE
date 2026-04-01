@@ -70,6 +70,8 @@ public class ConcreteAuthService implements AuthService {
 
     @Override
     public boolean register(UserDTO userDTO) {
+        if(loggedUser!=null)
+            throw new RuntimeException("User already logged in");
         if (userDAO.getUserByEmail(userDTO.getEmail()) != null) {
             throw new RuntimeException("User already exists");
         }

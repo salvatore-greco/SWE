@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConnectionManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Biblioteche-SWE</a> &gt; <a href="index.source.html" class="el_package">ORM</a> &gt; <span class="el_source">ConnectionManager.java</span></div><h1>ConnectionManager.java</h1><pre class="source lang-java linenums">package ORM;
+
+import io.github.cdimascio.dotenv.Dotenv;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.SQLTimeoutException;
+import java.util.Properties;
+
+
+/*
+    ConnectionManager è un singleton/deve esistere una sola istanza di esso.
+    Focus: mi serve creare il driver manager e la connessione. DriverManager.getConnection(url, user, pass) mi connette al db
+    Io poi passerò il connection manager ai vari dao. Essi creeranno PreparedStatement/Statement stmt -&gt; stmt.executeQuery(query)
+    esso mi ritorna un ResultSet con i dati provenienti dal DB. Cerchiamo di fornire meglio possibile i dati come le vogliono le classi
+    (evitiamo di ritornare il ResultSet grezzo)
+
+ */
+public class ConnectionManager {
+    private Connection connection;
+<span class="fc" id="L22">    private static ConnectionManager instance = null;</span>
+
+<span class="fc" id="L24">    private ConnectionManager() throws SQLException, SQLTimeoutException {</span>
+<span class="fc" id="L25">        this.connection = initializeConnection();</span>
+<span class="fc" id="L26">    }</span>
+
+    private Connection initializeConnection() throws SQLException {
+        Connection connection;
+<span class="fc" id="L30">        Properties props = getDBProprieties();</span>
+<span class="fc" id="L31">        connection = DriverManager.getConnection(props.getProperty(&quot;url&quot;), props);</span>
+<span class="fc" id="L32">        return connection;</span>
+    }
+
+    public static ConnectionManager getInstance() throws SQLException, SQLTimeoutException{
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        if (instance == null) instance = new ConnectionManager();</span>
+<span class="fc" id="L37">        return instance;</span>
+    }
+
+    public Connection getConnection(){
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">        if (instance == null){</span>
+<span class="nc" id="L42">            throw new IllegalStateException(&quot;getConnection must be called after getInstance&quot;);</span>
+        }
+        try {
+<span class="fc bfc" id="L45" title="All 2 branches covered.">            if (connection.isClosed()){</span>
+<span class="fc" id="L46">                this.connection = initializeConnection();</span>
+            }
+<span class="nc" id="L48">        } catch (SQLException e) {</span>
+<span class="nc" id="L49">            e.printStackTrace();</span>
+<span class="fc" id="L50">        }</span>
+<span class="fc" id="L51">        return connection;</span>
+    }
+
+    private Properties getDBProprieties(){
+<span class="fc" id="L55">        Dotenv dotenv = Dotenv.configure().directory(&quot;./src&quot;).load();</span>
+<span class="fc" id="L56">        Properties props = new Properties();</span>
+<span class="fc" id="L57">        props.setProperty(&quot;url&quot;, dotenv.get(&quot;DB_URL&quot;));</span>
+<span class="fc" id="L58">        props.setProperty(&quot;user&quot;, dotenv.get(&quot;DB_USER&quot;));</span>
+<span class="fc" id="L59">        props.setProperty(&quot;password&quot;, dotenv.get(&quot;DB_PASS&quot;));</span>
+<span class="fc" id="L60">        return props;</span>
+    }
+    public String getDBUsername(){
+<span class="nc" id="L63">        return getDBProprieties().getProperty(&quot;user&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

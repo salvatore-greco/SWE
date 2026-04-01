@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Biblioteche-SWE</a> &gt; <a href="index.source.html" class="el_package">ORM</a> &gt; <span class="el_source">UserDAO.java</span></div><h1>UserDAO.java</h1><pre class="source lang-java linenums">package ORM;
+
+import BusinessLogic.role;
+import DomainModel.Library;
+import Exception.data.UserNotFoundException;
+
+import java.sql.*;
+
+public class UserDAO {
+
+<span class="fc" id="L11">    public UserDAO() {</span>
+<span class="fc" id="L12">    }</span>
+
+    /**
+     *
+     * @param email
+     * @return {@link UserDTO} if user with given email is found. Can return null if a database error happens
+     * @throws UserNotFoundException
+     */
+    public UserDTO getUserByEmail(String email) throws UserNotFoundException {
+        try {
+<span class="fc" id="L22">            Connection conn = ConnectionManager.getInstance().getConnection();</span>
+<span class="fc" id="L23">            PreparedStatement stmt = conn.prepareStatement(&quot;SELECT * FROM \&quot;user\&quot; WHERE email = ?&quot;);</span>
+<span class="fc" id="L24">            stmt.setString(1, email);</span>
+<span class="fc" id="L25">            ResultSet rs = stmt.executeQuery();</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">            if (rs.next()) {</span>
+<span class="fc" id="L27">                UserDTO userDTO =  new UserDTO(</span>
+<span class="fc" id="L28">                        rs.getString(1),</span>
+<span class="fc" id="L29">                        rs.getString(2),</span>
+<span class="fc" id="L30">                        rs.getString(3),</span>
+<span class="fc" id="L31">                        role.valueOf(rs.getString(4)),</span>
+<span class="fc" id="L32">                        rs.getString(5)</span>
+                );
+<span class="fc" id="L34">                stmt.close();</span>
+<span class="fc" id="L35">                return userDTO;</span>
+            }
+            else
+<span class="fc" id="L38">                throw new UserNotFoundException(&quot;Wrong username or password&quot;);</span>
+                //dato che lanciamo la stessa eccezione anche nel concrete auth service
+                //per non dare informazioni sul fatto che l'email sia presente o meno nel db
+                //usiamo lo stesso messaggio dell'eccezione
+        }
+<span class="nc" id="L43">        catch (SQLException e){</span>
+<span class="nc" id="L44">            e.printStackTrace();</span>
+<span class="nc" id="L45">            return null;</span>
+        }
+
+    }
+
+    public Library getLibraryManagedByAdmin(String email){
+       try{
+<span class="fc" id="L52">           Connection conn = ConnectionManager.getInstance().getConnection();</span>
+<span class="fc" id="L53">           PreparedStatement stmt = conn.prepareStatement(&quot;SELECT name, budget from manage JOIN library on library.name = manage.library where manage.user = (?)&quot;);</span>
+<span class="fc" id="L54">           stmt.setString(1, email);</span>
+<span class="fc" id="L55">           ResultSet rs = stmt.executeQuery();</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">              if(rs.next()){</span>
+<span class="fc" id="L57">                    Library library = new Library(rs.getInt(2), rs.getString(2));</span>
+<span class="fc" id="L58">                    stmt.close();</span>
+<span class="fc" id="L59">                    return library;</span>
+              }
+<span class="nc" id="L61">       } catch (SQLException e) {</span>
+<span class="nc" id="L62">           e.printStackTrace();</span>
+<span class="fc" id="L63">       }</span>
+<span class="fc" id="L64">        return null;</span>
+    }
+
+    public boolean updatePassword(String email, String newHashedPassword){
+        try {
+<span class="fc" id="L69">            Connection conn = ConnectionManager.getInstance().getConnection();</span>
+<span class="fc" id="L70">            PreparedStatement stmt = conn.prepareStatement(&quot;UPDATE \&quot;user\&quot; SET password = ? WHERE email = ?&quot;);</span>
+<span class="fc" id="L71">            stmt.setString(1, newHashedPassword);</span>
+<span class="fc" id="L72">            stmt.setString(2, email);</span>
+<span class="fc" id="L73">            int row = stmt.executeUpdate();</span>
+<span class="fc" id="L74">            stmt.close();</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">            return row &gt; 0;</span>
+<span class="nc" id="L76">        } catch (SQLException e) {</span>
+<span class="nc" id="L77">            e.printStackTrace();</span>
+<span class="nc" id="L78">            return false;</span>
+        }
+    }
+
+    public boolean insertUser(UserDTO userDTO){
+        try {
+<span class="fc" id="L84">            Connection conn = ConnectionManager.getInstance().getConnection();</span>
+            //forzo il cast del ruolo nella enum postgre
+<span class="fc" id="L86">            PreparedStatement stmt = conn.prepareStatement(&quot;INSERT INTO \&quot;user\&quot; (email, name, surname, password, role) values (?, ?, ?, ?, ?::role)&quot;);</span>
+<span class="fc" id="L87">            stmt.setString(1, userDTO.getEmail());</span>
+<span class="fc" id="L88">            stmt.setString(2, userDTO.getName());</span>
+<span class="fc" id="L89">            stmt.setString(3, userDTO.getSurname());</span>
+<span class="fc" id="L90">            stmt.setString(4, userDTO.getPassword());</span>
+<span class="fc" id="L91">            stmt.setString(5, userDTO.getRole().name());</span>
+
+<span class="fc" id="L93">            int row = stmt.executeUpdate();</span>
+<span class="fc" id="L94">            stmt.close();</span>
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">            return row &gt; 0;</span>
+<span class="nc" id="L96">        } catch (SQLException e) {</span>
+<span class="nc" id="L97">            e.printStackTrace();</span>
+<span class="nc" id="L98">            return false;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

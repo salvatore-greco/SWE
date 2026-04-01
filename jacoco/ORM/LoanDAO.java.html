@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LoanDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Biblioteche-SWE</a> &gt; <a href="index.source.html" class="el_package">ORM</a> &gt; <span class="el_source">LoanDAO.java</span></div><h1>LoanDAO.java</h1><pre class="source lang-java linenums">package ORM;
+
+import DomainModel.Book;
+import DomainModel.Card;
+import DomainModel.Loan;
+
+import java.sql.*;
+import java.time.LocalDate;
+
+public class LoanDAO {
+<span class="fc" id="L11">    public LoanDAO() {</span>
+<span class="fc" id="L12">    }</span>
+
+    public boolean setLoan(Loan loan) {
+        try {
+<span class="fc" id="L16">            Connection conn = ConnectionManager.getInstance().getConnection();</span>
+<span class="fc" id="L17">            PreparedStatement stmt = conn.prepareStatement(&quot;INSERT INTO loan(book, card, granted, ended) values(?, ?, ?, ?) &quot;);</span>
+<span class="fc" id="L18">            stmt.setString(1, loan.getBook().getCode());</span>
+<span class="fc" id="L19">            stmt.setInt(2, loan.getCard().getId());</span>
+<span class="fc" id="L20">            stmt.setBoolean(3, loan.getGranted());</span>
+<span class="fc" id="L21">            stmt.setBoolean(4, loan.getEnded());</span>
+<span class="fc" id="L22">            int row = stmt.executeUpdate();</span>
+<span class="fc" id="L23">            stmt.close();</span>
+<span class="pc bpc" id="L24" title="1 of 2 branches missed.">            return row &gt; 0;</span>
+<span class="nc" id="L25">        } catch (SQLException e) {</span>
+<span class="nc" id="L26">            e.printStackTrace();</span>
+        }
+<span class="nc" id="L28">        return false;</span>
+    }
+
+    public boolean isBookLoaned(String code) {
+        try {
+<span class="fc" id="L33">            Connection conn = ConnectionManager.getInstance().getConnection();</span>
+<span class="fc" id="L34">            PreparedStatement stmt = conn.prepareStatement(&quot;SELECT 1 FROM loan WHERE book = ? AND ended = FALSE AND granted = TRUE&quot;);</span>
+<span class="fc" id="L35">            stmt.setString(1, code);</span>
+<span class="fc" id="L36">            return stmt.executeQuery().next();</span>
+<span class="nc" id="L37">        } catch (SQLException e) {</span>
+<span class="nc" id="L38">            e.printStackTrace();</span>
+<span class="nc" id="L39">            return true;</span>
+        }
+    }
+
+    public boolean grantLoan(Loan loan, LocalDate issueDate, LocalDate expirationDate) {
+        try {
+<span class="fc" id="L45">            Connection conn = ConnectionManager.getInstance().getConnection();</span>
+<span class="fc" id="L46">            PreparedStatement stmt = conn.prepareStatement(&quot;UPDATE loan SET granted = TRUE, issueDate = ?, expirationDate = ? WHERE book = ? AND card = ? AND ended = FALSE&quot;);</span>
+<span class="fc" id="L47">            stmt.setDate(1, Date.valueOf(issueDate));</span>
+<span class="fc" id="L48">            stmt.setDate(2, Date.valueOf(expirationDate));</span>
+<span class="fc" id="L49">            stmt.setString(3, loan.getBook().getCode());</span>
+<span class="fc" id="L50">            stmt.setInt(4, loan.getCard().getId());</span>
+<span class="fc" id="L51">            int row = stmt.executeUpdate();</span>
+<span class="fc" id="L52">            stmt.close();</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">            return row &gt; 0;</span>
+<span class="nc" id="L54">        } catch (SQLException e) {</span>
+<span class="nc" id="L55">            e.printStackTrace();</span>
+<span class="nc" id="L56">            return false;</span>
+        }
+    }
+
+    public boolean endLoan(Loan loan) {
+        try {
+<span class="fc" id="L62">            Connection conn = ConnectionManager.getInstance().getConnection();</span>
+<span class="fc" id="L63">            PreparedStatement stmt = conn.prepareStatement(&quot;UPDATE loan SET ended = ? WHERE book = ? AND card = ?&quot;);</span>
+<span class="fc" id="L64">            stmt.setBoolean(1, true);</span>
+<span class="fc" id="L65">            stmt.setString(2, loan.getBook().getCode());</span>
+<span class="fc" id="L66">            stmt.setInt(3, loan.getCard().getId());</span>
+<span class="fc" id="L67">            int row = stmt.executeUpdate();</span>
+<span class="fc" id="L68">            stmt.close();</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">            return row &gt; 0;</span>
+<span class="nc" id="L70">        } catch (SQLException e) {</span>
+<span class="nc" id="L71">            e.printStackTrace();</span>
+<span class="nc" id="L72">            return false;</span>
+        }
+    }
+
+    public Loan getLoanByBookAndCard(String code, int card) {
+        try {
+<span class="fc" id="L78">            String query = &quot;&quot;&quot;</span>
+                    SELECT *\s
+                    FROM loan AS l JOIN card AS c ON l.card = c.id JOIN book on book.code = l.book\s
+                    WHERE book = ? AND card = ?
+                   \s&quot;&quot;&quot;;
+<span class="fc" id="L83">            Connection conn = ConnectionManager.getInstance().getConnection();</span>
+<span class="fc" id="L84">            PreparedStatement stmt = conn.prepareStatement(query);</span>
+<span class="fc" id="L85">            stmt.setString(1, code);</span>
+<span class="fc" id="L86">            stmt.setInt(2, card);</span>
+<span class="fc" id="L87">            ResultSet rs = stmt.executeQuery();</span>
+<span class="pc bpc" id="L88" title="1 of 2 branches missed.">            while(rs.next()) {</span>
+<span class="fc" id="L89">                int cardId = rs.getInt(&quot;card&quot;);</span>
+<span class="fc" id="L90">                String user = rs.getString(&quot;user&quot;);</span>
+<span class="fc" id="L91">                LocalDate cardIssueDate = Utils.toLocalDateOrNull(rs.getDate(&quot;issuedate&quot;));</span>
+<span class="fc" id="L92">                LocalDate cardExpirationDate = Utils.toLocalDateOrNull(rs.getDate(&quot;expirationdate&quot;));</span>
+<span class="fc" id="L93">                boolean granted = rs.getBoolean(&quot;granted&quot;);</span>
+<span class="fc" id="L94">                boolean ended = rs.getBoolean(&quot;ended&quot;);</span>
+<span class="fc" id="L95">                String bookCode = rs.getString(&quot;book&quot;);</span>
+<span class="fc" id="L96">                String title = rs.getString(&quot;title&quot;);</span>
+<span class="fc" id="L97">                String isbn = rs.getString(&quot;isbn&quot;);</span>
+<span class="fc" id="L98">                stmt.close();</span>
+<span class="fc" id="L99">                return new Loan(new Card(cardId, cardIssueDate, cardExpirationDate),</span>
+<span class="fc" id="L100">                        new Book.BookBuilder().setCode(bookCode).setISBN(isbn).setTitle(title).build(),</span>
+                        granted, ended, cardIssueDate, cardExpirationDate);
+            }
+<span class="nc" id="L103">        } catch (SQLException e) {</span>
+<span class="nc" id="L104">            e.printStackTrace();</span>
+<span class="nc" id="L105">        }</span>
+<span class="nc" id="L106">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

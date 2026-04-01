@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Loan.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Biblioteche-SWE</a> &gt; <a href="index.source.html" class="el_package">DomainModel</a> &gt; <span class="el_source">Loan.java</span></div><h1>Loan.java</h1><pre class="source lang-java linenums">package DomainModel;
+
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.util.Objects;
+
+public class Loan {
+    private Card card;
+    private Book book;
+<span class="fc" id="L10">    private LocalDate issueDate = null;</span>
+<span class="fc" id="L11">    private LocalDate expirationDate = null;</span>
+    private boolean granted; // se vero l'utente ha il libro (fisicamente), falso ha fatto solo richiesta
+    private boolean ended; // se vero l'utente ha reso il libro alla biblioteca
+
+<span class="fc" id="L15">    public Loan(Card card, Book book, boolean granted, boolean ended) {</span>
+<span class="fc" id="L16">        Objects.requireNonNull(card, &quot;Card should not be null&quot;);</span>
+<span class="fc" id="L17">        Objects.requireNonNull(book, &quot;Book should not be null&quot;);</span>
+<span class="fc bfc" id="L18" title="All 4 branches covered.">        if(granted == false &amp;&amp; ended == true)</span>
+<span class="fc" id="L19">            throw new IllegalArgumentException(&quot;Loan cannot be ended but not granted&quot;);</span>
+<span class="fc" id="L20">        this.card = card;</span>
+<span class="fc" id="L21">        this.book = book;</span>
+<span class="fc" id="L22">        this.granted = granted;</span>
+<span class="fc" id="L23">        this.ended = ended;</span>
+<span class="fc" id="L24">    }</span>
+
+    /**
+     *
+     * @param card
+     * @param book
+     * @param issueDate
+     * @param expirationDate
+     * @throws DateTimeException when issueDate is after expirationDate
+     */
+    public Loan(Card card, Book book, boolean granted, boolean ended, LocalDate issueDate, LocalDate expirationDate) {
+<span class="fc" id="L35">        this(card,book,granted,ended);</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        if(issueDate.isAfter(expirationDate)){</span>
+<span class="fc" id="L37">            throw new DateTimeException(&quot;issueDate cannot be after expiration date&quot;);</span>
+        }
+<span class="fc" id="L39">        this.issueDate = issueDate;</span>
+<span class="fc" id="L40">        this.expirationDate = expirationDate;</span>
+<span class="fc" id="L41">    }</span>
+
+    public Card getCard() {
+<span class="fc" id="L44">        return card;</span>
+    }
+
+    public void setCard(Card card) {
+<span class="nc" id="L48">        this.card = card;</span>
+<span class="nc" id="L49">    }</span>
+
+    public Book getBook() {
+<span class="fc" id="L52">        return book;</span>
+    }
+
+    public void setBook(Book book) {
+<span class="nc" id="L56">        this.book = book;</span>
+<span class="nc" id="L57">    }</span>
+
+    public LocalDate getIssueDate() {
+<span class="nc" id="L60">        return issueDate;</span>
+    }
+
+    public void setIssueDate(LocalDate issueDate) {
+<span class="fc" id="L64">        this.issueDate = issueDate;</span>
+<span class="fc" id="L65">    }</span>
+
+    public LocalDate getExpirationDate() {
+<span class="nc" id="L68">        return expirationDate;</span>
+    }
+
+    public void setExpirationDate(LocalDate expirationDate) {
+<span class="fc" id="L72">        this.expirationDate = expirationDate;</span>
+<span class="fc" id="L73">    }</span>
+
+    public boolean getGranted() {
+<span class="fc" id="L76">        return granted;</span>
+    }
+
+    public void setGranted(boolean granted) {
+<span class="fc" id="L80">        this.granted = granted;</span>
+<span class="fc" id="L81">    }</span>
+
+    public boolean getEnded() {
+<span class="fc" id="L84">        return ended;</span>
+    }
+
+    public void setEnded(boolean ended) {
+<span class="fc" id="L88">        this.ended = ended;</span>
+<span class="fc" id="L89">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

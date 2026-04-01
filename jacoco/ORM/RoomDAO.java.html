@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RoomDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Biblioteche-SWE</a> &gt; <a href="index.source.html" class="el_package">ORM</a> &gt; <span class="el_source">RoomDAO.java</span></div><h1>RoomDAO.java</h1><pre class="source lang-java linenums">package ORM;
+
+import DomainModel.*;
+import BusinessLogic.role;
+import org.postgresql.util.PGInterval;
+
+import java.sql.*;
+import java.util.ArrayList;
+
+public class RoomDAO {
+
+<span class="fc" id="L12">    public RoomDAO() {</span>
+<span class="fc" id="L13">    }</span>
+
+    public boolean addSeatReservationStudyRoom(StudyRoom room, LibraryUser user) {
+        try {
+<span class="fc" id="L17">            Connection conn = ConnectionManager.getInstance().getConnection();</span>
+<span class="fc" id="L18">            PreparedStatement stmt = conn.prepareStatement(&quot;INSERT INTO reservation_study_room (\&quot;user\&quot;, room) VALUES (?, ?)&quot;);</span>
+<span class="fc" id="L19">            stmt.setString(1, user.getEmail());</span>
+<span class="fc" id="L20">            stmt.setInt(2, room.getNumber());</span>
+<span class="fc" id="L21">            int row = stmt.executeUpdate();</span>
+<span class="fc" id="L22">            stmt.close();</span>
+<span class="pc bpc" id="L23" title="1 of 2 branches missed.">            return row &gt; 0;</span>
+<span class="nc" id="L24">        } catch (SQLException e) {</span>
+<span class="nc" id="L25">            e.printStackTrace();</span>
+<span class="nc" id="L26">            return false;</span>
+        }
+    }
+
+    public boolean removeSeatReservationStudyRoom(StudyRoom room, LibraryUser user) {
+        try {
+<span class="fc" id="L32">            Connection conn = ConnectionManager.getInstance().getConnection();</span>
+<span class="fc" id="L33">            PreparedStatement stmt = conn.prepareStatement(&quot;DELETE FROM reservation_study_room WHERE \&quot;user\&quot; = ? AND room = ?&quot;);</span>
+<span class="fc" id="L34">            stmt.setString(1, user.getEmail());</span>
+<span class="fc" id="L35">            stmt.setInt(2, room.getNumber());</span>
+<span class="fc" id="L36">            int row = stmt.executeUpdate();</span>
+<span class="fc" id="L37">            stmt.close();</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">            return row &gt; 0;</span>
+<span class="nc" id="L39">        } catch (SQLException e) {</span>
+<span class="nc" id="L40">            e.printStackTrace();</span>
+<span class="nc" id="L41">            return false;</span>
+        }
+    }
+
+    private ArrayList&lt;Event&gt; getEventForRoomNumber(int number) {
+        try {
+<span class="fc" id="L47">            String query = &quot;&quot;&quot;</span>
+                     SELECT e.*, u.*, u.name as user_name\s
+                     FROM room as r JOIN event as e on r.number = e.room\s
+                     JOIN &quot;user&quot; as u on u.email = e.organizer\s
+                     WHERE r.number = ?
+                    \s&quot;&quot;&quot;;
+<span class="fc" id="L53">            Connection conn = ConnectionManager.getInstance().getConnection();</span>
+<span class="fc" id="L54">            PreparedStatement stmt = conn.prepareStatement(query);</span>
+<span class="fc" id="L55">            stmt.setInt(1, number);</span>
+<span class="fc" id="L56">            ResultSet rs = stmt.executeQuery();</span>
+<span class="fc" id="L57">            ArrayList&lt;Event&gt; eventList = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L59">                PGInterval pgInterval = (PGInterval) rs.getObject(&quot;duration&quot;);</span>
+<span class="fc" id="L60">                eventList.add(new Event.EventBuilder()</span>
+<span class="fc" id="L61">                        .setId(rs.getInt(&quot;id&quot;))</span>
+<span class="fc" id="L62">                        .setName(rs.getString(&quot;name&quot;))</span>
+<span class="fc" id="L63">                        .setDescription(rs.getString(&quot;description&quot;))</span>
+<span class="fc" id="L64">                        .setStartDate(rs.getTimestamp(&quot;date&quot;).toLocalDateTime())</span>
+<span class="fc" id="L65">                        .setEventDuration(Utils.PGIntervalToDuration(pgInterval))</span>
+<span class="fc" id="L66">                        .setOrganizer(new Librarian(rs.getString(&quot;user_name&quot;), rs.getString(&quot;email&quot;), rs.getString(&quot;surname&quot;)))</span>
+<span class="fc" id="L67">                        .build());</span>
+<span class="fc" id="L68">            }</span>
+<span class="fc" id="L69">            stmt.close();</span>
+<span class="fc" id="L70">            return eventList;</span>
+<span class="nc" id="L71">        } catch (SQLException e) {</span>
+<span class="nc" id="L72">            e.printStackTrace();</span>
+        }
+<span class="nc" id="L74">        throw new RuntimeException(&quot;non ho trovato una sega nel db&quot;);</span>
+    }
+
+
+    private ArrayList&lt;LibraryUser&gt; getReservedSeatForRoomNumber(int number) {
+        try {
+<span class="fc" id="L80">            String query = &quot;&quot;&quot;</span>
+                    SELECT u.*, c.*\s
+                    FROM reservation_study_room as res join &quot;user&quot; as u on res.&quot;user&quot;=u.email\s
+                    left join card as c on c.user = u.email\s
+                    where res.room = ? and u.role = ?::role
+                   \s&quot;&quot;&quot;;
+<span class="fc" id="L86">            Connection conn = ConnectionManager.getInstance().getConnection();</span>
+<span class="fc" id="L87">            PreparedStatement stmt = conn.prepareStatement(query);</span>
+<span class="fc" id="L88">            stmt.setInt(1, number);</span>
+<span class="fc" id="L89">            stmt.setString(2, role.libraryUser.name());</span>
+<span class="fc" id="L90">            ResultSet rs = stmt.executeQuery();</span>
+<span class="fc" id="L91">            ArrayList&lt;LibraryUser&gt; userList = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">            while (rs.next()) {</span>
+<span class="fc" id="L93">                userList.add(new LibraryUser.LibraryUserBuilder()</span>
+<span class="fc" id="L94">                        .setName(rs.getString(&quot;name&quot;))</span>
+<span class="fc" id="L95">                        .setSurname(rs.getString(&quot;surname&quot;))</span>
+<span class="fc" id="L96">                        .setEmail(rs.getString(&quot;email&quot;))</span>
+<span class="fc" id="L97">                        .setCard(rs.getInt(&quot;id&quot;), Utils.toLocalDateOrNull(rs.getDate(&quot;issuedate&quot;)), Utils.toLocalDateOrNull(rs.getDate(&quot;expirationdate&quot;)))</span>
+<span class="fc" id="L98">                        .build()</span>
+                );
+            }
+<span class="fc" id="L101">            stmt.close();</span>
+<span class="fc" id="L102">            return userList;</span>
+<span class="nc" id="L103">        } catch (SQLException e) {</span>
+<span class="nc" id="L104">            e.printStackTrace();</span>
+        }
+<span class="nc" id="L106">        throw new RuntimeException(&quot;manco qua ho trovato nulla nel db&quot;);</span>
+    }
+
+    public Room getRoomByNumber(int number) {
+        try {
+<span class="fc" id="L111">            Connection conn = ConnectionManager.getInstance().getConnection();</span>
+<span class="fc" id="L112">            PreparedStatement stmt = conn.prepareStatement(&quot;SELECT * FROM room WHERE number = ?&quot;);</span>
+<span class="fc" id="L113">            stmt.setInt(1, number);</span>
+<span class="fc" id="L114">            ResultSet rs = stmt.executeQuery();</span>
+<span class="fc bfc" id="L115" title="All 2 branches covered.">            if(rs.next()) {</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">                if (rs.getBoolean(&quot;is_study_room&quot;)) {</span>
+<span class="fc" id="L117">                    Room room = new StudyRoom(rs.getInt(&quot;number&quot;), rs.getInt(&quot;seats&quot;), getReservedSeatForRoomNumber(number));</span>
+<span class="fc" id="L118">                    stmt.close();</span>
+<span class="fc" id="L119">                    return room;</span>
+                }
+                else {
+<span class="fc" id="L122">                    ArrayList&lt;Event&gt; eventList = getEventForRoomNumber(number);</span>
+<span class="fc" id="L123">                    EventRoom eventRoom = new EventRoom(rs.getInt(&quot;number&quot;), rs.getInt(&quot;seats&quot;));</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">                    for (Event event : eventList) {</span>
+<span class="fc" id="L125">                        event.setPlace(eventRoom);</span>
+<span class="fc" id="L126">                    }</span>
+<span class="fc" id="L127">                    eventRoom.setScheduledEvents(eventList);</span>
+<span class="fc" id="L128">                    stmt.close();</span>
+<span class="fc" id="L129">                    return eventRoom;</span>
+                }
+            }
+<span class="fc" id="L132">            stmt.close();</span>
+<span class="nc" id="L133">        } catch (SQLException e) {</span>
+<span class="nc" id="L134">            e.printStackTrace();</span>
+<span class="fc" id="L135">        }</span>
+<span class="fc" id="L136">        return null;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
