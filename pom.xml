@@ -69,6 +69,19 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.14</version>
+                <configuration>
+                    <excludes>
+                        <exclude>DomainModel/Book.class</exclude>
+                        <exclude>DomainModel/Card.class</exclude>
+                        <exclude>DomainModel/Librarian.class</exclude>
+                        <exclude>DomainModel/Library.class</exclude>
+                        <exclude>DomainModel/LibraryAdministrator.class</exclude>
+                        <exclude>DomainModel/LibraryUser.class</exclude>
+                        <exclude>DomainModel/User.class</exclude>
+                        <exclude>ORM/*DTO.class</exclude>
+                    </excludes>
+                    <outputDirectory>${project.basedir}/jacoco</outputDirectory>
+                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>

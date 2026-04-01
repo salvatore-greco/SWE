@@ -6,7 +6,8 @@ import java.sql.Date;
 import java.time.Duration;
 import java.time.LocalDate;
 
-public class Utils {
+public final class Utils {
+    private Utils(){}
 
     public static LocalDate toLocalDateOrNull(Date date){
         if (date == null)
