@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'relazione/**'
+      - '.github/workflows/compile_report.yml'
 jobs:
   build_latex:
     runs-on: ubuntu-latest
@@ -12,7 +13,8 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v4
         with:
-          root_file: relazione/main.tex
+          root_file: main.tex
+          working_directory: relazione/
       - name: Upload PDF file
         uses: actions/upload-artifact@v6
         with:
