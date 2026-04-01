@@ -39,7 +39,6 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & 3a. Se le credenziali sono errate il sistema restituisce un errore permettendo di ritentare  \\ \hline
         \textbf{Post Condizioni} & L'utente è autenticato. Viene istanziato il controller appropriato\\ \hline
-        \textbf{Test} & 1,2,3 \\ \hline
     \end{tabularx}
     \caption{Autenticazione UCT}
     \label{tab:Autenticazione UCT}
@@ -62,7 +61,6 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & 3a. Se l'utente esiste già restituisce un errore permettendo di ritentare  \\ \hline
         \textbf{Post Condizioni} & Viene creato l'account, permettendo all'utente di fare il login\\ \hline
-        \textbf{Test} & 1,2,3 \\ \hline
     \end{tabularx}
     \caption{Registrazione UCT}
     \label{tab:Registrazione UCT}
@@ -84,7 +82,6 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & -  \\ \hline
         \textbf{Post Condizioni} & Viene resettata la password\\ \hline
-        \textbf{Test} & 1,2,3 \\ \hline
     \end{tabularx}
     \caption{Reset password UCT}
     \label{tab:Reset password UCT}
@@ -105,7 +102,6 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & 2a. Se il libro è già in prestito il sistema respinge la richiesta mostrando un errore  \\ \hline
         \textbf{Post Condizioni}  & La richiesta viene registrata \\ \hline
-        \textbf{Test} & 1,2,3 \\ \hline
     \end{tabularx}
     \caption{Riserva un libro UCT}
     \label{tab:Riserva un libro UCT}
@@ -126,7 +122,6 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & -  \\ \hline
         \textbf{Post Condizioni}  & La richiesta viene registrata \\ \hline
-        \textbf{Test} & 1,2,3 \\ \hline
     \end{tabularx}
     \caption{Richiede tessera biblioteca UCT}
     \label{tab:Richiede tessera biblioteca UCT}
@@ -148,7 +143,6 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & 2a. Se l'utente ha già effettuato una prenotazione per l'evento o la stanza è piena il sistema respinge la richiesta mostrando un errore  \\ \hline
         \textbf{Post Condizioni}  & La richiesta viene registrata \\ \hline
-        \textbf{Test} & 1,2,3 \\ \hline
     \end{tabularx}
     \caption{Prenotazione ad evento UCT}
     \label{tab:Richiesta tessera UCT}
@@ -170,7 +164,6 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & 2a. Se l'utente ha già riservato un posto in quell'aula o l'aula è piena il sistema respinge la richiesta mostrando un errore  \\ \hline
         \textbf{Post Condizioni}  & La richiesta viene registrata \\ \hline
-        \textbf{Test} & 1,2,3 \\ \hline
     \end{tabularx}
     \caption{Prenota posto aula studio UCT}
     \label{tab:Prenota posto aula studio UCT}
@@ -194,7 +187,6 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & - \\ \hline
         \textbf{Post Condizioni}  & Viene creata la tessera e associata all'utente \\ \hline
-        \textbf{Test} & 1,2,3 \\ \hline
     \end{tabularx}
     \caption{Approva richiesta tessera UCT}
     \label{tab:Approva richiesta tessera UCT}
@@ -218,7 +210,6 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & -  \\ \hline
         \textbf{Post Condizioni}  & Viene creata la tessera e associata all'utente \\ \hline
-        \textbf{Test} & 1,2,3 \\ \hline
     \end{tabularx}
     \caption{Rilascia tessere UCT}
     \label{tab:Rilascia tessere UCT}
@@ -241,7 +232,6 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & 2a. Se il libro è già in prestito il sistema restituisce un errore respingendo l'operazione \\ \hline
         \textbf{Post Condizioni}  & Viene creato il prestito \\ \hline
-        \textbf{Test} & 1,2,3 \\ \hline
     \end{tabularx}
     \caption{Registra prestito UCT}
     \label{tab:Registra prestito UCT}
@@ -263,7 +253,6 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & 2a. Se il libro è già in prestito il sistema restituisce un errore respingendo l'operazione \\ \hline
         \textbf{Post Condizioni}  & Viene creato il prestito \\ \hline
-        \textbf{Test} & 1,2,3 \\ \hline
     \end{tabularx}
     \caption{Approva richiesta prestito UCT}
     \label{tab:Approva richiesta prestito UCT}
@@ -293,7 +282,6 @@ Questo caso d'uso è di livello \textless \textless summary\textgreater \textgre
             \item La stanza scelta è un aula studio invece di un aula eventi
         \end{itemize}  \\ \hline
         \textbf{Post Condizioni} & Viene creato l'evento\\ \hline
-        \textbf{Test} & 1,2,3 \\ \hline
     \end{tabularx}
     \caption{Crea evento UCT}
     \label{tab:Crea evento UCT}
@@ -315,7 +303,6 @@ Questo caso d'uso è di livello \textless \textless summary\textgreater \textgre
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & 3a. Se l'aumento è negativo il sistema respinge l'operazione visualizzando un errore  \\ \hline
         \textbf{Post Condizioni} & Viene aumentato il budget \\ \hline
-        \textbf{Test} & 1,2,3 \\ \hline
     \end{tabularx}
     \caption{Aumenta il budget UCT}
     \label{tab:Aumenta il budget UCT}
