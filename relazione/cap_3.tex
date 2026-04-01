@@ -24,7 +24,7 @@ Ogni classe modella un concetto reale presente nel sistema di gestione della bib
     Questa classe rappresenta un prestito di un libro da parte di un utente.\\
 
     \subsubsection{User}
-    Questa classe rappresenta un utente astratto, caratterizzato da nome, cognome ed email. La classe appunto è definita come astratta.\\
+    Questa classe rappresenta un utente astratto, caratterizzato da nome, cognome ed email. La classe appunto è definita come astratta. È stato scelto di implementarla così, invece di usare un interfaccia, per fare l'override del metodo \texttt{equals()} in modo da avere un'implementazione comune a tutti gli attori, eventualmente da arricchire nelle classi derivate.\\
 
      \subsubsection{LibraryUser}
     Questa classe rappresenta un utente che può usufruire i servizi messi a disposizione dalla biblioteca, come il prestito di libri, l'iscrizione ad eventi o la prenotazione posti nelle aule studio.\\
@@ -76,8 +76,7 @@ La Business Logic, mostrata in Figura~\ref{fig:business_logic}, contiene tutte l
     Il \texttt{role} è un \textbf{enum} che identifica i possibili ruoli degli utenti del sistema: \textbf{LibraryUser, Librarian e LibraryAdministrator}.\\
 
     \subsubsection{ControllerInterface}
-    La \texttt{ControllerInterface} è un'interfaccia di supporto, che dichiara il metodo \textbf{createController}, il quale restituisce un oggetto di tipo \texttt{ControllerInterface}.\\
-    Questa interfaccia implementa il design pattern \textbf{Factory}, consentendo la creazione dei diversi controller in base al tipo di utente.
+    La \texttt{ControllerInterface} è un'interfaccia di supporto, una \textbf{Marker Interface}: essa al suo interno non dichiara nessun metodo da far implementare alle classi figlie, ma viene usata per indicare un tipo di ritorno generico utile alla \texttt{ControllerFactory} per creare i controller\\
 
     \subsubsection{ControllerFactory}
     La \texttt{ControllerFactory} è un'interfaccia che dichiara il metodo \textbf{createController}, il quale restituisce un oggetto di tipo \texttt{ControllerInterface}.\\
@@ -125,3 +124,5 @@ La Business Logic, mostrata in Figura~\ref{fig:business_logic}, contiene tutte l
     \end{itemize}
 
 \subsection{ORM}
+
+\subsection{Modello relazionale Database}
