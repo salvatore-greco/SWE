@@ -1,5 +1,6 @@
 package IntegrationTest.ORM;
 
+import IntegrationTest.BaseIntegrationTest;
 import ORM.*;
 import BusinessLogic.role;
 import DomainModel.*;

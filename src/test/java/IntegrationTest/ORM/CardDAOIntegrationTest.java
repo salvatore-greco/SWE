@@ -1,6 +1,7 @@
 package IntegrationTest.ORM;
 
 import BusinessLogic.role;
+import IntegrationTest.BaseIntegrationTest;
 import ORM.*;
 import DomainModel.Card;
 

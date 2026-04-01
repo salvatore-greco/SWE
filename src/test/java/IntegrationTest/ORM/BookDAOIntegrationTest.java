@@ -2,6 +2,7 @@ package IntegrationTest.ORM;
 
 import DomainModel.Book;
 import Exception.data.BookNotFoundException;
+import IntegrationTest.BaseIntegrationTest;
 import org.junit.jupiter.api.Test;
 import ORM.*;
 import static org.junit.jupiter.api.Assertions.*;

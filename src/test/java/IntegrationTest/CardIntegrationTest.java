@@ -5,7 +5,6 @@ import BusinessLogic.ConcreteAuthService;
 import BusinessLogic.LibrarianController;
 import BusinessLogic.LibraryUserController;
 import DomainModel.Card;
-import IntegrationTest.ORM.BaseIntegrationTest;
 import ORM.CardDAO;
 import ORM.UserDAO;
 import org.junit.jupiter.api.BeforeAll;

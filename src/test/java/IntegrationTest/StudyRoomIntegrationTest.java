@@ -4,7 +4,6 @@ import BusinessLogic.AuthService;
 import BusinessLogic.ConcreteAuthService;
 import BusinessLogic.LibraryUserController;
 import DomainModel.StudyRoom;
-import IntegrationTest.ORM.BaseIntegrationTest;
 import ORM.RoomDAO;
 import ORM.UserDAO;
 import org.junit.jupiter.api.BeforeAll;

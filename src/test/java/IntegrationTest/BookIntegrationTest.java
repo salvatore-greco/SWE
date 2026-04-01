@@ -1,6 +1,5 @@
 package IntegrationTest;
 
-import IntegrationTest.ORM.BaseIntegrationTest;
 import BusinessLogic.*;
 import DomainModel.*;
 import org.junit.jupiter.api.BeforeAll;

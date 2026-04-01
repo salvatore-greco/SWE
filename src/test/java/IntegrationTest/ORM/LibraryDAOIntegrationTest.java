@@ -1,5 +1,6 @@
 package IntegrationTest.ORM;
 
+import IntegrationTest.BaseIntegrationTest;
 import ORM.*;
 import DomainModel.Library;
 import org.junit.jupiter.api.Test;

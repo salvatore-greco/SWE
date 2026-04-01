@@ -1,4 +1,4 @@
-package IntegrationTest.ORM;
+package IntegrationTest;
 
 import java.sql.Connection;
 import java.sql.SQLException;
