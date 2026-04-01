@@ -1,4 +1,5 @@
 \section{Testing}
+\subsection{Struttura e setup dei test}
 I test sono stati eseguiti tramite il framework \texttt{JUnit} e sono stati strutturati come segue:
 \begin{verbatim}
  src/test/
@@ -33,56 +34,9 @@ I test sono stati eseguiti tramite il framework \texttt{JUnit} e sono stati stru
             |-- DBSeeder.java
             `-- DBSeederTest.java
 \end{verbatim}
-Sono stati divisi nei package \texttt{UnitTest} e \texttt{IntegrationTest}. Nel primo si va a testare la classe in isolamento, facendo il mock del database se necessario, come fatto un \texttt{AuthUnitTest} di cui si riporta un estratto di codice; mentre nel secondo si vanno a chiamare i metodi implementati nei DAO interrogando realmente il database. Per l'elenco di tutti i test case si rimanda alla sezione \hyperref[tabella_test]{Tabella test}.
-\begin{code}
-\begin{minted}{java}
-@BeforeAll
-    public static void init() {
-        userDAO = mock(UserDAO.class);
-        when(userDAO.getUserByEmail("library.user@email.com")).thenReturn(new UserDTO(
-                "library.user@email.com",
-                "Mario",
-                "Rossi",
-                role.libraryUser,
-                BCrypt.hashpw("password", BCrypt.gensalt())
-        ));
-        when(userDAO.getUserByEmail("librarian@email.com")).thenReturn(new UserDTO(
-                "librarian@email.com",
-                "Luca",
-                "Bianchi",
-                role.librarian,
-                BCrypt.hashpw("bibliotecario", BCrypt.gensalt())
-        ));
-        when(userDAO.getUserByEmail("admin@email.com")).thenReturn(new UserDTO(
-                "admin@email.com",
-                "Sara",
-                "Verdi",
-                role.libraryAdministrator,
-                BCrypt.hashpw("admin", BCrypt.gensalt())
-        ));
-        when(userDAO.getUserByEmail("inesistente@email.com")).thenThrow(new UserNotFoundException("Wrong username or password"));
-        when(userDAO.updatePassword(eq("library.user@email.com"), anyString())).thenReturn(true);
-        when(userDAO.updatePassword(eq("inesistente@email.com"), anyString())).thenReturn(false);
-        when(userDAO.insertUser(any())).thenReturn(false);
-        when(userDAO.insertUser(refEq(new UserDTO(
-                "nuovo@email.com",
-                "Gino",
-                "Neri",
-                role.libraryUser,
-                "password"
-        )))).thenReturn(true);
-    }
-    
-    @Test
-    public void login_invalidPassword_throwsException() {
-        AuthService authService = new ConcreteAuthService(userDAO);
-        var e = assertThrows(UserNotFoundException.class, () -> authService.login("library.user@email.com", "Password"));
-        assertEquals("Wrong username or password", e.getMessage());
-    }
-\end{minted}
-\caption{init e test case in AuthUnitTest}
-\end{code}
-\noindent Per agevolare l'automatizzazione degli integration test è stata scritta una classe \texttt{DBSeeder} che va a creare uno schema \texttt{test}, istanziato mediante il file \texttt{db.sql} e popolato tramite il file \texttt{data.sql}. Gli script \textit{SQL} sono eseguiti tramite la classe \texttt{ResourceDatabasePopulator} del package \texttt{springframework.jdbc}
+Sono stati divisi nei package \texttt{UnitTest} e \texttt{IntegrationTest}. Nel primo si va a testare la classe in isolamento, facendo il mock del database se necessario, come fatto un \texttt{AuthUnitTest}, mentre nel secondo si vanno a chiamare i metodi implementati nei DAO interrogando realmente il database. Per l'elenco di tutti i test case si rimanda alla sezione \hyperref[tabella_test]{Tabella test}.
+
+Per agevolare l'automatizzazione degli integration test è stata scritta una classe \texttt{DBSeeder} che va a creare uno schema \texttt{test}, istanziato mediante il file \texttt{db.sql} e popolato tramite il file \texttt{data.sql}. Gli script \textit{SQL} sono eseguiti tramite la classe \texttt{ResourceDatabasePopulator} del package \texttt{springframework.jdbc}
 \begin{code}
     \begin{minted}{java}
     public class DBSeeder {
@@ -187,10 +141,67 @@ Sono stati divisi nei package \texttt{UnitTest} e \texttt{IntegrationTest}. Nel 
     \end{minted}
     \caption{metodi della classe BaseIntegrationTest}
 \end{code}
+\subsection{Nomenclatura}\label{subsec:nomenclatura}
+Per la nomenclatura dei test case si è provato a seguire il più possibile uno standard con \textit{NomeClasseSottoTest\_metodoTestato\_risultatoAtteso}; mentre per la nomenclatura delle classi è stata seguita la nomenclatura \textit{NomeClasseSottoTestUnitTest} per Unit test e \textit{NomeClasseSottoTestIntegrationTest} per Integration test.
 \subsection{Test coverage}
 I risultati di copertura sono stati generati con \texttt{JaCoCo} e sono disponibili per la consultazione su \url{https://salvatore-greco.github.io/SWE/}.\\
 È stato raggiunto un buon risultato col \textbf{90\%} di linee di codice coperte e il \textbf{79\%} di branch coperti. Il risultato più basso coi branch è causato da alcune condizioni non testate sui ResultSet nei DAO.
-
 \subsection{Unit Test}
-In questo package sono presenti gli unit test di alcune classi del package \texttt{DomainModel}, che implementano metodi effettivamente da testare, di \texttt{ConcreteAuthService} del package \texttt{BusinessLogic} e della classe \texttt{DBSeeder}.
+\subsubsection{DomainModel}
+Per il package \texttt{DomainModel} sono stati effettuati test solo di \texttt{EventRoom}, \texttt{Event}, \texttt{Loan}, \texttt{StudyRoom} e \texttt{Room} in quanto le altre classi sono prive di metodi che non siano getter o setter. Come visto in \ref{subsec:nomenclatura} sono stati usati nomi significativi per i test case pertanto si rimanda a \hyperref[UnitTest]{Tabella Unit test} per un elenco esaustivo dei test case effettuati.
+\subsubsection{BusinessLogic}
+Per il package \texttt{BusinessLogic} è stata testata una sola classe, \texttt{ConcreteAuthManager}; testare in isolamento anche i controller avrebbe portato a una duplicazione dei test case fra Unit Test e Integration test, pertanto è stato scelto di effettuare solo Integration Test.\\
+Per testare \texttt{ConcreteAuthManager} viene fatto il mock dei DAO usati all'interno dei metodi, facendone lo stub per restituire un dato prevedibile a ogni esecuzione dei test, senza fare chiamate al database. Per effettuare il mocking è stato usato \texttt{Mockito}. 
+\begin{code}
+\begin{minted}{java}
+@BeforeAll
+    public static void init() {
+        userDAO = mock(UserDAO.class);
+        when(userDAO.getUserByEmail("library.user@email.com")).thenReturn(new UserDTO(
+                "library.user@email.com",
+                "Mario",
+                "Rossi",
+                role.libraryUser,
+                BCrypt.hashpw("password", BCrypt.gensalt())
+        ));
+        when(userDAO.getUserByEmail("librarian@email.com")).thenReturn(new UserDTO(
+                "librarian@email.com",
+                "Luca",
+                "Bianchi",
+                role.librarian,
+                BCrypt.hashpw("bibliotecario", BCrypt.gensalt())
+        ));
+        when(userDAO.getUserByEmail("admin@email.com")).thenReturn(new UserDTO(
+                "admin@email.com",
+                "Sara",
+                "Verdi",
+                role.libraryAdministrator,
+                BCrypt.hashpw("admin", BCrypt.gensalt())
+        ));
+        when(userDAO.getUserByEmail("inesistente@email.com")).thenThrow(new UserNotFoundException("Wrong username or password"));
+        when(userDAO.updatePassword(eq("library.user@email.com"), anyString())).thenReturn(true);
+        when(userDAO.updatePassword(eq("inesistente@email.com"), anyString())).thenReturn(false);
+        when(userDAO.insertUser(any())).thenReturn(false);
+        when(userDAO.insertUser(refEq(new UserDTO(
+                "nuovo@email.com",
+                "Gino",
+                "Neri",
+                role.libraryUser,
+                "password"
+        )))).thenReturn(true);
+    }
+    
+    @Test
+    public void login_invalidPassword_throwsException() {
+        AuthService authService = new ConcreteAuthService(userDAO);
+        var e = assertThrows(UserNotFoundException.class, () -> authService.login("library.user@email.com", "Password"));
+        assertEquals("Wrong username or password", e.getMessage());
+    }
+\end{minted}
+\caption{init e test case in AuthUnitTest}
+\label{code:AuthUnitTest}
+\end{code}
+\subsection{Integration Test}
+\subsubsection{DBSeeder}
+Pur essendo usata solo nell'ambito dei test anche la classe \texttt{DBSeeder} è stata sottoposta a test, compiendo però operazioni sul database. Sono stati testati tutti i suoi metodi: creazione dello schema di test, istanza tramite script \texttt{db.sql}, popolamento tramite script \texttt{data.sql} e cancellazione dello schema di test.
 

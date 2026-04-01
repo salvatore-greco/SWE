@@ -1,7 +1,8 @@
 \section{Introduzione}
 Il presente elaborato è stato scritto per il superamento dell'esame Ingegneria Del Software del corso di laurea triennale in Ingegneria Informatica dell'Università degli Studi di Firenze.\newline
 Si descrive il design e l'implementazione in \textit{Java} di un sistema gestionale per biblioteche. \newline
-Il codice sorgente è presente al link \url{https://github.com/salvatore-greco/SWE}
+
+Il progetto è stato versionato usando Git e l'intero codice sorgente è disponibile all'url \url{https://github.com/salvatore-greco/SWE}. Sono state usate due GitHub Action per gestire il deploy su GitHub Pages dei risultati di coverage e per la compilazione della presente relazione.
 
 
 \subsection{Statement}
@@ -26,3 +27,9 @@ Sono state usate le seguenti dipendenze esterne, gestite attraverso il build sys
 \end{itemize}
 Il progetto è stato diviso in quattro package: DomainModel, BusinessLogic, ORM, Exception.\newline
 Per la business logic è stato scelto di creare un controller per attore data l'assenza di una GUI. Data questa circostanza è stato scritto un ampio numero di test case, fra Unit Test e Integration Test.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{images/package_diagram.png}
+    \caption{Package diagram del progetto}
+    \label{fig:placeholder}
+\end{figure}

@@ -20,6 +20,9 @@
 % ========================== %
 % tabelle carine
 \usepackage{tabularx}
+% $tree output
+\usepackage{verbatim}
+\usepackage{listings}
 % per configurare enumerate
 \usepackage{enumitem}
 %Package per tabella test
@@ -50,6 +53,11 @@
   \arabic{usecasecnt}% Stampa il numero in formato arabo
 }
 % ================ %
+%ambiente per codice lungo
+\newenvironment{code}
+  {\par\addvspace{\baselineskip}\captionsetup{type=listing}}
+  {\par\addvspace{\baselineskip}}
+%=================%
 \begin{document}
 % Frontespizio
 \include{title.tex}

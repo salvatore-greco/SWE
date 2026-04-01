@@ -2,9 +2,10 @@
 % Sorgente : test
 % Data     : 2026-03-27 19:50
 % Classi   : 23  |  Metodi totali: 234
+\section*{Tabella test}\label{tabella_test}
 
-
-\subsection*{Classe \texttt{BookIntegrationTest}}
+\subsection*{Business Login Integration test}\label{BL_IT}
+\subsubsection*{Classe \texttt{BookIntegrationTest}}
 {\small\textit{java/IntegrationTest/BookIntegrationTest.java}}
 \vspace{4pt}
 
@@ -31,7 +32,7 @@
   public & - & \texttt{void} & \texttt{updateBookInCatalogue\_notExistingBook} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{CardIntegrationTest}}
+\subsubsection*{Classe \texttt{CardIntegrationTest}}
 {\small\textit{java/IntegrationTest/CardIntegrationTest.java}}
 \vspace{4pt}
 
@@ -56,7 +57,7 @@
   public & - & \texttt{void} & \texttt{createCard\_userWithCard\_throws} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{EventIntegrationTest}}
+\subsubsection*{Classe \texttt{EventIntegrationTest}}
 {\small\textit{java/IntegrationTest/EventIntegrationTest.java}}
 \vspace{4pt}
 
@@ -92,7 +93,7 @@
   public & - & \texttt{void} & \texttt{cancelEventBooking\_notBooked\_throws} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{LibraryIntegrationTest}}
+\subsubsection*{Classe \texttt{LibraryIntegrationTest}}
 {\small\textit{java/IntegrationTest/LibraryIntegrationTest.java}}
 \vspace{4pt}
 
@@ -115,7 +116,7 @@
   public & - & \texttt{void} & \texttt{increaseBudget\_negativeIncrease\_throws} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{LoanIntegrationTest}}
+\subsubsection*{Classe \texttt{LoanIntegrationTest}}
 {\small\textit{java/IntegrationTest/LoanIntegrationTest.java}}
 \vspace{4pt}
 
@@ -142,8 +143,8 @@
   public & - & \texttt{void} & \texttt{requestLoan\_expiredCard\_throws} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{BaseDAOUnitTest}}
-{\small\textit{java/IntegrationTest/ORM/BaseDAOUnitTest.java}}
+\subsubsection*{Classe \texttt{BaseIntegrationTest}}
+{\small\textit{java/IntegrationTest/ORM/BaseIntegrationTest.java}}
 \vspace{4pt}
 
 \begin{longtable}{@{}llll@{}}
@@ -166,8 +167,10 @@
   public & static & \texttt{void} & \texttt{connectionCloser} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{BookDAOUnitTest}}
-{\small\textit{java/IntegrationTest/ORM/BookDAOUnitTest.java}}
+\subsection*{ORM Integration test}\label{ORM_IT}
+
+\subsubsection*{Classe \texttt{BookDAOIntegrationTest}}
+{\small\textit{java/IntegrationTest/ORM/BookDAOIntegrationTest.java}}
 \vspace{4pt}
 
 \begin{longtable}{@{}llll@{}}
@@ -195,8 +198,8 @@
   public & - & \texttt{void} & \texttt{BookDAO\_updateBook\_falseIfNotExist} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{CardDAOUnitTest}}
-{\small\textit{java/IntegrationTest/ORM/CardDAOUnitTest.java}}
+\subsubsection*{Classe \texttt{CardDAOIntegrationTest}}
+{\small\textit{java/IntegrationTest/ORM/CardDAOIntegrationTest.java}}
 \vspace{4pt}
 
 \begin{longtable}{@{}llll@{}}
@@ -223,7 +226,7 @@
   public & - & \texttt{void} & \texttt{CardDAO\_getCardByEmail\_inexistentCard\_returnNull} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{ConnectionManagerUnitTest}}
+\subsubsection*{Classe \texttt{ConnectionManagerUnitTest}}
 {\small\textit{java/IntegrationTest/ORM/ConnectionManagerUnitTest.java}}
 \vspace{4pt}
 
@@ -245,8 +248,8 @@
   public & - & \texttt{void} & \texttt{ConnectionManager\_testConnection} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{EventDAOUnitTest}}
-{\small\textit{java/IntegrationTest/ORM/EventDAOUnitTest.java}}
+\subsubsection*{Classe \texttt{EventDAOIntegrationTest}}
+{\small\textit{java/IntegrationTest/ORM/EventDAOIntegrationTest.java}}
 \vspace{4pt}
 
 \begin{longtable}{@{}llll@{}}
@@ -277,8 +280,8 @@
   public & - & \texttt{void} & \texttt{EventDAO\_editEvent\_notExistingEvent\_returnsFalse} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{LibraryDAOUnitTest}}
-{\small\textit{java/IntegrationTest/ORM/LibraryDAOUnitTest.java}}
+\subsubsection*{Classe \texttt{LibraryDAOIntegrationTest}}
+{\small\textit{java/IntegrationTest/ORM/LibraryDAOIntegrationTest.java}}
 \vspace{4pt}
 
 \begin{longtable}{@{}llll@{}}
@@ -302,8 +305,8 @@
   public & - & \texttt{void} & \texttt{LibraryDAO\_increaseBudget\_falseIfLibraryNotExist} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{LoanDAOUnitTest}}
-{\small\textit{java/IntegrationTest/ORM/LoanDAOUnitTest.java}}
+\subsubsection*{Classe \texttt{LoanDAOIntegrationTest}}
+{\small\textit{java/IntegrationTest/ORM/LoanDAOIntegrationTest.java}}
 \vspace{4pt}
 
 \begin{longtable}{@{}llll@{}}
@@ -332,8 +335,8 @@
   public & - & \texttt{void} & \texttt{LoanDAO\_getLoanByBookAndCard\_existingLoan\_returnsLoan} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{RoomDAOUnitTest}}
-{\small\textit{java/IntegrationTest/ORM/RoomDAOUnitTest.java}}
+\subsubsection*{Classe \texttt{RoomDAOIntegrationTest}}
+{\small\textit{java/IntegrationTest/ORM/RoomDAOIntegrationTest.java}}
 \vspace{4pt}
 
 \begin{longtable}{@{}llll@{}}
@@ -359,8 +362,8 @@
   public & - & \texttt{void} & \texttt{RoomDao\_getEventRoom\_withNoEvents} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{UserDAOUnitTest}}
-{\small\textit{java/IntegrationTest/ORM/UserDAOUnitTest.java}}
+\subsubsection*{Classe \texttt{UserDAOIntegrationTest}}
+{\small\textit{java/IntegrationTest/ORM/User.java}}
 \vspace{4pt}
 
 \begin{longtable}{@{}llll@{}}
@@ -388,7 +391,7 @@
   public & - & \texttt{void} & \texttt{UserDAO\_saveUser\_returnsTrue} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{StudyRoomIntegrationTest}}
+\subsubsection*{Classe \texttt{StudyRoomIntegrationTest}}
 {\small\textit{java/IntegrationTest/StudyRoomIntegrationTest.java}}
 \vspace{4pt}
 
@@ -414,7 +417,8 @@
   public & - & \texttt{void} & \texttt{leaveSeatStudyRoom\_notReserved\_throws} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{AuthUnitTest}}
+\subsection*{Unit Test}\label{UnitTest}
+\subsubsection*{Classe \texttt{AuthUnitTest}}
 {\small\textit{java/UnitTest/BusinessLogic/AuthUnitTest.java}}
 \vspace{4pt}
 
@@ -444,7 +448,7 @@
   public & - & \texttt{void} & \texttt{register\_errorInsertingUser\_throws} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{EventRoomUnitTest}}
+\subsubsection*{Classe \texttt{EventRoomUnitTest}}
 {\small\textit{java/UnitTest/DomainModel/EventRoomUnitTest.java}}
 \vspace{4pt}
 
@@ -469,7 +473,7 @@
   public & - & \texttt{void} & \texttt{test\_EventRoom\_schedulingInvalidEvent\_throws} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{EventUnitTest}}
+\subsubsection*{Classe \texttt{EventUnitTest}}
 {\small\textit{java/UnitTest/DomainModel/EventUnitTest.java}}
 \vspace{4pt}
 
@@ -499,7 +503,7 @@
   public & - & \texttt{void} & \texttt{test\_Event\_availableSeatsWithoutRoom\_throws} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{LoanUnitTest}}
+\subsubsection*{Classe \texttt{LoanUnitTest}}
 {\small\textit{java/UnitTest/DomainModel/LoanUnitTest.java}}
 \vspace{4pt}
 
@@ -525,7 +529,7 @@
   public & - & \texttt{void} & \texttt{Loan\_constructor\_CardBookCorrectness} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{RoomUnitTest}}
+\subsubsection*{Classe \texttt{RoomUnitTest}}
 {\small\textit{java/UnitTest/DomainModel/RoomUnitTest.java}}
 \vspace{4pt}
 
@@ -549,7 +553,7 @@
   public & - & \texttt{void} & \texttt{test\_Room\_invalidSeatsNumber} \\
 \end{longtable}
 
-\subsection*{Classe \texttt{StudyRoomUnitTest}}
+\subsubsection*{Classe \texttt{StudyRoomUnitTest}}
 {\small\textit{java/UnitTest/DomainModel/StudyRoomUnitTest.java}}
 \vspace{4pt}
 
@@ -578,7 +582,7 @@
 \end{longtable}
 
 
-\subsection*{Classe \texttt{DBSeederTest}}
+\subsubsection*{Classe \texttt{DBSeederTest}}
 {\small\textit{java/UnitTest/utils/DBSeederTest.java}}
 \vspace{4pt}
 
