@@ -1,1 +1,196 @@
 \section{Testing}
+I test sono stati eseguiti tramite il framework \texttt{JUnit} e sono stati strutturati come segue:
+\begin{verbatim}
+ src/test/
+`-- java
+    |-- IntegrationTest
+    |   |-- BookIntegrationTest.java
+    |   |-- CardIntegrationTest.java
+    |   |-- EventIntegrationTest.java
+    |   |-- LibraryIntegrationTest.java
+    |   |-- LoanIntegrationTest.java
+    |   |-- ORM
+    |   |   |-- BaseIntegrationTest.java
+    |   |   |-- BookDAOIntegrationTest.java
+    |   |   |-- CardDAOIntegrationTest.java
+    |   |   |-- ConnectionManagerUnitTest.java
+    |   |   |-- EventDAOIntegrationTest.java
+    |   |   |-- LibraryDAOIntegrationTest.java
+    |   |   |-- LoanDAOIntegrationTest.java
+    |   |   |-- RoomDAOIntegrationTest.java
+    |   |   `-- UserDAOIntegrationTest.java
+    |   `-- StudyRoomIntegrationTest.java
+    `-- UnitTest
+        |-- BusinessLogic
+        |   `-- AuthUnitTest.java
+        |-- DomainModel
+        |   |-- EventRoomUnitTest.java
+        |   |-- EventUnitTest.java
+        |   |-- LoanUnitTest.java
+        |   |-- RoomUnitTest.java
+        |   `-- StudyRoomUnitTest.java
+        `-- utils
+            |-- DBSeeder.java
+            `-- DBSeederTest.java
+\end{verbatim}
+Sono stati divisi nei package \texttt{UnitTest} e \texttt{IntegrationTest}. Nel primo si va a testare la classe in isolamento, facendo il mock del database se necessario, come fatto un \texttt{AuthUnitTest} di cui si riporta un estratto di codice; mentre nel secondo si vanno a chiamare i metodi implementati nei DAO interrogando realmente il database. Per l'elenco di tutti i test case si rimanda alla sezione \hyperref[tabella_test]{Tabella test}.
+\begin{code}
+\begin{minted}{java}
+@BeforeAll
+    public static void init() {
+        userDAO = mock(UserDAO.class);
+        when(userDAO.getUserByEmail("library.user@email.com")).thenReturn(new UserDTO(
+                "library.user@email.com",
+                "Mario",
+                "Rossi",
+                role.libraryUser,
+                BCrypt.hashpw("password", BCrypt.gensalt())
+        ));
+        when(userDAO.getUserByEmail("librarian@email.com")).thenReturn(new UserDTO(
+                "librarian@email.com",
+                "Luca",
+                "Bianchi",
+                role.librarian,
+                BCrypt.hashpw("bibliotecario", BCrypt.gensalt())
+        ));
+        when(userDAO.getUserByEmail("admin@email.com")).thenReturn(new UserDTO(
+                "admin@email.com",
+                "Sara",
+                "Verdi",
+                role.libraryAdministrator,
+                BCrypt.hashpw("admin", BCrypt.gensalt())
+        ));
+        when(userDAO.getUserByEmail("inesistente@email.com")).thenThrow(new UserNotFoundException("Wrong username or password"));
+        when(userDAO.updatePassword(eq("library.user@email.com"), anyString())).thenReturn(true);
+        when(userDAO.updatePassword(eq("inesistente@email.com"), anyString())).thenReturn(false);
+        when(userDAO.insertUser(any())).thenReturn(false);
+        when(userDAO.insertUser(refEq(new UserDTO(
+                "nuovo@email.com",
+                "Gino",
+                "Neri",
+                role.libraryUser,
+                "password"
+        )))).thenReturn(true);
+    }
+    
+    @Test
+    public void login_invalidPassword_throwsException() {
+        AuthService authService = new ConcreteAuthService(userDAO);
+        var e = assertThrows(UserNotFoundException.class, () -> authService.login("library.user@email.com", "Password"));
+        assertEquals("Wrong username or password", e.getMessage());
+    }
+\end{minted}
+\caption{init e test case in AuthUnitTest}
+\end{code}
+\noindent Per agevolare l'automatizzazione degli integration test è stata scritta una classe \texttt{DBSeeder} che va a creare uno schema \texttt{test}, istanziato mediante il file \texttt{db.sql} e popolato tramite il file \texttt{data.sql}. Gli script \textit{SQL} sono eseguiti tramite la classe \texttt{ResourceDatabasePopulator} del package \texttt{springframework.jdbc}
+\begin{code}
+    \begin{minted}{java}
+    public class DBSeeder {
+
+    private Connection connection;
+
+    public DBSeeder() throws SQLException{
+        this.connection = ConnectionManager.getInstance().getConnection();
+    }
+
+    public void createTestSchema() {
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.executeUpdate("CREATE SCHEMA IF NOT EXISTS test AUTHORIZATION CURRENT_USER");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void deleteTestSchema(){
+        try {
+            connection.setAutoCommit(true);
+            Statement stmt = connection.createStatement();
+            stmt.executeUpdate("DROP SCHEMA IF EXISTS test CASCADE");
+            stmt.executeUpdate("SET search_path TO public");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void initDatabaseTest(String filenameDDL, String filenameData){
+        try {
+            Statement stmt = connection.createStatement();
+            stmt.execute("SET search_path TO test");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Database error. Check if schema 'test' exists");
+        }
+        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+        populator.addScripts(
+                new FileSystemResource(filenameDDL), //file must be in root directory
+                new FileSystemResource(filenameData)
+        );
+        populator.populate(this.connection);
+    }
+}
+    \end{minted}
+\caption{Classe DBSeeder}
+\end{code}
+\noindent Il setup e il teardown sono comuni a tutti gli integration test; essi sono definiti nella classe \texttt{BaseIntegrationTest} che ogni classe nel package estende. Il setup va a creare lo schema \texttt{test}, crea le tabelle e imposta l'autocommit della connessione a falso; dopo ogni test case viene eseguito il teardown, dove viene fatto il rollback della transazione. In caso di fallimento di questa operazione, viene impostato un flag \texttt{teardownFail} a vero, che il metodo \texttt{teardownChecker} eseguito dopo ogni test case controlla, facendo fallire tutti i test dato lo stato inconsistente del database. Infine il metodo \texttt{connectionCloser} cancella lo schema precedentemente creato e chiude la connessione.
+\begin{code}
+    \begin{minted}{java}
+    private static void setTestSchema() throws SQLException {
+        Statement stmt = connDAO.createStatement();
+        stmt.execute("SET search_path TO test");
+    }
+
+    @BeforeAll
+    public static void init() {
+        try {
+            dbSeeder = new DBSeeder();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            fail("Failed to instantiate DBSeeder. Check connection to db");
+        }
+        dbSeeder.createTestSchema();
+        assertDoesNotThrow(() -> dbSeeder.initDatabaseTest("db.sql", "data.sql"));
+        try {
+            connDAO = ConnectionManager.getInstance().getConnection();
+            setTestSchema();
+            connDAO.setAutoCommit(false);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            fail("Fail to get connection");
+        }
+    }
+
+    @AfterEach
+    public void teardown() {
+        try {
+            connDAO.rollback();
+        } catch (SQLException e) {
+            teardownFail = true;
+            e.printStackTrace();
+        }
+    }
+
+    @BeforeEach
+    public void teardownChecker() {
+        assumeFalse(teardownFail, "Aborting test. DB state is inconsistent");
+    }
+
+
+    @AfterAll
+    public static void connectionCloser(){
+        try {
+            dbSeeder.deleteTestSchema();
+            connDAO.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }        
+    \end{minted}
+    \caption{metodi della classe BaseIntegrationTest}
+\end{code}
+\subsection{Test coverage}
+I risultati di copertura sono stati generati con \texttt{JaCoCo} e sono disponibili per la consultazione su \url{https://salvatore-greco.github.io/SWE/}.\\
+È stato raggiunto un buon risultato col \textbf{90\%} di linee di codice coperte e il \textbf{79\%} di branch coperti. Il risultato più basso coi branch è causato da alcune condizioni non testate sui ResultSet nei DAO.
+
+\subsection{Unit Test}
+In questo package sono presenti gli unit test di alcune classi del package \texttt{DomainModel}, che implementano metodi effettivamente da testare, di \texttt{ConcreteAuthService} del package \texttt{BusinessLogic} e della classe \texttt{DBSeeder}.
+
