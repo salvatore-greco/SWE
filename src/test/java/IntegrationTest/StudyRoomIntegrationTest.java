@@ -4,16 +4,15 @@ import BusinessLogic.AuthService;
 import BusinessLogic.ConcreteAuthService;
 import BusinessLogic.LibraryUserController;
 import DomainModel.StudyRoom;
-import IntegrationTest.ORM.BaseDAOUnitTest;
+import IntegrationTest.ORM.BaseIntegrationTest;
 import ORM.RoomDAO;
 import ORM.UserDAO;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class StudyRoomIntegrationTest extends BaseDAOUnitTest {
+public class StudyRoomIntegrationTest extends BaseIntegrationTest {
 
     private static LibraryUserController libraryUserController;
 

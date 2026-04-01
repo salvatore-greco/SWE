@@ -1,8 +1,7 @@
 package IntegrationTest;
 
-import IntegrationTest.ORM.BaseDAOUnitTest;
+import IntegrationTest.ORM.BaseIntegrationTest;
 import BusinessLogic.*;
-import ORM.*;
 import DomainModel.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class BookIntegrationTest extends BaseDAOUnitTest{
+public class BookIntegrationTest extends BaseIntegrationTest {
     private static LibraryAdministratorController adminController;
 
     @BeforeAll

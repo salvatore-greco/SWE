@@ -5,7 +5,7 @@ import BusinessLogic.ConcreteAuthService;
 import BusinessLogic.LibrarianController;
 import BusinessLogic.LibraryUserController;
 import DomainModel.Card;
-import IntegrationTest.ORM.BaseDAOUnitTest;
+import IntegrationTest.ORM.BaseIntegrationTest;
 import ORM.CardDAO;
 import ORM.UserDAO;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CardIntegrationTest extends BaseDAOUnitTest {
+public class CardIntegrationTest extends BaseIntegrationTest {
 
     private static LibrarianController librarianController;
 

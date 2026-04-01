@@ -11,7 +11,7 @@ import ORM.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
-public class BaseDAOUnitTest {
+public class BaseIntegrationTest {
 
     private static DBSeeder dbSeeder;
     protected static Connection connDAO; //connection used by DAOs

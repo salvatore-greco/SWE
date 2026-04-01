@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserDAOUnitTest extends BaseDAOUnitTest{
+public class UserDAOIntegrationTest extends BaseIntegrationTest {
     private UserDAO userDAO = new UserDAO();
 
     @Test

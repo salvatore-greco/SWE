@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LibraryDAOUnitTest extends BaseDAOUnitTest {
+public class LibraryDAOIntegrationTest extends BaseIntegrationTest {
 
     @Test
     public void LibraryDAO_getLibraryByName_returnsObject() {

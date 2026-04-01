@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class EventDAOUnitTest extends BaseDAOUnitTest{
+public class EventDAOIntegrationTest extends BaseIntegrationTest {
     private EventDAO eventDAO = new EventDAO();
 
     private UserDAO userDAO = new UserDAO();

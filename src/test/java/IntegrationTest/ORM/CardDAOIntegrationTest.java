@@ -5,13 +5,12 @@ import ORM.*;
 import DomainModel.Card;
 
 import DomainModel.LibraryUser;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CardDAOUnitTest extends BaseDAOUnitTest{
+public class CardDAOIntegrationTest extends BaseIntegrationTest {
     private CardDAO cardDAO = new CardDAO();
 
     private UserDAO userDAO = new UserDAO();

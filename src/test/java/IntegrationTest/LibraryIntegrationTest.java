@@ -1,6 +1,6 @@
 package IntegrationTest;
 
-import IntegrationTest.ORM.BaseDAOUnitTest;
+import IntegrationTest.ORM.BaseIntegrationTest;
 import BusinessLogic.*;
 import ORM.*;
 import DomainModel.*;
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LibraryIntegrationTest extends BaseDAOUnitTest{
+public class LibraryIntegrationTest extends BaseIntegrationTest {
     private static LibraryAdministratorController adminController;
 
     private static LibraryDAO libraryDAO;

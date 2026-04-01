@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LoanDAOUnitTest extends BaseDAOUnitTest {
+public class LoanDAOIntegrationTest extends BaseIntegrationTest {
     private LoanDAO loanDAO = new LoanDAO();
 
     private BookDAO bookDAO = new BookDAO();
