@@ -2,8 +2,8 @@ name: Deploy to GitHub Pages from src/
 
 on:
   push:
-    branches:
-      - main
+    paths:
+      - 'jacoco/**'
 
 permissions:
   contents: read
