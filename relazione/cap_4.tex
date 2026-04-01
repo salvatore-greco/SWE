@@ -1,17 +1,17 @@
 \section{Testing}
-\subsection{Struttura e setup dei test}
+\subsection{Struttura e setup dei test}\label{subsec:struttura}
 I test sono stati eseguiti tramite il framework \texttt{JUnit} e sono stati strutturati come segue:
 \begin{verbatim}
  src/test/
 `-- java
     |-- IntegrationTest
+    |   |-- BaseIntegrationTest.java
     |   |-- BookIntegrationTest.java
     |   |-- CardIntegrationTest.java
     |   |-- EventIntegrationTest.java
     |   |-- LibraryIntegrationTest.java
     |   |-- LoanIntegrationTest.java
     |   |-- ORM
-    |   |   |-- BaseIntegrationTest.java
     |   |   |-- BookDAOIntegrationTest.java
     |   |   |-- CardDAOIntegrationTest.java
     |   |   |-- ConnectionManagerUnitTest.java
@@ -202,6 +202,142 @@ Per testare \texttt{ConcreteAuthManager} viene fatto il mock dei DAO usati all'i
 \label{code:AuthUnitTest}
 \end{code}
 \subsection{Integration Test}
+Come specificato anche in \ref{subsec:struttura} ogni classe in questo package è sottoclasse di \texttt{BaseIntegrationTest} per compiere setup, teardown e controllo sul teardown.
 \subsubsection{DBSeeder}
 Pur essendo usata solo nell'ambito dei test anche la classe \texttt{DBSeeder} è stata sottoposta a test, compiendo però operazioni sul database. Sono stati testati tutti i suoi metodi: creazione dello schema di test, istanza tramite script \texttt{db.sql}, popolamento tramite script \texttt{data.sql} e cancellazione dello schema di test.
+\begin{code}
+    \begin{minted}{java}
+    @Test
+    @Order(1)
+    public void DBSeeder_createSchema() {
+        dbSeeder.createTestSchema();
+        try {
+            Connection conn = ConnectionManager.getInstance().getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT 1 FROM pg_namespace where nspname = 'test'");
+            if (rs.next())
+                assertEquals(1, rs.getInt(1));
+            else
+                fail("Schema does not exist");
+        } catch (SQLException e) {
+            fail("Error while accessing database");
+        }
+    }
 
+    @Test
+    @Order(2)
+    public void DBSeeder_fillDB(){
+        dbSeeder.initDatabaseTest("db.sql", "data.sql");
+        //testing schema search path
+        try{
+            Connection connection = ConnectionManager.getInstance().getConnection();
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SHOW search_path");
+            if(rs.next()){
+                assertEquals("test", rs.getString("search_path"));
+            }
+        }
+        catch (SQLException e){
+            fail("Error while accessing database when testing search path");
+        }
+        // testing ddl and insert into
+        try{
+            Connection connection = ConnectionManager.getInstance().getConnection();
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT email from \"user\" where email='prova@email.com'");
+            if(rs.next()){
+                assertEquals("prova@email.com", rs.getString("email"));
+            }
+        }
+        catch (SQLException e){
+            fail("Error while accessing database when testing  ddl and insert into");
+        }
+    }
+    
+    @Test
+    @Order(3)
+    public void DBSeeder_deleteSchema() {
+        dbSeeder.deleteTestSchema();
+        try {
+            Connection conn = ConnectionManager.getInstance().getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT 1 FROM pg_namespace where nspname = 'test'");
+            if (rs.next())
+                fail("Schema still exist");
+            else
+                return; //Source: https://stackoverflow.com/questions/4036144/junit4-fail-is-here-but-where-is-pass
+        } catch (SQLException e) {
+            fail("Error while accessing database");
+        }
+    }
+
+    \end{minted}
+    \caption{Test case da DBSeederTest}
+\end{code}
+\subsubsection{ORM}
+Per il package \texttt{ORM} sono stati eseguiti Integration test per ogni classe e per ogni metodo presente, avendo cura di controllare anche i casi in cui il metodo può lanciare un eccezione o ritornare falso.\\
+Per un elenco esaustivo dei test case effettuati si rimanda a \hyperref[ORM_IT]{Tabella Integration test ORM}.
+\begin{code}
+    \begin{minted}{java}
+    @Test
+    public void RoomDAO_getStudyRoom_hasEveryReservation(){
+        RoomDAO roomDAO = new RoomDAO();
+        //questi magic numbers dipendono dai dati inseriti nel db di test -> controllare data.sql
+        StudyRoom studyRoom = (StudyRoom) roomDAO.getRoomByNumber(5);
+        assertEquals(5, studyRoom.getNumber());
+        assertEquals(2, studyRoom.getSeats());
+        var reservedSeat = studyRoom.getReservedSeats();
+        assertEquals(2, reservedSeat.size());
+        assertAll(() -> assertEquals("gino.verdi@email.com", reservedSeat.getFirst().getEmail()),
+                () -> assertEquals("neri.neri@email.com", reservedSeat.getLast().getEmail()));
+    }
+    
+    @Test
+    public void RoomDAO_getStudyRoom_withNoReservation(){
+        RoomDAO roomDAO = new RoomDAO();
+        //questi magic numbers dipendono dai dati inseriti nel db di test -> controllare data.sql
+        StudyRoom studyRoom = (StudyRoom) roomDAO.getRoomByNumber(4);
+        assertEquals(4, studyRoom.getNumber());
+        assertEquals(35, studyRoom.getSeats());
+        var reservedSeat = studyRoom.getReservedSeats();
+        assertTrue(reservedSeat.isEmpty());
+    }
+
+    \end{minted}
+    \caption{Test case da RoomDAOIntegrationTest}
+\end{code}
+\subsubsection{Business Logic}
+Per la business logic è stato seguito un approccio differente, non è stata scritta una fixture per ogni controller ma sono state divise per operazione da svolgere. Sono presenti:
+\begin{itemize}
+    \item \textbf{CardIntegrationTest} per testare la parte di richiesta e approvazione delle tessere
+    \item \textbf{BookIntegrationTest} per testare la parte di aggiunta, modifica e cancellazione di un libro in catalogo da parte dell'amministratore
+    \item \textbf{EventIntegrationTest} per testare la creazione, cancellazione e modifica di un evento da parte del bibliotecario e la prenotazione da parte dell'utente
+    \item \textbf{LibraryIntegrationTest} per testare la gestione del budget da parte dell'amministratore della biblioteca
+    \item \textbf{LoanIntegrationTest} per testare la richiesta e la registrazione dei prestiti, coinvolgendo sia il bibliotecario che l'utente
+    \item \textbf{StudyRoomIntegrationTest} per testare la prenotazione e il rilascio dei posti in aula studio da parte dell'utente
+\end{itemize}
+Il controller di ogni attore è stato istanziato seguendo la procedura di login tramite \texttt{AuthManager} per avere un esperienza più vicina possibile a quella che potrebbe essere di un utilizzatore del software.\\
+Per un elenco esaustivo dei test case effettuati si rimanda a \hyperref[BL_IT]{Tabella Integration test Business Logic}.
+\begin{code}
+    \begin{minted}{java}
+    @Test
+    public void grantRequestedLoan() {
+        Book bookToLoan = assertDoesNotThrow(() -> bookDAO.getBookByCode("A002"));
+        Loan requestedLoan = assertDoesNotThrow(() -> libraryUserController.requestLoan(bookToLoan));
+        assertFalse(requestedLoan.getGranted());
+        assertFalse(requestedLoan.getEnded());
+        assertDoesNotThrow(() -> librarianController.grantLoan(requestedLoan));
+        Loan grantedLoan = new LoanDAO().getLoanByBookAndCard(bookToLoan.getCode(), requestedLoan.getCard().getId());
+        assertTrue(grantedLoan.getGranted());
+        assertFalse(grantedLoan.getEnded());
+    }
+
+    @Test
+    public void grantLoan_notRequested(){
+        Book bookToLoan = assertDoesNotThrow(() -> bookDAO.getBookByCode("A002"));
+        Loan loan = new Loan(libraryUserController.getUser().getCard(), bookToLoan, false, false);
+        assertDoesNotThrow(() -> librarianController.registerLoan(loan));
+    }
+    \end{minted}
+    \caption{Test case da LoanIntegrationTest}
+\end{code}
