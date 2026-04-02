@@ -411,7 +411,7 @@ L'ORM, mostrato in Figura~\ref{fig:orm}, si occupa della gestione della persiste
         \item cercare una stanza tramite \textbf{getRoomByNumber}.
     \end{itemize}
 
-   \\ Di seguito, nel Codice~\ref{lst:esempio}, è riportato un esempio rappresentativo del funzionamento di un metodo appartenente al livello ORM. In particolare, viene mostrato un metodo della classe \texttt{RoomDAO}, che esegue una query SQL per recuperare informazioni dal database e costruire il corrispondente oggetto del dominio, in questo caso una \texttt{Room}.
+Di seguito, nel Codice~\ref{lst:esempio}, è riportato un esempio rappresentativo del funzionamento di un metodo appartenente al livello ORM. In particolare, viene mostrato un metodo della classe \texttt{RoomDAO}, che esegue una query SQL per recuperare informazioni dal database e costruire il corrispondente oggetto del dominio, in questo caso una \texttt{Room}.
     Il metodo utilizza JDBC per preparare ed eseguire la query, gestire il \texttt{ResultSet} e, in base ai dati ottenuti, istanziare dinamicamente l'oggetto adatto (\texttt{StudyRoom} o \texttt{EventRoom}), restituendolo al livello superiore dell'applicazione.
     \begin{listing}[H]
         \begin{minted}[fontsize=\small]{java}
