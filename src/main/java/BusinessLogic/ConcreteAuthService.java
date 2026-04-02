@@ -43,8 +43,7 @@ public class ConcreteAuthService implements AuthService {
                 factory = new LibraryAdministratorControllerFactory();
                 break;
             default:
-                //FIXME: creare l'eccezione corretta e mettere un messaggio decente
-                throw new RuntimeException("broski non esiste il ruolo " + userDTO.getRole());
+                throw new RuntimeException("Role " + userDTO.getRole() + " does not exist ");
         }
         return factory.createController(loggedUser);
     }

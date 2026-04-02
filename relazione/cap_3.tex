@@ -18,7 +18,63 @@ Ogni classe modella un concetto reale presente nel sistema di gestione della bib
     \subsubsection{Book}
     Questa classe rappresenta un libro.\\
     Un libro può essere aggiunto o rimosso dal catalogo di tutti i libri della biblioteca da parte dell'amministratore della biblioteca. Se presente nel catalogo, può essere preso in prestito da un utente ed è identificato tramite ISBN, titolo e codice. Inoltre su questo è riportato anche il nome degli autori.\\
-    Per la creazione di un oggetto Book viene usato il \textbf{BookBuilder}, che implementa il design pattern del \textbf{Builder}.\\
+    Per la creazione di un oggetto Book viene usato il \textbf{BookBuilder}, mostrato nel Codice~\ref{lst:bookBuilder}, che implementa il design pattern del \textbf{Builder}.\\
+    \begin{listing}[H]
+        \begin{minted}[fontsize=\small]{java}
+            public class Book {
+            
+                public static class BookBuilder {
+                    private String ISBN;
+                    private String title;
+                    private ArrayList<String> authors;
+                    private String code; //book code to identify multiple copies
+            
+                    public BookBuilder setISBN(String ISBN) {
+                        this.ISBN = ISBN;
+                        return this;
+                    }
+            
+                    public BookBuilder setTitle(String title){
+                        this.title = title;
+                        return this;
+                    }
+            
+                    public BookBuilder setAuthors(ArrayList<String> authors){
+                        this.authors = authors;
+                        return this;
+                    }
+            
+                    public BookBuilder setCode(String code){
+                        this.code = code;
+                        return this;
+                    }
+            
+                    public Book build(){
+                        return new Book(this);
+                    }
+                }
+            
+                private Book(BookBuilder builder){
+                    this.ISBN = builder.ISBN;
+                    this.title = builder.title;
+                    this.code = builder.code;
+                    this.authors = builder.authors;
+                }
+            
+                private String ISBN;
+                private String title;
+                private ArrayList<String> authors;
+                private String code;
+            
+                public String getISBN() { return ISBN; }
+                public String getTitle() { return title; }
+                public ArrayList<String> getAuthors() { return authors; }
+                public String getCode() { return code; }
+            }
+        \end{minted}
+        \caption{Implementazione del pattern Builder nella classe \texttt{Book}}
+        \label{lst:bookBuilder}
+    \end{listing}
 
     \subsubsection{Loan}
     Questa classe rappresenta un prestito di un libro da parte di un utente.\\
@@ -68,9 +124,61 @@ La Business Logic, mostrata in Figura~\ref{fig:business_logic}, contiene tutte l
 \end{figure}
 
     \subsubsection{AuthService e ConcreteAuthService}
-    L'\texttt{AuthService} è un'interfaccia che dichiara i principali metodi di autenticazione: \textbf{login, logout, register e resetPassword}.\\
-    Questi vengono implementati in \texttt{ConcreteAuthService}. In particolare, il metodo \textbf{login} restituisce un tipo di utente diverso in base al ruolo dell'utente autenticato.\\
+    L'\texttt{AuthService} è un'interfaccia che dichiara i principali metodi di autenticazione: \textbf{login, logout, register e resetPassword}, mostrati nel Codice~\ref{lst:authService}.\\
+    \begin{listing}[H]
+        \begin{minted}[fontsize=\small]{java}
+            public interface AuthService {
+                public ControllerInterface login(String email, String password) throws UserNotFoundException;
+                public void logout();
+                public void resetPassword(String email, String newPassword);
+                public boolean register(UserDTO userDTO);
+                public boolean isLogged();
+            }
+        \end{minted}
+        \caption{Classe \texttt{AuthService}}
+        \label{lst:authService}
+    \end{listing}
+    
+    Questi vengono implementati in \texttt{ConcreteAuthService}. In particolare, il metodo \textbf{login} restituisce un tipo di utente diverso in base al ruolo dell'utente autenticato, come mostrato nel Codice~\ref{lst:login}.\\
     La gestione della sessione di un utente, è realizzato tramite il metodo \textbf{isLogged}, che verifica se un utente è autenticato o meno.\\
+
+    \begin{listing}[H]
+        \begin{minted}[fontsize=\small]{java}
+        @Override
+        public ControllerInterface login(String email, String password) throws UserNotFoundException {
+            UserDTO userDTO = userDAO.getUserByEmail(email);
+            ControllerFactory factory;
+    
+            if (!BCrypt.checkpw(password, userDTO.getPassword())) {
+                throw new UserNotFoundException("Wrong username or password");
+            }
+    
+            switch (userDTO.getRole()) {
+                case role.libraryUser:
+                    loggedUser = new LibraryUser.LibraryUserBuilder()
+                            .setName(userDTO.getName())
+                            .setSurname(userDTO.getSurname())
+                            .setEmail(userDTO.getEmail())
+                            .build();
+                    factory = new LibraryUserControllerFactory();
+                    break;
+                case role.librarian:
+                    loggedUser = new Librarian(userDTO.getName(), userDTO.getEmail(), userDTO.getSurname());
+                    factory = new LibrarianControllerFactory();
+                    break;
+                case role.libraryAdministrator:
+                    loggedUser = new LibraryAdministrator(userDTO.getName(), userDTO.getSurname(), userDTO.getEmail());
+                    factory = new LibraryAdministratorControllerFactory();
+                    break;
+                default:
+                    throw new RuntimeException("Role " + userDTO.getRole() + " does not exist ");
+            }
+            return factory.createController(loggedUser);
+        }
+        \end{minted}
+        \caption{Metodo \textbf{login}}
+        \label{lst:login}
+    \end{listing}
 
     \subsubsection{Role}
     Il \texttt{Role} è un \textbf{enum} che identifica i possibili ruoli degli utenti del sistema: \textbf{LibraryUser, Librarian e LibraryAdministrator}.\\
@@ -80,7 +188,17 @@ La Business Logic, mostrata in Figura~\ref{fig:business_logic}, contiene tutte l
 
     \subsubsection{ControllerFactory}
     La \texttt{ControllerFactory} è un'interfaccia che dichiara il metodo \textbf{createController}, il quale restituisce un oggetto di tipo \texttt{ControllerInterface}.\\
-    Questa interfaccia implementa il design pattern \textbf{Factory}, consentendo la creazione dei diversi controller in base al tipo di utente.
+    Questa interfaccia implementa il design pattern \textbf{Factory}, mostrato nel Codice~\ref{lst:controllerFactory}, consentendo la creazione dei diversi controller in base al tipo di utente.
+    \begin{listing}[H]
+        \begin{minted}[fontsize=\small]{java}
+            public interface ControllerFactory {
+                public ControllerInterface createController(User user);
+            }
+        \end{minted}
+        \caption{Implementazione del pattern Factory nella classe \texttt{ControllerFactory}}
+        \label{lst:controllerFactory}
+    \end{listing}
+        
 
     \subsubsection{LibraryUserControllerFactory}
     Questa classe implementa l'interfaccia \texttt{ControllerFactory} e sovrascrive il metodo \textbf{createController}, restituendo un'istanza di \texttt{LibraryUserController}.
@@ -135,7 +253,60 @@ L'ORM, mostrato in Figura~\ref{fig:orm}, si occupa della gestione della persiste
     \subsubsection{ConnectionManager}
     La classe si occupa di gestire la connessione al database per tutte le classi DAO tramite il metodo \textbf{getConnection}.\\
     È implementata utilizzando il design pattern \textbf{Singleton}, con lo scopo di centralizzare la gestione delle connessioni.\\
-    Per stabilire la connessione al database è necessaria la creazione di un file \texttt{.env}, con dentro inserite le credenziali per poterci accedere.
+    Per stabilire la connessione al database è necessaria la creazione di un file \texttt{.env}, con dentro inserite le credenziali per poterci accedere.\\
+    Tutta la classe è mostrata in Codice~\ref{lst:connectionManager}.
+    \begin{listing}[H]
+        \begin{minted}[fontsize=\small]{java}
+            public class ConnectionManager {
+                private Connection connection;
+                private static ConnectionManager instance = null;
+            
+                private ConnectionManager() throws SQLException, SQLTimeoutException {
+                    this.connection = initializeConnection();
+                }
+            
+                private Connection initializeConnection() throws SQLException {
+                    Connection connection;
+                    Properties props = getDBProprieties();
+                    connection = DriverManager.getConnection(props.getProperty("url"), props);
+                    return connection;
+                }
+            
+                public static ConnectionManager getInstance() throws SQLException, SQLTimeoutException{
+                    if (instance == null) instance = new ConnectionManager();
+                    return instance;
+                }
+            
+                public Connection getConnection(){
+                    if (instance == null){
+                        throw new IllegalStateException("getConnection must be called after getInstance");
+                    }
+                    try {
+                        if (connection.isClosed()){
+                            this.connection = initializeConnection();
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    return connection;
+                }
+            
+                private Properties getDBProprieties(){
+                    Dotenv dotenv = Dotenv.configure().directory("./src").load();
+                    Properties props = new Properties();
+                    props.setProperty("url", dotenv.get("DB_URL"));
+                    props.setProperty("user", dotenv.get("DB_USER"));
+                    props.setProperty("password", dotenv.get("DB_PASS"));
+                    return props;
+                }
+                public String getDBUsername(){
+                    return getDBProprieties().getProperty("user");
+                }
+            }
+        \end{minted}
+        \caption{Implementazione della classe \texttt{ConnectionManager}}
+        \label{lst:connectionManager}
+    \end{listing}
 
     \subsubsection{Utils}
     La classe \texttt{Utils} è una classe di supporto, utilizzata da alcuni DAO. Implementa due metodi, \textbf{toLocalDateOrNull e PGIntervalToDuration}, che servono per convertire i risultati delle query in tipi compatibili con Java.
@@ -148,7 +319,48 @@ L'ORM, mostrato in Figura~\ref{fig:orm}, si occupa della gestione della persiste
         \item aggiornare la password tramite \textbf{updatePassword};
         \item inserire un nuovo utente tramite \textbf{insertUser}.
     \end{itemize}
-    Per la gestione dei dati è stata introdotta la classe \texttt{UserDTO} (Data Transfer Object), che incapsula gli attributi dell'utente e viene utilizzata per trasferire i dati tra database e applicazione.
+    Per la gestione dei dati è stata introdotta la classe \texttt{UserDTO} (Data Transfer Object), mostrata in, Codice~\ref{lst:userDTO}, che incapsula gli attributi dell'utente e viene utilizzata per trasferire i dati tra database e applicazione.
+    \begin{listing}[H]
+        \begin{minted}[fontsize=\small]{java}
+            public class UserDTO {
+                private String email;
+                private String name;
+                private String surname;
+                private role role;
+                private String password;
+            
+                public UserDTO(String email, String name, String surname, role role, String password) {
+                    this.email = email;
+                    this.name = name;
+                    this.surname = surname;
+                    this.role = role;
+                    this.password = password;
+                }
+            
+                public String getEmail() {
+                    return email;
+                }
+            
+                public String getName() {
+                    return name;
+                }
+            
+                public String getSurname() {
+                    return surname;
+                }
+            
+                public role getRole() {
+                    return role;
+                }
+            
+                public String getPassword() {
+                    return password;
+                }
+            }
+        \end{minted}
+        \caption{Implementazione della classe \texttt{UserDTO}}
+        \label{lst:userDTO}
+    \end{listing}
 
     \subsubsection{BookDAO} 
     La classe \texttt{BookDAO} gestisce le operazioni sui libri che permette di:
@@ -198,5 +410,44 @@ L'ORM, mostrato in Figura~\ref{fig:orm}, si occupa della gestione della persiste
         \item recuperare gli utenti che hanno prenotato un posto tramite \textbf{getReservedSeatForRoomNumber};
         \item cercare una stanza tramite \textbf{getRoomByNumber}.
     \end{itemize}
+
+   \\ Di seguito, nel Codice~\ref{lst:esempio}, è riportato un esempio rappresentativo del funzionamento di un metodo appartenente al livello ORM. In particolare, viene mostrato un metodo della classe \texttt{RoomDAO}, che esegue una query SQL per recuperare informazioni dal database e costruire il corrispondente oggetto del dominio, in questo caso una \texttt{Room}.
+    Il metodo utilizza JDBC per preparare ed eseguire la query, gestire il \texttt{ResultSet} e, in base ai dati ottenuti, istanziare dinamicamente l'oggetto adatto (\texttt{StudyRoom} o \texttt{EventRoom}), restituendolo al livello superiore dell'applicazione.
+    \begin{listing}[H]
+        \begin{minted}[fontsize=\small]{java}
+            public Room getRoomByNumber(int number) {
+                try {
+                    Connection conn = ConnectionManager.getInstance().getConnection();
+                    PreparedStatement stmt = conn.prepareStatement("SELECT * FROM room WHERE number = ?");
+                    stmt.setInt(1, number);
+                    ResultSet rs = stmt.executeQuery();
+                    if(rs.next()) {
+                        if (rs.getBoolean("is_study_room")) {
+                            Room room = new StudyRoom(rs.getInt("number"), rs.getInt("seats"), 
+                                getReservedSeatForRoomNumber(number));
+                            stmt.close();
+                            return room;
+                        }
+                        else {
+                            ArrayList<Event> eventList = getEventForRoomNumber(number);
+                            EventRoom eventRoom = new EventRoom(rs.getInt("number"), rs.getInt("seats"));
+                            for (Event event : eventList) {
+                                event.setPlace(eventRoom);
+                            }
+                            eventRoom.setScheduledEvents(eventList);
+                            stmt.close();
+                            return eventRoom;
+                        }
+                    }
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        \end{minted}
+        \caption{Esempio di metodo DAO per il recupero di dati dal DB}
+        \label{lst:esempio}
+    \end{listing}
 
 \subsection{Modello relazionale Database}
