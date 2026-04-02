@@ -10,13 +10,14 @@
 \usepackage{makeidx}
 \usepackage{tocloft}
 %====
+\usepackage{tcolorbox}
 \usepackage{fancyhdr} % per il layout di intestazione e piè di pagina
 \usepackage{float} % per il posizionamento delle immagini
 \usepackage{caption} % per impostare figura invece di figure
 \usepackage[hidelinks]{hyperref} % per \nameref e hyperlink ai riferimenti
 % === snippet di codice ==== %
 \usepackage{minted}
-\usepackage[svgnames]{xcolor}
+%\usepackage[svgnames]{xcolor}
 % ========================== %
 % tabelle carine
 \usepackage{tabularx}
@@ -58,6 +59,12 @@
   {\par\addvspace{\baselineskip}\captionsetup{type=listing}}
   {\par\addvspace{\baselineskip}}
 %=================%
+%stili pagina (pie di pagina e numerazione)
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\leftmark}
+\cfoot{\large \thepage}
+%===========
 \begin{document}
 % Frontespizio
 \include{title.tex}

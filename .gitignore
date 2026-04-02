@@ -3,3 +3,10 @@ out/
 *.old
 target/
 .env
+*.aux
+*.out
+relazione/*.log
+relazione/*.pdf
+relazione/main.synctex.gz
+*.toc
+relazione/_minted*
