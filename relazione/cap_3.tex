@@ -451,4 +451,43 @@ Di seguito, nel Codice~\ref{lst:esempio}, è riportato un esempio rappresentativ
     \end{listing}
 
 \subsection{Modello relazionale Database}
+Come già specificato in \ref{subsec:architettura} per il database è stato utilizzato \texttt{PostgreSQL}; sono stati usati i suoi data types anche se non sono \textit{SQL} standard come \texttt{duration}. Per la gestione dei ruoli e per avere una validazione anche lato database è stata definita un enumerazione:
+\begin{code}
+\mint{sql}|CREATE type role AS ENUM ('librarian', 'libraryUser', 'libraryAdministrator');|
+\caption{enumerazione database}
+\end{code}
+\noindent Per inizializzare il database è stato creato il file \texttt{db.sql} contenente la definizione delle tabelle, che dovrà essere eseguito manualmente la prima volta; per avere dei dati iniziali da usare nei test è stato creato il file \texttt{data.sql} che invece è eseguito dalla classe \texttt{DBSeeder} nello schema \texttt{test} (\ref{subsec:struttura}).\\
+Di seguito mostriamo il modello relazionale
+\begin{tcolorbox}
+	Book(\underline{code}, isbn, title)\\
+	User(\underline{email}, name, surname, role, password)\\
+	Card(\underline{id}, issueDate, expirationDate, user) VIR fra card.user e user.email, user NOT NULL\\
+	Loan(\underline{book}, \underline{card}, issueDate, expirationDate) VIR fra loan.book e book.code, loan.card e card.id, card NOT NULL\\
+	Library(\underline{name}, budget)\\
+	Manage(\underline{user}, library) VIR manage.user e user.email, library NOT NULL\\
+	Room(\underline{number}, seats, is\_study\_room) is\_study\_room UNIQUE\\
+	Event(\underline{id}, name, description, date, duration, organizer, room, room\_type) VIR organizer e user.email, event.room e room.number, room\_type e room.is\_study\_room, event.room NOT NULL\\
+	Reservation\_study\_room(\underline{user}, room) VIR user e user.email, room e room.number, room NOT NULL\\
+	Participation(\underline{event}, user) VIR event e event.id, user e user.email
+\end{tcolorbox}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
