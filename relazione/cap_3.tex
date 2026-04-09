@@ -382,7 +382,7 @@ L'ORM, mostrato in Figura~\ref{fig:orm}, si occupa della gestione della persiste
         \item recuperare un prestito tramite \textbf{getLoanByBookAndCard}.
     \end{itemize}
 
-    \subsubsection{EventDAO}
+    \subsubsection{EventDAO e EventDTO}
     La classe \texttt{EventDAO} gestisce le operazioni relative agli eventi e alla partecipazione degli utenti. Consente di:
     \begin{itemize}
         \item aggiungere un partecipante ad un evento tramite \textbf{addNewParticipant};
@@ -391,6 +391,7 @@ L'ORM, mostrato in Figura~\ref{fig:orm}, si occupa della gestione della persiste
         \item eliminare un evento tramite \textbf{deleteEvent};
         \item modificare un evento tramite \textbf{editEvent}.
     \end{itemize}
+    Per la gestione dei dati è stata introdotta la classe \texttt{EventDTO}, che incapsula gli attributi dell'evento e viene utilizzata per trasferire i dati tra database e applicazione.
 
     \subsubsection{CardDAO}
     La classe \texttt{CardDAO} gestisce le tessere della biblioteca e consente di:
