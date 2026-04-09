@@ -14,7 +14,7 @@
 \usepackage{fancyhdr} % per il layout di intestazione e piè di pagina
 \usepackage{float} % per il posizionamento delle immagini
 \usepackage{caption} % per impostare figura invece di figure
-\usepackage[hidelinks]{hyperref} % per \nameref e hyperlink ai riferimenti
+\usepackage{hyperref} % per \nameref e hyperlink ai riferimenti
 % === snippet di codice ==== %
 \usepackage{minted}
 %\usepackage[svgnames]{xcolor}
@@ -69,7 +69,10 @@
 % Frontespizio
 \include{title.tex}
 %Indice
-\tableofcontents
+{
+	\hypersetup{hidelinks}
+	\tableofcontents
+}
 \newpage
 %Capitolo 1
 \include{cap_1.tex}

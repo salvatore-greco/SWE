@@ -1,8 +1,9 @@
 \section{Introduzione}
 Il presente elaborato è stato scritto per il superamento dell'esame Ingegneria Del Software del corso di laurea triennale in Ingegneria Informatica dell'Università degli Studi di Firenze.\newline
 Si descrive il design e l'implementazione in \textit{Java} di un sistema gestionale per biblioteche. \newline
+La relazione è stata scritta in \LaTeX\ usando gli editor \href{https://overleaf.com}{\texttt{Overleaf}} e \texttt{TexStudio}; per la corretta formattazione del codice è stato usato il package \texttt{minted}, mentre per i box colorati \texttt{tcolorbox}.
 
-Il progetto è stato versionato usando Git e l'intero codice sorgente è disponibile all'url \url{https://github.com/salvatore-greco/SWE}. Sono state usate due GitHub Action per gestire il deploy su GitHub Pages dei risultati di coverage e per la compilazione della presente relazione.
+Il progetto è stato versionato usando Git e l'intero codice sorgente è disponibile all'url \url{https://github.com/salvatore-greco/SWE}. Sono state usate due GitHub Action per gestire il deploy su GitHub Pages dei risultati di coverage e per la compilazione del presente documento.
 
 
 \subsection{Statement}
@@ -13,8 +14,9 @@ L'amministratore della biblioteca può gestirne il budget e il catalogo attraver
 Se provviste di aule studio, ne permette la gestione: consultare i posti disponibili  e prenotarne uno; essi vengono rilasciati in modo automatico giornalmente e possono essere rilasciati manualmente da parte degli utenti.    
 
 \subsection{Architettura e tecnologie utilizzate}\label{subsec:architettura}
-Per lo sviluppo è stato utilizzato \textit{Java}, utilizzando come IDE \textit{IntelliJ} data la sua grande integrazione con l'ecosistema e col database.
-Come database è stato scelto \textit{PostgreSQL}, utilizzando le API \textit{JDBC} e il suo relativo driver. Use Case Diagram e Class Diagram seguono lo standard UML e sono stati realizzati col software \textit{StarUML}.\newline
+Per lo sviluppo è stato utilizzato \textit{Java}, utilizzando come IDE \textit{IntelliJ} data la sua grande integrazione con l'ecosistema e col database.\\
+Come database è stato scelto \textit{PostgreSQL}, utilizzando le API \textit{JDBC} e il suo relativo driver. \\
+Use Case Diagram e Class Diagram seguono lo standard UML e sono stati realizzati col software \textit{StarUML}.\newline
 Sono state usate le seguenti dipendenze esterne, gestite attraverso il build system \textit{Maven}:
 \begin{itemize}
     \item \textbf{PostgreSQL JDBC driver}
@@ -31,5 +33,5 @@ Per la business logic è stato scelto di creare un controller per attore data l'
     \centering
     \includegraphics[width=1\linewidth]{images/package_diagram.png}
     \caption{Package diagram del progetto}
-    \label{fig:placeholder}
+    \label{fig:package diagram}
 \end{figure}

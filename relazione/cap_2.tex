@@ -3,25 +3,25 @@
 Di seguito vengono mostrati i diagrammi per i casi d'uso degli attori del sistema progettato. Ogni operazione di livello "User Goal" viene descritta nel dettaglio nella prossima sezione
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\linewidth]{images/use case diagram/cittadino.jpg}
+    \includegraphics[width=0.7\linewidth]{images/use case diagram/cittadino.png}
     \caption{Use Case Diagram per LibraryUser}
     \label{fig:Use Case Diagram per LibraryUser}
 \end{figure}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\linewidth]{images/use case diagram/amministratore.jpg}
+    \includegraphics[width=0.7\linewidth]{images/use case diagram/amministratore.png}
     \caption{Use Case Diagram per Library Administrator}
     \label{fig:Use Case Diagram per Library Administrator}
 \end{figure}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\linewidth]{images/use case diagram/bibliotecario.jpg}
+    \includegraphics[width=0.7\linewidth]{images/use case diagram/bibliotecario.png}
     \caption{Use Case Diagram per Librarian}
     \label{fig:Use Case Diagram per Librarian}
 \end{figure}
 \subsection{Use Case Template}
 Di seguito vengono descritti i template per i casi d'uso di livello User Goal indicati nello Use Case Diagram. \\
-Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post condizioni, basic flow, alternative flow e test associati.
+Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post condizioni, basic flow, alternative flow e test associati; dato il grande numero di test case effettuati, nella tabella viene indicato il nome della fixture. In linea generale ne è stato testato il basic flow e, se presenti, gli alternative flow.
 \subsubsection{Autenticazione}
 \begin{table}[H]
     \begin{tabularx}{\textwidth}{|c|X|}
@@ -32,13 +32,14 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \textbf{Attori} & Library User, Librarian o Library Administrator \\ \hline 
         \textbf{Pre Condizioni} & L'utente è nella pagina appropriata e non ha già fatto il autenticazione \\ \hline
         \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
-            \item L'utente inserisce il nome utente e password 
+            \item L'utente inserisce il nome utente e password (Mockup \hyperref[fig:login page]{\#1})
             \item L'utente invia le credenziali 
             \item Il sistema controlla le credenziali 
             \item Il sistema autentica l'utente, istanziandone il proprio controller 
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & 3a. Se le credenziali sono errate il sistema restituisce un errore permettendo di ritentare  \\ \hline
         \textbf{Post Condizioni} & L'utente è autenticato. Viene istanziato il controller appropriato\\ \hline
+        \textbf{Test} & AuthUnitTest \\ \hline
     \end{tabularx}
     \caption{Autenticazione UCT}
     \label{tab:Autenticazione UCT}
@@ -54,13 +55,14 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \textbf{Attori} & Library User, Librarian o Library Administrator \\ \hline 
         \textbf{Pre Condizioni} & L'utente è nella pagina appropriata e non ha fatto il login \\ \hline
         \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
-            \item L'utente inserisce nome, cognome, email, password 
+            \item L'utente inserisce nome, cognome, email, password (Mockup \hyperref[fig:register page]{\#2})
             \item L'utente invia le credenziali 
             \item Il sistema controlla che non esista già un utente con l'email inserita 
             \item Il sistema crea l'account 
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & 3a. Se l'utente esiste già restituisce un errore permettendo di ritentare  \\ \hline
         \textbf{Post Condizioni} & Viene creato l'account, permettendo all'utente di fare il login\\ \hline
+        \textbf{Test} & AuthUnitTest \\ \hline
     \end{tabularx}
     \caption{Registrazione UCT}
     \label{tab:Registrazione UCT}
@@ -82,6 +84,7 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & -  \\ \hline
         \textbf{Post Condizioni} & Viene resettata la password\\ \hline
+        \textbf{Test} & AuthUnitTest \\ \hline
     \end{tabularx}
     \caption{Reset password UCT}
     \label{tab:Reset password UCT}
@@ -97,11 +100,12 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \textbf{Pre Condizioni} & L'utente ha fatto il login e ha una tessera valida \\ \hline
         \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
             \item L'utente cerca il libro da chiedere in prestito 
-            \item L'utente seleziona il libro e preme "Prenota" Mockup x 
+            \item L'utente seleziona il libro e preme "Prenota" (Mockup \hyperref[fig:catalogo libri]{\#4})
             \item Il sistema invia la richiesta e salva la prenotazione permettendo al bibliotecario di approvarla e consegnare il libro all'utente 
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & 2a. Se il libro è già in prestito il sistema respinge la richiesta mostrando un errore  \\ \hline
         \textbf{Post Condizioni}  & La richiesta viene registrata \\ \hline
+        \textbf{Test} & LoanDAOIntegrationTest, LoanIntegrationTest, LoanUnitTest  \\ \hline
     \end{tabularx}
     \caption{Riserva un libro UCT}
     \label{tab:Riserva un libro UCT}
@@ -122,6 +126,7 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & -  \\ \hline
         \textbf{Post Condizioni}  & La richiesta viene registrata \\ \hline
+        \textbf{Test} & CardIntegrationTest, CardDAOIntegrationTest \\ \hline
     \end{tabularx}
     \caption{Richiede tessera biblioteca UCT}
     \label{tab:Richiede tessera biblioteca UCT}
@@ -137,12 +142,13 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \textbf{Pre Condizioni} & L'utente ha fatto il login \\ \hline
         \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
             \item L'utente seleziona la pagina "Lista eventi" 
-            \item L'utente sceglie l'evento a cui vuole partecipare 
+            \item L'utente sceglie l'evento a cui vuole partecipare (Mockup \hyperref[fig:Lista eventi]{\#5})
             \item L'utente clicca il tasto "Prenota"
             \item Il sistema invia la richiesta e riserva il posto per l'utente
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & 2a. Se l'utente ha già effettuato una prenotazione per l'evento o la stanza è piena il sistema respinge la richiesta mostrando un errore  \\ \hline
         \textbf{Post Condizioni}  & La richiesta viene registrata \\ \hline
+        \textbf{Test} & EventIntegrationTest, EventDAOIntegrationTest, EventUnitTest \\ \hline
     \end{tabularx}
     \caption{Prenotazione ad evento UCT}
     \label{tab:Richiesta tessera UCT}
@@ -158,12 +164,13 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \textbf{Pre Condizioni} & L'utente ha fatto il login \\ \hline
         \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
             \item L'utente seleziona la pagina "Prenota posto" 
-            \item L'utente sceglie l'aula in cui vuole riservare un posto
+            \item L'utente sceglie l'aula in cui vuole riservare un posto (Mockup \hyperref[fig:Prenotazione aula studio]{\#6})
             \item L'utente clicca il tasto "Prenota"
             \item Il sistema invia la richiesta e riserva il posto per l'utente
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & 2a. Se l'utente ha già riservato un posto in quell'aula o l'aula è piena il sistema respinge la richiesta mostrando un errore  \\ \hline
         \textbf{Post Condizioni}  & La richiesta viene registrata \\ \hline
+        \textbf{Test} & StudyRoomIntegrationTest, StudyRoomUnitTest \\ \hline
     \end{tabularx}
     \caption{Prenota posto aula studio UCT}
     \label{tab:Prenota posto aula studio UCT}
@@ -178,7 +185,7 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \textbf{Attori} & Librarian \\ \hline 
         \textbf{Pre Condizioni} & Il bibliotecario ha fatto il login e l'utente che fa richiesta non ha una tessera o la ha scaduta \\ \hline
         \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
-            \item Il bibliotecario seleziona la pagina "Richieste tessere"
+            \item Il bibliotecario seleziona la pagina "Richieste tessere" (Mockup \hyperref[fig:Richieste tessere bibliotecario]{\#8})
             \item Il bibliotecario seleziona la richiesta dell'utente
             \item Il bibliotecario clicca il tasto "Approva"
             \item Il sistema invia la richiesta e crea la tessera all'utente associato
@@ -187,6 +194,7 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & - \\ \hline
         \textbf{Post Condizioni}  & Viene creata la tessera e associata all'utente \\ \hline
+        \textbf{Test} & CardIntegrationTest, CardDAOIntegrationTest \\ \hline
     \end{tabularx}
     \caption{Approva richiesta tessera UCT}
     \label{tab:Approva richiesta tessera UCT}
@@ -210,6 +218,7 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & -  \\ \hline
         \textbf{Post Condizioni}  & Viene creata la tessera e associata all'utente \\ \hline
+        \textbf{Test} & CardIntegrationTest, CardDAOIntegrationTest \\ \hline
     \end{tabularx}
     \caption{Rilascia tessere UCT}
     \label{tab:Rilascia tessere UCT}
@@ -232,6 +241,7 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & 2a. Se il libro è già in prestito il sistema restituisce un errore respingendo l'operazione \\ \hline
         \textbf{Post Condizioni}  & Viene creato il prestito \\ \hline
+        \textbf{Test} & LoanDAOIntegrationTest, LoanIntegrationTest, LoanUnitTest  \\ \hline
     \end{tabularx}
     \caption{Registra prestito UCT}
     \label{tab:Registra prestito UCT}
@@ -246,13 +256,14 @@ Ne vengono elencati i dettagli come: descrizione, livello, attori, pre e post co
         \textbf{Attori} & Librarian \\ \hline 
         \textbf{Pre Condizioni} & Il bibliotecario ha fatto il login e l'utente che chiede il prestito ha la tessera \\ \hline
         \textbf{Basic Flow} & \begin{enumerate}[nosep, leftmargin=* ,before=\vspace{-0.5\baselineskip}]
-            \item Il bibliotecario seleziona la pagina "Richieste prestiti"
+            \item Il bibliotecario seleziona la pagina "Richieste prestiti" (Mockup \hyperref[fig:richieste prestito bibliotecario]{\#7})
             \item Il bibliotecario seleziona il libro da mandare in prestito e lo approva
             \item Il sistema invia la richiesta e registra il prestito all'utente associato alla tessera
             \item Il bibliotecario presta il libro all'utente
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & 2a. Se il libro è già in prestito il sistema restituisce un errore respingendo l'operazione \\ \hline
         \textbf{Post Condizioni}  & Viene creato il prestito \\ \hline
+        \textbf{Test} & LoanDAOIntegrationTest, LoanIntegrationTest, LoanUnitTest  \\ \hline
     \end{tabularx}
     \caption{Approva richiesta prestito UCT}
     \label{tab:Approva richiesta prestito UCT}
@@ -282,6 +293,7 @@ Questo caso d'uso è di livello \textless \textless summary\textgreater \textgre
             \item La stanza scelta è un aula studio invece di un aula eventi
         \end{itemize}  \\ \hline
         \textbf{Post Condizioni} & Viene creato l'evento\\ \hline
+        \textbf{Test} & EventIntegrationTest, EventDAOIntegrationTest, EventUnitTest \\ \hline
     \end{tabularx}
     \caption{Crea evento UCT}
     \label{tab:Crea evento UCT}
@@ -303,6 +315,7 @@ Questo caso d'uso è di livello \textless \textless summary\textgreater \textgre
         \end{enumerate} \\ \hline
         \textbf{Alternative Flow} & 3a. Se l'aumento è negativo il sistema respinge l'operazione visualizzando un errore  \\ \hline
         \textbf{Post Condizioni} & Viene aumentato il budget \\ \hline
+        \textbf{Test} & LibraryIntegrationTest, LibraryDAOIntegrationTest \\ \hline
     \end{tabularx}
     \caption{Aumenta il budget UCT}
     \label{tab:Aumenta il budget UCT}
@@ -361,17 +374,6 @@ Di seguito vengono mostrati i mockup di una possibile interfaccia utente per que
     \caption{Richieste tessere bibliotecario}
     \label{fig:Richieste tessere bibliotecario}
 \end{figure}
-\subsection{Modello concettuale Database}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\linewidth]{images/Er diagram.png}
-    \caption{Schema ER database}
-    \label{fig:Schema ER database}
-\end{figure}
-Il diagramma in figura è stato realizzato con \url{https://draw.io}\\
-Esso descrive in modo concettuale il database. La ristrutturazione e la traduzione nel modello relazionale verranno trattate nella sezione successiva. Ogni tabella è stata mappata a una classe nel package \texttt{DomainModel}. \\
-Per gli utenti è stato scelto di accorparli in un entità sola fin dal principio dato che hanno molti attributi in comune, evitando di fare una generalizzazione per poi risolverla in fase di ristrutturazione; per differenziare il loro ruolo è stato scelto un flag \texttt{role}.
-Per la relazione fra \texttt{User} e \texttt{Card} è stato scelto di farla 1:N con partecipazione opzionale da parte di \texttt{User} per dare modo di potersi registrare e richiedere la tessera in un secondo momento. \\
-Sono state scelte fin da subito le chiavi primarie, evitando di farle in fase di ristrutturazione; sono indicate col pallino pieno nell'attributo. 
+
 
 

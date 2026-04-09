@@ -450,8 +450,18 @@ Di seguito, nel Codice~\ref{lst:esempio}, è riportato un esempio rappresentativ
         \label{lst:esempio}
     \end{listing}
 
-\subsection{Modello relazionale Database}
-Come già specificato in \ref{subsec:architettura} per il database è stato utilizzato \texttt{PostgreSQL}; sono stati usati i suoi data types anche se non sono \textit{SQL} standard come \texttt{duration}. Per la gestione dei ruoli e per avere una validazione anche lato database è stata definita un enumerazione:
+\subsection{Database}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{images/Er diagram.png}
+	\caption{Schema ER database}
+	\label{fig:Schema ER database}
+\end{figure}
+Il diagramma in figura è stato realizzato con \url{https://draw.io}\\
+Esso descrive in modo concettuale il database. Ogni tabella è stata mappata a una classe nel package \texttt{DomainModel}, ad eccezione degli utenti, dove è stato scelto di accorparli in un entità sola fin dal principio dato che hanno molti attributi in comune, evitando di fare una generalizzazione per poi risolverla in fase di ristrutturazione; per differenziare il loro ruolo è stato scelto un flag \texttt{role}.
+Per la relazione fra \texttt{User} e \texttt{Card} è stato scelto di farla 1:N con partecipazione opzionale da parte di \texttt{User} per dare modo di potersi registrare e richiedere la tessera in un secondo momento. \\
+Sono state scelte fin da subito le chiavi primarie, evitando di farlo in fase di ristrutturazione; sono indicate col pallino pieno nell'attributo. 
+Come già specificato in \ref{subsec:architettura} per il database è stato utilizzato \texttt{PostgreSQL}; sono stati usati i suoi data types, anche se non sono \textit{SQL} standard, come \texttt{duration}. Per la gestione dei ruoli e per avere una validazione anche lato database è stata definita un enumerazione:
 \begin{code}
 \mint{sql}|CREATE type role AS ENUM ('librarian', 'libraryUser', 'libraryAdministrator');|
 \caption{enumerazione database}
