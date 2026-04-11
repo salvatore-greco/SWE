@@ -146,6 +146,16 @@ Per la nomenclatura dei test case si è provato a seguire il più possibile uno 
 \subsection{Test coverage}
 I risultati di copertura sono stati generati con \texttt{JaCoCo} e sono disponibili per la consultazione su \url{https://salvatore-greco.github.io/SWE/}.\\
 È stato raggiunto un buon risultato col \textbf{90\%} di linee di codice coperte e il \textbf{79\%} di branch coperti. Il risultato più basso coi branch è causato da alcune condizioni non testate sui ResultSet nei DAO.
+\subsection{Criteri di progettazione dei test}
+La progettazione dei test è stata guidata dall’obiettivo di verificare in maniera sistematica il corretto funzionamento delle diverse componenti del sistema, sia in isolamento sia in interazione con il database. In particolare, sono stati adottati i seguenti criteri:
+\begin{itemize}
+    \item \textbf{Copertura dei casi d’uso principali}: per ogni funzionalità è stato testato il comportamento atteso nei casi standard, come la creazione, modifica e cancellazione di entità.
+    \item \textbf{Gestione dei casi di errore}: sono stati introdotti test specifici per verificare il comportamento del sistema in condizioni non valide, come input errati, entità inesistenti o operazioni non consentite.
+    \item \textbf{Casi limite}: sono stati testati scenari particolari come collezioni vuote, risorse non disponibili o vincoli violati (ad esempio prenotazioni duplicate).
+    \item \textbf{Test delle operazioni CRUD}: per tutte le classi del package \texttt{ORM} sono stati verificati i metodi di creazione, lettura, aggiornamento e cancellazione, controllando casi di successo e fallimento.
+    \item \textbf{Integrità del sistema}: negli integration test è stato verificato che le operazioni producano gli effetti attesi sul database, controllando che lo stato delle entità sia consistente dopo ogni operazione.
+\end{itemize}
+Infine, l’elevato numero di test sviluppati è anche motivato dall’assenza di un'interfaccia grafica: tale mancanza è stata compensata attraverso una validazione approfondita delle funzionalità del sistema tramite testing.
 \subsection{Unit Test}
 \subsubsection{DomainModel}
 Per il package \texttt{DomainModel} sono stati effettuati test solo di \texttt{EventRoom}, \texttt{Event}, \texttt{Loan}, \texttt{StudyRoom} e \texttt{Room} in quanto le altre classi sono prive di metodi che non siano getter o setter. Come visto in \ref{subsec:nomenclatura} sono stati usati nomi significativi per i test case pertanto si rimanda a \hyperref[UnitTest]{Tabella Unit test} per un elenco esaustivo dei test case effettuati.
