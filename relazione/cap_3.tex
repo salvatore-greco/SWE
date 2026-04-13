@@ -20,7 +20,7 @@ Ogni classe modella un concetto reale presente nel sistema di gestione della bib
     Un libro può essere aggiunto o rimosso dal catalogo di tutti i libri della biblioteca da parte dell'amministratore della biblioteca. Se presente nel catalogo, può essere preso in prestito da un utente ed è identificato tramite ISBN, titolo e codice. Inoltre su questo è riportato anche il nome degli autori.\\
     Per la creazione di un oggetto Book viene usato il \textbf{BookBuilder}, mostrato nel Codice~\ref{lst:bookBuilder}, che implementa il design pattern del \textbf{Builder}.\\
     \begin{listing}[H]
-        \begin{minted}[fontsize=\small]{java}
+        \begin{minted}[fontsize=\small,breaklines]{java}
             public class Book {
             
                 public static class BookBuilder {
@@ -126,7 +126,7 @@ La Business Logic, mostrata in Figura~\ref{fig:business_logic}, contiene tutte l
     \subsubsection{AuthService e ConcreteAuthService}
     L'\texttt{AuthService} è un'interfaccia che dichiara i principali metodi di autenticazione: \textbf{login, logout, register e resetPassword}, mostrati nel Codice~\ref{lst:authService}.\\
     \begin{listing}[H]
-        \begin{minted}[fontsize=\small]{java}
+        \begin{minted}[fontsize=\small,breaklines]{java}
             public interface AuthService {
                 public ControllerInterface login(String email, String password) throws UserNotFoundException;
                 public void logout();
@@ -143,7 +143,7 @@ La Business Logic, mostrata in Figura~\ref{fig:business_logic}, contiene tutte l
     La gestione della sessione di un utente, è realizzato tramite il metodo \textbf{isLogged}, che verifica se un utente è autenticato o meno.\\
 
     \begin{listing}[H]
-        \begin{minted}[fontsize=\small]{java}
+        \begin{minted}[fontsize=\small,breaklines]{java}
         @Override
         public ControllerInterface login(String email, String password) throws UserNotFoundException {
             UserDTO userDTO = userDAO.getUserByEmail(email);
@@ -190,7 +190,7 @@ La Business Logic, mostrata in Figura~\ref{fig:business_logic}, contiene tutte l
     La \texttt{ControllerFactory} è un'interfaccia che dichiara il metodo \textbf{createController}, il quale restituisce un oggetto di tipo \texttt{ControllerInterface}.\\
     Questa interfaccia implementa il design pattern \textbf{Factory}, mostrato nel Codice~\ref{lst:controllerFactory}, consentendo la creazione dei diversi controller in base al tipo di utente.
     \begin{listing}[H]
-        \begin{minted}[fontsize=\small]{java}
+        \begin{minted}[fontsize=\small,breaklines]{java}
             public interface ControllerFactory {
                 public ControllerInterface createController(User user);
             }
@@ -256,7 +256,7 @@ L'ORM, mostrato in Figura~\ref{fig:orm}, si occupa della gestione della persiste
     Per stabilire la connessione al database è necessaria la creazione di un file \texttt{.env}, con dentro inserite le credenziali per poterci accedere.\\
     Tutta la classe è mostrata in Codice~\ref{lst:connectionManager}.
     \begin{listing}[H]
-        \begin{minted}[fontsize=\small]{java}
+        \begin{minted}[fontsize=\small,breaklines]{java}
             public class ConnectionManager {
                 private Connection connection;
                 private static ConnectionManager instance = null;
@@ -321,7 +321,7 @@ L'ORM, mostrato in Figura~\ref{fig:orm}, si occupa della gestione della persiste
     \end{itemize}
     Per la gestione dei dati è stata introdotta la classe \texttt{UserDTO} (Data Transfer Object), mostrata in, Codice~\ref{lst:userDTO}, che incapsula gli attributi dell'utente e viene utilizzata per trasferire i dati tra database e applicazione.
     \begin{listing}[H]
-        \begin{minted}[fontsize=\small]{java}
+        \begin{minted}[fontsize=\small,breaklines]{java}
             public class UserDTO {
                 private String email;
                 private String name;
@@ -415,7 +415,7 @@ L'ORM, mostrato in Figura~\ref{fig:orm}, si occupa della gestione della persiste
 Di seguito, nel Codice~\ref{lst:esempio}, è riportato un esempio rappresentativo del funzionamento di un metodo appartenente al livello ORM. In particolare, viene mostrato un metodo della classe \texttt{RoomDAO}, che esegue una query SQL per recuperare informazioni dal database e costruire il corrispondente oggetto del dominio, in questo caso una \texttt{Room}.
     Il metodo utilizza JDBC per preparare ed eseguire la query, gestire il \texttt{ResultSet} e, in base ai dati ottenuti, istanziare dinamicamente l'oggetto adatto (\texttt{StudyRoom} o \texttt{EventRoom}), restituendolo al livello superiore dell'applicazione.
     \begin{listing}[H]
-        \begin{minted}[fontsize=\small]{java}
+        \begin{minted}[fontsize=\small,breaklines]{java}
             public Room getRoomByNumber(int number) {
                 try {
                     Connection conn = ConnectionManager.getInstance().getConnection();

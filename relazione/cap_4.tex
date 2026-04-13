@@ -38,7 +38,7 @@ Sono stati divisi nei package \texttt{UnitTest} e \texttt{IntegrationTest}. Nel 
 
 Per agevolare l'automatizzazione degli integration test è stata scritta una classe \texttt{DBSeeder} che va a creare uno schema \texttt{test}, istanziato mediante il file \texttt{db.sql} e popolato tramite il file \texttt{data.sql}. Gli script \textit{SQL} sono eseguiti tramite la classe \texttt{ResourceDatabasePopulator} del package \texttt{springframework.jdbc}
 \begin{code}
-    \begin{minted}{java}
+    \begin{minted}[breaklines]{java}
     public class DBSeeder {
 
     private Connection connection;
@@ -87,7 +87,7 @@ Per agevolare l'automatizzazione degli integration test è stata scritta una cla
 \end{code}
 \noindent Il setup e il teardown sono comuni a tutti gli integration test; essi sono definiti nella classe \texttt{BaseIntegrationTest} che ogni classe nel package estende. Il setup va a creare lo schema \texttt{test}, crea le tabelle e imposta l'autocommit della connessione a falso; dopo ogni test case viene eseguito il teardown, dove viene fatto il rollback della transazione. In caso di fallimento di questa operazione, viene impostato un flag \texttt{teardownFail} a vero, che il metodo \texttt{teardownChecker} eseguito dopo ogni test case controlla, facendo fallire tutti i test dato lo stato inconsistente del database. Infine il metodo \texttt{connectionCloser} cancella lo schema precedentemente creato e chiude la connessione.
 \begin{code}
-    \begin{minted}{java}
+    \begin{minted}[breaklines]{java}
     private static void setTestSchema() throws SQLException {
         Statement stmt = connDAO.createStatement();
         stmt.execute("SET search_path TO test");
@@ -163,7 +163,7 @@ Per il package \texttt{DomainModel} sono stati effettuati test solo di \texttt{E
 Per il package \texttt{BusinessLogic} è stata testata una sola classe, \texttt{ConcreteAuthManager}; testare in isolamento anche i controller avrebbe portato a una duplicazione dei test case fra Unit Test e Integration test, pertanto è stato scelto di effettuare solo Integration Test.\\
 Per testare \texttt{ConcreteAuthManager} viene fatto il mock dei DAO usati all'interno dei metodi, facendone lo stub per restituire un dato prevedibile a ogni esecuzione dei test, senza fare chiamate al database. Per effettuare il mocking è stato usato \texttt{Mockito}. 
 \begin{code}
-\begin{minted}{java}
+\begin{minted}[breaklines]{java}
 @BeforeAll
     public static void init() {
         userDAO = mock(UserDAO.class);
@@ -216,7 +216,7 @@ Come specificato anche in \ref{subsec:struttura} ogni classe in questo package �
 \subsubsection{DBSeeder}
 Pur essendo usata solo nell'ambito dei test anche la classe \texttt{DBSeeder} è stata sottoposta a test, compiendo però operazioni sul database. Sono stati testati tutti i suoi metodi: creazione dello schema di test, istanza tramite script \texttt{db.sql}, popolamento tramite script \texttt{data.sql} e cancellazione dello schema di test.
 \begin{code}
-    \begin{minted}{java}
+    \begin{minted}[breaklines]{java}
     @Test
     @Order(1)
     public void DBSeeder_createSchema() {
@@ -288,7 +288,7 @@ Pur essendo usata solo nell'ambito dei test anche la classe \texttt{DBSeeder} è
 Per il package \texttt{ORM} sono stati eseguiti Integration test per ogni classe e per ogni metodo presente, avendo cura di controllare anche i casi in cui il metodo può lanciare un eccezione o ritornare falso.\\
 Per un elenco esaustivo dei test case effettuati si rimanda a \hyperref[ORM_IT]{Tabella Integration test ORM}.
 \begin{code}
-    \begin{minted}{java}
+    \begin{minted}[breaklines]{java}
     @Test
     public void RoomDAO_getStudyRoom_hasEveryReservation(){
         RoomDAO roomDAO = new RoomDAO();
@@ -329,7 +329,7 @@ Per la business logic è stato seguito un approccio differente, non è stata scr
 Il controller di ogni attore è stato istanziato seguendo la procedura di login tramite \texttt{AuthManager} per avere un esperienza più vicina possibile a quella che potrebbe essere di un utilizzatore del software.\\
 Per un elenco esaustivo dei test case effettuati si rimanda a \hyperref[BL_IT]{Tabella Integration test Business Logic}.
 \begin{code}
-    \begin{minted}{java}
+    \begin{minted}[breaklines]{java}
     @Test
     public void grantRequestedLoan() {
         Book bookToLoan = assertDoesNotThrow(() -> bookDAO.getBookByCode("A002"));
